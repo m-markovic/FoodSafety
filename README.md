@@ -14,5 +14,6 @@ mvn eclipse:eclipse
 
 ```
 mvn package
-java -jar target/foodsafety-jar-with-dependencies.jar
+export WTCRED="me@myemail.com mypassword" # credentials for wirelesstag.net - NO space in the password
+java -ea -jar target/foodsafety-jar-with-dependencies.jar
 ```
