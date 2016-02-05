@@ -17,3 +17,10 @@ mvn package
 export WTCRED="me@myemail.com mypassword" # credentials for wirelesstag.net - NO space in the password
 java -ea -jar target/foodsafety-jar-with-dependencies.jar
 ```
+## Run static analyses
+
+Run
+```
+mvn site
+```
+then open ```target/site/project-reports.html```
