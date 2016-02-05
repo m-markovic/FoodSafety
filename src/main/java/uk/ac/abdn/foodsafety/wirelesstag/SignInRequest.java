@@ -25,7 +25,7 @@ public final class SignInRequest {
      */
     public SignInRequest() {
         final String credentials = System.getenv(ENV_VARIABLE);
-        assert (credentials != null) : MESSAGE;
+        assert credentials != null : MESSAGE;
         final String[] pair = credentials.split(" ");
         assert pair.length == 2 : MESSAGE;
         this.email = pair[0];

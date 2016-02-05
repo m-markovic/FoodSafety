@@ -26,7 +26,7 @@ final class FoodSafetyException extends RuntimeException {
      * @param e IOException caught while communicating with mywirelesstag.com
      * @return An FoodSafetyException representing the known facts about the situation
      */
-    static final FoodSafetyException wirelessTagConnectionFailed(final IOException e) {
+    static FoodSafetyException wirelessTagConnectionFailed(final IOException e) {
         return new FoodSafetyException("Failed to connect to mywirelesstag.com", e);
     }
 
@@ -35,7 +35,7 @@ final class FoodSafetyException extends RuntimeException {
      * @param url The url that returned the response
      * @return An FoodSafetyException representing the known facts about the situation
      */
-    static final FoodSafetyException wirelessTagSentError(
+    static FoodSafetyException wirelessTagSentError(
             final int responseCode, 
             final URL url) {
         return new FoodSafetyException(
