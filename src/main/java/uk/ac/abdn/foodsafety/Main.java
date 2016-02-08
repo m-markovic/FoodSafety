@@ -1,5 +1,7 @@
 package uk.ac.abdn.foodsafety;
 
+import java.time.LocalDate;
+
 /**
  * 
  * @author nhc
@@ -13,6 +15,11 @@ public class Main {
      * @param args Not used.
      */
     public static void main(final String[] args) {
-        new WirelessTagClient().getEventRawData(3);
+        final WirelessTagClient client = new WirelessTagClient();
+        client.getEventRawData(3);
+        client.getStatsRaw(
+                3, 
+                LocalDate.of(2016, 1, 28), 
+                LocalDate.of(2016, 1, 29));
     }
 }

@@ -8,9 +8,12 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDate;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import uk.ac.abdn.foodsafety.wirelesstag.GetStatsRawRequest;
+import uk.ac.abdn.foodsafety.wirelesstag.GetStatsRawResponse;
 import uk.ac.abdn.foodsafety.wirelesstag.SignInRequest;
 import uk.ac.abdn.foodsafety.wirelesstag.GetEventRawDataRequest;
 import uk.ac.abdn.foodsafety.wirelesstag.GetEventRawDataResponse;
@@ -57,18 +60,49 @@ class WirelessTagClient {
     /**
      * Performs a POST to "/ethLogs.asmx/GetEventRawData", retrieving
      * event data from a specified sensor.
-     * @param sensor_id The ID of the sensor to get data for, e.g. 3.
+     * @param sensorId The ID of the sensor to get data for, e.g. 3.
      */
-    public void getEventRawData(final int sensor_id) {
+    public void getEventRawData(final int sensorId) {
         try {
             final HttpsURLConnection urlConnection = 
               this.post(
                   "/ethLogs.asmx/GetEventRawData",
-                  gson.toJson(new GetEventRawDataRequest(sensor_id)));
+                  gson.toJson(new GetEventRawDataRequest(sensorId)));
             final GetEventRawDataResponse response = 
                     this.parseJsonResponse(
                         urlConnection, 
                         GetEventRawDataResponse.class);
+            //TODO do stuff
+            System.out.println(response.toString());
+          } catch (final IOException e) {
+              throw FoodSafetyException.wirelessTagConnectionFailed(e);
+          }
+    }
+
+    /**
+     * Performs a POST to "/ethLogs.asmx/GetStatsRaw", retrieving
+     * event data from a specified sensor between two dates.
+     * @param sensorId The ID of the sensor to get data for, e.g. 3.
+     * @param fromDate The first date to get data from
+     * @param toDate The last date to get data from - must be after fromDate
+     */
+    public void getStatsRaw(
+            final int sensorId,
+            final LocalDate fromDate,
+            final LocalDate toDate) {
+        assert fromDate.isBefore(toDate) : String.format(
+                "Cannot get data for this period because fromDate %s is not before toDate %s",
+                fromDate,
+                toDate);
+        try {
+            final HttpsURLConnection urlConnection = 
+              this.post(
+                  "/ethLogs.asmx/GetStatsRaw",
+                  gson.toJson(new GetStatsRawRequest(sensorId, fromDate, toDate)));
+            final GetStatsRawResponse response = 
+                    this.parseJsonResponse(
+                        urlConnection, 
+                        GetStatsRawResponse.class);
             //TODO do stuff
             System.out.println(response.toString());
           } catch (final IOException e) {

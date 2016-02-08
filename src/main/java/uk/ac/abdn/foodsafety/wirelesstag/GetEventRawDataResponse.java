@@ -24,7 +24,7 @@ public final class GetEventRawDataResponse {
      */
     public static final class MotionEvent {
         /** Example: "2/8/2016" for Feb 8 2016. 
-          * This is in American style: MM/DD/YYYY */
+          * This is in American style: MM/dd/yyyy */
         private String date;
         
         /** Example: "10:09:40.867". TODO: How to determine time zone? */
