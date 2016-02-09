@@ -12,21 +12,15 @@ import uk.ac.abdn.foodsafety.csparql.FoodSafetyEngine;
  */
 public class Main {
     /**
-     * Proof-of-concept - downloads and prints
-     * an event log for sensor 3.
+     * Proof-of-concept - pushes some data for sensor 3 to a Csparql engine.
      * @param args Not used.
      */
     public static void main(final String[] args) {
-        //Create csparql engine instance
-        new FoodSafetyEngine();
-    }
-    
-    public void doWireless() {
         final WirelessTagClient client = new WirelessTagClient();
-        client.getEventRawData(3);
         client.getStatsRaw(
                 3,
                 LocalDate.of(2016, 1, 28), 
-                LocalDate.of(2016, 1, 29));
+                LocalDate.of(2016, 1, 29),
+                new FoodSafetyEngine());
     }
 }

@@ -12,6 +12,7 @@ import java.time.LocalDate;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import uk.ac.abdn.foodsafety.csparql.FoodSafetyEngine;
 import uk.ac.abdn.foodsafety.wirelesstag.GetStatsRawRequest;
 import uk.ac.abdn.foodsafety.wirelesstag.GetStatsRawResponse;
 import uk.ac.abdn.foodsafety.wirelesstag.SignInRequest;
@@ -89,7 +90,8 @@ class WirelessTagClient {
     public void getStatsRaw(
             final int sensorId,
             final LocalDate fromDate,
-            final LocalDate toDate) {
+            final LocalDate toDate,
+            final FoodSafetyEngine engine) {
         assert fromDate.isBefore(toDate) : String.format(
                 "Cannot get data for this period because fromDate %s is not before toDate %s",
                 fromDate,
@@ -103,8 +105,7 @@ class WirelessTagClient {
                     this.parseJsonResponse(
                         urlConnection, 
                         GetStatsRawResponse.class);
-            //TODO do stuff
-            System.out.println(response.toString());
+            response.addReadingsTo(engine);
           } catch (final IOException e) {
               throw FoodSafetyException.wirelessTagConnectionFailed(e);
           }
