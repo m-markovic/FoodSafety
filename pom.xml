@@ -7,6 +7,15 @@
   <packaging>jar</packaging>
   <version>0.1.0</version>
 
+  <repositories>
+    <repository>
+      <id>streamreasoning_repository</id>
+      <name>streamreasoning repository</name>
+      <url>http://streamreasoning.org/maven/</url>
+      <layout>default</layout>
+    </repository>
+  </repositories>
+
   <build>
     <finalName>foodsafety</finalName>
     <plugins>
@@ -52,6 +61,12 @@
   </build>
 
   <dependencies>
+    <!--  CSPARQL: Streaming RDF platform -->
+    <dependency>
+      <groupId>eu.larkc.csparql</groupId>
+      <artifactId>csparql-core</artifactId>
+      <version>0.9.6</version>
+    </dependency>    
     <!--  Gson: Java to Json conversion -->
     <dependency>
       <groupId>com.google.code.gson</groupId>
