@@ -17,13 +17,16 @@ public class Main {
      * @param args Not used.
      */
     public static void main(final String[] args) {
+        //Create csparql engine instance
+        new FoodSafetyEngine();
+    }
+    
+    public void doWireless() {
         final WirelessTagClient client = new WirelessTagClient();
         client.getEventRawData(3);
         client.getStatsRaw(
                 3,
                 LocalDate.of(2016, 1, 28), 
                 LocalDate.of(2016, 1, 29));
-        //Create csparql engine instance
-        new FoodSafetyEngine();
     }
 }

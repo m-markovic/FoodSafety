@@ -10,7 +10,7 @@ import java.net.URL;
  * The only Exception expected from the FoodSafety application.
  */
 @SuppressWarnings("serial")
-final class FoodSafetyException extends RuntimeException {
+public final class FoodSafetyException extends RuntimeException {
     /**
      * Constructor.
      * @param msg The error message
@@ -26,7 +26,7 @@ final class FoodSafetyException extends RuntimeException {
      * @param e IOException caught while communicating with mywirelesstag.com
      * @return An FoodSafetyException representing the known facts about the situation
      */
-    static FoodSafetyException wirelessTagConnectionFailed(final IOException e) {
+    public static FoodSafetyException wirelessTagConnectionFailed(final IOException e) {
         return new FoodSafetyException("Failed to connect to mywirelesstag.com", e);
     }
 
@@ -35,7 +35,7 @@ final class FoodSafetyException extends RuntimeException {
      * @param url The url that returned the response
      * @return An FoodSafetyException representing the known facts about the situation
      */
-    static FoodSafetyException wirelessTagSentError(
+    public static FoodSafetyException wirelessTagSentError(
             final int responseCode, 
             final URL url) {
         return new FoodSafetyException(
@@ -44,5 +44,10 @@ final class FoodSafetyException extends RuntimeException {
                     responseCode, 
                     url), 
                 null);
+    }
+    
+    public static FoodSafetyException internalError(
+            final Exception e) {
+        return new FoodSafetyException("Internal FoodSafety appliction error", e);
     }
 }
