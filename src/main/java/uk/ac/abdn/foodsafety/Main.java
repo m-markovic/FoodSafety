@@ -12,15 +12,20 @@ import uk.ac.abdn.foodsafety.csparql.FoodSafetyEngine;
  */
 public class Main {
     /**
-     * Proof-of-concept - pushes some data for sensor 3 to a Csparql engine.
-     * @param args Not used.
+     * Creates a Csparql engine and provides it with downloaded readings
+     * from wireless tags.
+     * The readings will contain temperature and humidity from fromDate to toDate
+     * for the given sensors
+     * @param args fromDate toDate sensorId sensorId ...
      */
     public static void main(final String[] args) {
+        assert args.length > 2 : "Parameter example: 2016-01-28 2016-01-29 2 3 4\nParameters are fromDate toDate sensorId sensorId ...";
+        final LocalDate fromDate = LocalDate.parse(args[0]);
+        final LocalDate toDate = LocalDate.parse(args[1]);
         final WirelessTagClient client = new WirelessTagClient();
-        client.getStatsRaw(
-                3,
-                LocalDate.of(2016, 1, 28), 
-                LocalDate.of(2016, 1, 29),
-                new FoodSafetyEngine());
+        final FoodSafetyEngine engine = new FoodSafetyEngine();
+        for (int i = 2; i < args.length; i++) {
+            client.getStatsRaw(Integer.parseInt(args[i]), fromDate, toDate, engine);
+        }
     }
 }
