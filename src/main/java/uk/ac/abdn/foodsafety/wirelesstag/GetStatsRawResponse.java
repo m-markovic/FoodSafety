@@ -64,7 +64,7 @@ public final class GetStatsRawResponse {
                                 Integer.parseInt(mdy[0]), 
                                 Integer.parseInt(mdy[1])), 
                         LocalTime.ofSecondOfDay(tods.get(i)));
-                final ZonedDateTime zdt = localDateTime.atZone(ZoneId.of("America/Los_Angeles"));
+                final ZonedDateTime zdt = localDateTime.atZone(ZoneId.of("Europe/London"));
                 engine.addReading(
                         zdt.toInstant().toEpochMilli(), 
                         Double.toString(temps.get(i)), 

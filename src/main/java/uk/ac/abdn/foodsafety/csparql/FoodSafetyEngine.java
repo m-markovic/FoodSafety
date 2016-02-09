@@ -9,8 +9,8 @@ import java.util.UUID;
 import uk.ac.abdn.foodsafety.FoodSafetyException;
 import eu.larkc.csparql.cep.api.RdfQuadruple;
 import eu.larkc.csparql.cep.api.RdfStream;
+import eu.larkc.csparql.core.engine.ConsoleFormatter;
 import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
-import eu.larkc.csparql.core.engine.CsparqlQueryResultProxy;
 
 /**
  * 
@@ -21,7 +21,6 @@ import eu.larkc.csparql.core.engine.CsparqlQueryResultProxy;
  */
 public final class FoodSafetyEngine extends CsparqlEngineImpl {
     private final RdfStream wirelessStream = new RdfStream("http://foodsafety/wirelessTag");
-    private final CsparqlQueryResultProxy wirelessQueryProxy;
     
     /**
      * Initializes this engine.
@@ -30,8 +29,8 @@ public final class FoodSafetyEngine extends CsparqlEngineImpl {
         this.initialize();
         this.registerStream(wirelessStream);
         String text = new Scanner(FoodSafetyEngine.class.getResourceAsStream("/wireless.sparql.txt"), "UTF-8").useDelimiter("\\A").next();
-        try {
-            wirelessQueryProxy = this.registerQuery(text, false);
+        try { //Register query and add a System.out observer
+            this.registerQuery(text, false).addObserver(new ConsoleFormatter());
         } catch (final ParseException e) {
             throw FoodSafetyException.internalError(e);
         }
