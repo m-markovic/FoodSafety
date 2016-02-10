@@ -1,7 +1,5 @@
 package uk.ac.abdn.foodsafety;
 
-import java.time.LocalDate;
-
 import uk.ac.abdn.foodsafety.csparql.FoodSafetyEngine;
 
 /**
@@ -19,13 +17,11 @@ public class Main {
      * @param args fromDate toDate sensorId sensorId ...
      */
     public static void main(final String[] args) {
-        assert args.length > 2 : "Parameter example: 2016-01-28 2016-01-29 2 3 4\nParameters are fromDate toDate sensorId sensorId ...";
-        final LocalDate fromDate = LocalDate.parse(args[0]);
-        final LocalDate toDate = LocalDate.parse(args[1]);
+        assert args.length > 2 : "Parameter example: 2016-01-28 2016-01-29T15:34:59 1 2 3 4\nParameters are from to sensorId sensorId ...";
+        final DataSlicer dataSlicer = new DataSlicer(args[0], args[1], new FoodSafetyEngine());
         final WirelessTagClient client = new WirelessTagClient();
-        final FoodSafetyEngine engine = new FoodSafetyEngine();
         for (int i = 2; i < args.length; i++) {
-            client.getStatsRaw(Integer.parseInt(args[i]), fromDate, toDate, engine);
+            dataSlicer.add(client, Integer.parseInt(args[i]));
         }
     }
 }
