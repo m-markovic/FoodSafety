@@ -86,6 +86,7 @@ class WirelessTagClient {
      * @param sensorId The ID of the sensor to get data for, e.g. 3.
      * @param fromDate The first date to get data from
      * @param toDate The last date to get data from - must be after fromDate
+     * @param engine Push all readings to this object.
      */
     public void getStatsRaw(
             final int sensorId,

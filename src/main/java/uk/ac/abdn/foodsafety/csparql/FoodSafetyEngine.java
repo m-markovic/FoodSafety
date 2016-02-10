@@ -36,6 +36,12 @@ public final class FoodSafetyEngine extends CsparqlEngineImpl {
         }
     }
     
+    /**
+     * Puts seven RdfQuadruples to this engine, based on one temperature/humidity reading from a wireless tag.
+     * @param timestamp milliseconds since the epoch, e.g. 1455056378070
+     * @param temperature reading, e.g. "19.946533012390137"
+     * @param humidity reading, e.g. "24.85736083984375"
+     */
     public void addReading(final long timestamp, final String temperature, final String humidity) {
         final Date d = new Date (timestamp);      
         final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");

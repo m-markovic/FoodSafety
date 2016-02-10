@@ -18,6 +18,10 @@ public final class GetStatsRawResponse {
     /** This operation returns a sequence of readings for raw temperature/battery/humidity data. */
     private List<TemperatureBatteryHumidityReading> d;
 
+    /**
+     * Pushes all readings to the given engine.
+     * @param engine A collector of readings.
+     */
     public void addReadingsTo(final FoodSafetyEngine engine) {
         for (final TemperatureBatteryHumidityReading day : d) {
             day.addTo(engine);
@@ -55,6 +59,10 @@ public final class GetStatsRawResponse {
             return String.join("\n", date, tods.toString(), temps.toString(), caps.toString());
         }
 
+        /**
+         * Pushes all readings to the given engine.
+         * @param engine A collector of readings.
+         */
         public void addTo(final FoodSafetyEngine engine) {
             for (int i = 0; i < tods.size(); i++) {
                 final String[] mdy = date.split("/");
