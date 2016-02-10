@@ -4,10 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.stream.Stream;
 
-import uk.ac.abdn.foodsafety.csparql.FoodSafetyEngine;
+import uk.ac.abdn.foodsafety.sensordata.TemperatureHumidityReading;
 
 /**
  * A GetStatsRawResponse represents the data sent in a
@@ -15,30 +15,22 @@ import uk.ac.abdn.foodsafety.csparql.FoodSafetyEngine;
  * It is intended to be deserialized from JSON by GSON.
  */
 public final class GetStatsRawResponse {
+    private static final ZoneId ZONE_UK = ZoneId.of("Europe/London");
+    
     /** This operation returns a sequence of readings for raw temperature/battery/humidity data. */
-    private List<TemperatureBatteryHumidityReading> d;
+    private List<SingleDayTemperatureHumidityReadings> d;
+
+    public Stream<TemperatureHumidityReading> stream() {
+        return d.stream()
+                .map((day) -> day.stream())
+                .reduce(Stream.empty(), Stream::concat);
+    }
 
     /**
-     * Pushes all readings to the given engine.
-     * @param engine A collector of readings.
-     */
-    public void addReadingsTo(final FoodSafetyEngine engine) {
-        for (final TemperatureBatteryHumidityReading day : d) {
-            day.addTo(engine);
-        };
-    }
-    /**
-     * Temporary implementation for inspecting the responses.
-     */
-    public String toString() {
-        return d.toString();
-    }
-    
-    /**
-     * A TemperatureBatteryHumidityReading contains three sequences of readings
+     * A SingleDayTemperatureHumidityReadings contains three sequences of readings
      * for a given date.
      */
-    public static final class TemperatureBatteryHumidityReading {
+    public static final class SingleDayTemperatureHumidityReadings {
         /** Example: "2/8/2016" for Feb 8 2016. 
           * This is in American style: MM/dd/yyyy */
         private String date;
@@ -52,34 +44,21 @@ public final class GetStatsRawResponse {
         /** Humidity. Example: 24.85736083984375 */
         private List<Double> caps;
 
-        /**
-         * Temporary implementation for inspecting the responses.
-         */
-        public String toString() {
-            return String.join("\n", date, tods.toString(), temps.toString(), caps.toString());
-        }
-
-        /**
-         * Pushes all readings to the given engine.
-         * @param engine A collector of readings.
-         */
-        public void addTo(final FoodSafetyEngine engine) {
+        private Stream<TemperatureHumidityReading> stream() {
+            final String[] mdy = date.split("/");
+            final LocalDate date = LocalDate.of(
+                            Integer.parseInt(mdy[2]), 
+                            Integer.parseInt(mdy[0]), 
+                            Integer.parseInt(mdy[1]));
+            final Stream.Builder<TemperatureHumidityReading> result = Stream.builder();
             for (int i = 0; i < tods.size(); i++) {
-                final String[] mdy = date.split("/");
-                final LocalDateTime localDateTime = LocalDateTime.of(
-                        LocalDate.of(
-                                Integer.parseInt(mdy[2]), 
-                                Integer.parseInt(mdy[0]), 
-                                Integer.parseInt(mdy[1])), 
-                        LocalTime.ofSecondOfDay(tods.get(i)));
-                final ZonedDateTime zdt = localDateTime.atZone(ZoneId.of("Europe/London"));
-                engine.addReading(
-                        zdt.toInstant().toEpochMilli(), 
-                        Double.toString(temps.get(i)), 
-                        Double.toString(caps.get(i)));
+                final LocalDateTime localDateTime = LocalDateTime.of(date, LocalTime.ofSecondOfDay(tods.get(i)));
+                result.accept(new TemperatureHumidityReading(
+                        localDateTime.atZone(ZONE_UK),
+                        temps.get(i),
+                        caps.get(i)));
             }
+            return result.build();
         }
-       
-    };
-
+    }
 }

@@ -9,10 +9,11 @@ import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.stream.Stream;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import uk.ac.abdn.foodsafety.csparql.FoodSafetyEngine;
+import uk.ac.abdn.foodsafety.sensordata.TemperatureHumidityReading;
 import uk.ac.abdn.foodsafety.wirelesstag.GetStatsRawRequest;
 import uk.ac.abdn.foodsafety.wirelesstag.GetStatsRawResponse;
 import uk.ac.abdn.foodsafety.wirelesstag.SignInRequest;
@@ -86,14 +87,13 @@ class WirelessTagClient {
      * @param sensorId The ID of the sensor to get data for, e.g. 3.
      * @param fromDate The first date to get data from
      * @param toDate The last date to get data from - must be after fromDate
-     * @param engine Push all readings to this object.
+     * @return a Java Stream of sensor readings
      */
-    public void getStatsRaw(
+    public Stream<TemperatureHumidityReading> getStatsRaw(
             final int sensorId,
             final LocalDate fromDate,
-            final LocalDate toDate,
-            final FoodSafetyEngine engine) {
-        assert fromDate.isBefore(toDate) : String.format(
+            final LocalDate toDate) {
+        assert fromDate.isBefore(toDate) || fromDate.isEqual(toDate) : String.format(
                 "Cannot get data for this period because fromDate %s is not before toDate %s",
                 fromDate,
                 toDate);
@@ -106,7 +106,7 @@ class WirelessTagClient {
                     this.parseJsonResponse(
                         urlConnection, 
                         GetStatsRawResponse.class);
-            response.addReadingsTo(engine);
+            return response.stream();
           } catch (final IOException e) {
               throw FoodSafetyException.wirelessTagConnectionFailed(e);
           }

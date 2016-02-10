@@ -1,12 +1,13 @@
 package uk.ac.abdn.foodsafety.csparql;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import uk.ac.abdn.foodsafety.FoodSafetyException;
+import uk.ac.abdn.foodsafety.sensordata.TemperatureHumidityReading;
 import eu.larkc.csparql.cep.api.RdfQuadruple;
 import eu.larkc.csparql.cep.api.RdfStream;
 import eu.larkc.csparql.core.engine.ConsoleFormatter;
@@ -19,7 +20,9 @@ import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
  * A FoodSafetyEngine is a specific CsparqlEngine with methods
  * and queries for this project.
  */
-public final class FoodSafetyEngine extends CsparqlEngineImpl {
+public final class FoodSafetyEngine
+    extends CsparqlEngineImpl 
+    implements Consumer<TemperatureHumidityReading> {
     private final RdfStream wirelessStream = new RdfStream("http://foodsafety/wirelessTag");
     
     /**
@@ -38,23 +41,20 @@ public final class FoodSafetyEngine extends CsparqlEngineImpl {
     
     /**
      * Puts seven RdfQuadruples to this engine, based on one temperature/humidity reading from a wireless tag.
-     * @param timestamp milliseconds since the epoch, e.g. 1455056378070
-     * @param temperature reading, e.g. "19.946533012390137"
-     * @param humidity reading, e.g. "24.85736083984375"
      */
-    public void addReading(final long timestamp, final String temperature, final String humidity) {
-        final Date d = new Date (timestamp);      
-        final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        final String time = sdf.format(d);
+    @Override
+    public void accept(final TemperatureHumidityReading reading) {
+        final String time = reading.time.format(DateTimeFormatter.ISO_LOCAL_TIME);
+        final long timestamp = reading.time.toInstant().toEpochMilli();
         final String baseUri = "http://foodsafety-onto#";
         UUID random = UUID.randomUUID();
         wirelessStream.put(new RdfQuadruple(baseUri +  "wirelesstag", baseUri + "observes", baseUri + "temperatureObservation/" + random.toString(), timestamp));
         wirelessStream.put(new RdfQuadruple(baseUri +  "temperatureObservation/" + random.toString(), baseUri +  "type", baseUri + "temperatureObservation", timestamp));
-        wirelessStream.put(new RdfQuadruple(baseUri + "temperatureObservation/" + random.toString(), baseUri + "value", temperature, timestamp));
+        wirelessStream.put(new RdfQuadruple(baseUri + "temperatureObservation/" + random.toString(), baseUri + "value", Double.toString(reading.temperature), timestamp));
         wirelessStream.put(new RdfQuadruple(baseUri + "temperatureObservation/" + random.toString(), baseUri + "time", time, timestamp));
         UUID random2 = UUID.randomUUID();
         wirelessStream.put(new RdfQuadruple(baseUri +  "wirelesstag", baseUri + "observes", baseUri + "humidityObservation/" + random2.toString(), timestamp));
-        wirelessStream.put(new RdfQuadruple(baseUri + "humidityObservation/" + random2.toString(), baseUri + "value", temperature, System.currentTimeMillis()));
+        wirelessStream.put(new RdfQuadruple(baseUri + "humidityObservation/" + random2.toString(), baseUri + "value", Double.toString(reading.humidity), timestamp));
         wirelessStream.put(new RdfQuadruple(baseUri +  "humidityObservation/" + random2.toString(), baseUri +  "type", baseUri + "humidityObservation", timestamp));
         wirelessStream.put(new RdfQuadruple(baseUri + "humidityObservation/" + random2.toString(), baseUri + "time", time, timestamp));
     }
