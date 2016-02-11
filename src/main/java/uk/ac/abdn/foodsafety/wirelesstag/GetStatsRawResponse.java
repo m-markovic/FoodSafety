@@ -46,13 +46,13 @@ public final class GetStatsRawResponse {
 
         private Stream<TemperatureHumidityReading> stream() {
             final String[] mdy = date.split("/");
-            final LocalDate date = LocalDate.of(
+            final LocalDate localDate = LocalDate.of(
                             Integer.parseInt(mdy[2]), 
                             Integer.parseInt(mdy[0]), 
                             Integer.parseInt(mdy[1]));
             final Stream.Builder<TemperatureHumidityReading> result = Stream.builder();
             for (int i = 0; i < tods.size(); i++) {
-                final LocalDateTime localDateTime = LocalDateTime.of(date, LocalTime.ofSecondOfDay(tods.get(i)));
+                final LocalDateTime localDateTime = LocalDateTime.of(localDate, LocalTime.ofSecondOfDay(tods.get(i)));
                 result.accept(new TemperatureHumidityReading(
                         localDateTime.atZone(ZONE_UK),
                         temps.get(i),

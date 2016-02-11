@@ -8,6 +8,7 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.util.stream.Stream;
 
@@ -162,10 +163,13 @@ public class WirelessTagClient {
         final HttpsURLConnection urlConnection = 
                 this.createConnection(path);
         urlConnection.setRequestMethod("POST");
-        urlConnection.setRequestProperty("Content-Type", "application/json");
+        urlConnection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
         urlConnection.setRequestProperty("Accept","application/json");
         urlConnection.setDoOutput(true);
-        final OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
+        final OutputStreamWriter writer = 
+                new OutputStreamWriter(
+                        urlConnection.getOutputStream(),
+                        Charset.forName("UTF-8"));
         writer.write(body);
         writer.flush();
         writer.close();
@@ -190,7 +194,10 @@ public class WirelessTagClient {
                     urlConnection.getURL());
         }
         final BufferedReader responseReader = 
-                new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                new BufferedReader(
+                        new InputStreamReader(
+                                urlConnection.getInputStream(),
+                                Charset.forName("UTF-8")));
         final T response = gson.fromJson(responseReader, classOfT);
         responseReader.close();
         return response;
