@@ -7,7 +7,7 @@ import java.util.Scanner;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import uk.ac.abdn.foodsafety.FoodSafetyException;
+import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 import uk.ac.abdn.foodsafety.sensordata.TemperatureHumidityReading;
 import eu.larkc.csparql.cep.api.RdfQuadruple;
 import eu.larkc.csparql.cep.api.RdfStream;

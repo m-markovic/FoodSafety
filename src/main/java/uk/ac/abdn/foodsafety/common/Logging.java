@@ -1,4 +1,4 @@
-package uk.ac.abdn.foodsafety;
+package uk.ac.abdn.foodsafety.common;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

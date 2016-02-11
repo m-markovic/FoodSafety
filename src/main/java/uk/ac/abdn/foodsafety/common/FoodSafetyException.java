@@ -1,4 +1,4 @@
-package uk.ac.abdn.foodsafety;
+package uk.ac.abdn.foodsafety.common;
 
 import java.io.IOException;
 import java.net.URL;

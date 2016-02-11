@@ -1,4 +1,4 @@
-package uk.ac.abdn.foodsafety;
+package uk.ac.abdn.foodsafety.wirelesstag;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,12 +13,8 @@ import java.util.stream.Stream;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 import uk.ac.abdn.foodsafety.sensordata.TemperatureHumidityReading;
-import uk.ac.abdn.foodsafety.wirelesstag.GetStatsRawRequest;
-import uk.ac.abdn.foodsafety.wirelesstag.GetStatsRawResponse;
-import uk.ac.abdn.foodsafety.wirelesstag.SignInRequest;
-import uk.ac.abdn.foodsafety.wirelesstag.GetEventRawDataRequest;
-import uk.ac.abdn.foodsafety.wirelesstag.GetEventRawDataResponse;
 
 import com.google.gson.Gson;
 
@@ -28,7 +24,7 @@ import com.google.gson.Gson;
  * Credentials must be given in an environment variable,
  * @see uk.ac.abdn.foodsafety.wirelesstag.SignInRequest
  */
-class WirelessTagClient {
+public class WirelessTagClient {
     /** Base URL for all requests made */
     private static final String BASE_URL = "https://www.mytaglist.com";
 
@@ -42,7 +38,7 @@ class WirelessTagClient {
      * Signs in to mywirelesstag.com if this has not been
      * done previously by another instance.
      */
-    WirelessTagClient() {
+    public WirelessTagClient() {
         WirelessTagClient.ensureSignedIn(this);
     }
 

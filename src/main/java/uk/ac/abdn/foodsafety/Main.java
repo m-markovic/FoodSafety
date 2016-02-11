@@ -1,6 +1,7 @@
 package uk.ac.abdn.foodsafety;
 
 import uk.ac.abdn.foodsafety.csparql.FoodSafetyEngine;
+import uk.ac.abdn.foodsafety.wirelesstag.WirelessTagClient;
 
 /**
  * 
