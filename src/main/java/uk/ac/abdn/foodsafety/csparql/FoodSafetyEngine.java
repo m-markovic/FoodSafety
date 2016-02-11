@@ -1,5 +1,6 @@
 package uk.ac.abdn.foodsafety.csparql;
 
+import java.io.InputStream;
 import java.text.ParseException;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -31,12 +32,34 @@ public final class FoodSafetyEngine
     public FoodSafetyEngine() {
         this.initialize();
         this.registerStream(wirelessStream);
-        String text = new Scanner(FoodSafetyEngine.class.getResourceAsStream("/wireless.sparql.txt"), "UTF-8").useDelimiter("\\A").next();
-        try { //Register query and add a System.out observer
+        this.registerQueryFromResources("/wireless.sparql.txt");
+    }
+    
+    /**
+     * Registers a SPARQL query read from /src/main/resources
+     * The query must be encoded in UTF-8.
+     * A ConsoleFormatter will be added as observer to the query.
+     * @param path The path to the query, relative to FoodSafety/src/main/resources,
+     * example: "/myquery.sparql.txt"
+     */
+    private void registerQueryFromResources(final String path) {
+        //Get InputStream for the file
+        final InputStream resourceAsStream = FoodSafetyEngine.class.getResourceAsStream(path);
+        Scanner scanner = null;
+        try {
+            //Read entire file as UTF-8 into String
+            scanner = new Scanner(resourceAsStream, "UTF-8");
+            final String text = scanner.useDelimiter("\\A").next();
+            //Register query and add observer
             this.registerQuery(text, false).addObserver(new ConsoleFormatter());
         } catch (final ParseException e) {
             throw FoodSafetyException.internalError(e);
+        } finally { //Close Scanner
+            if (scanner != null) {
+                scanner.close();
+            }
         }
+        
     }
     
     /**
