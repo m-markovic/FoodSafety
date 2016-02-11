@@ -69,4 +69,13 @@ public final class FoodSafetyException extends RuntimeException {
             final Exception e) {
         return new FoodSafetyException(String.format("Malformed input: '%s'", userInput), e);
     }
+    
+    /**
+     * Constructs an Exception to throw when some file IO related to the meat probe failed.
+     * @param e Exception caught during file IO
+     * @return The wrapping Exception
+     */
+    public static FoodSafetyException meatProbeIOfailed(final IOException e) {
+        return new FoodSafetyException("Failure reading a meat probe file", e);
+    }
 }
