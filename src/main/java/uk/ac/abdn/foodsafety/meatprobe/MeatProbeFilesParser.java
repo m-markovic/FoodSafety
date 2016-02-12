@@ -9,6 +9,12 @@ import java.util.stream.Stream;
 
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 
+/**
+ * 
+ * @author nhc
+ *
+ * Parser for an entire directory of meat probe files.
+ */
 public final class MeatProbeFilesParser {
     /** Charset used for decoding all meat probe files */
     private static final Charset UTF8 = Charset.forName("UTF-8");
@@ -56,7 +62,9 @@ public final class MeatProbeFilesParser {
      */
     private static Stream<String> readAllLines(final Path path) {
         try {
-            return Files.readAllLines(path, UTF8).stream();
+            return Files.isDirectory(path) 
+                    ? Stream.empty() 
+                    : Files.readAllLines(path, UTF8).stream();
         } catch (final IOException e) {
             throw FoodSafetyException.meatProbeIOfailed(e);
         }

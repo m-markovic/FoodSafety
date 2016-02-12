@@ -45,7 +45,7 @@ final class DataSlicer {
         this.fromDateTime = DataSlicer.parse(from, LocalTime.MIN);
         this.toDateTime = DataSlicer.parse(to, LocalTime.MAX);
     }
-    
+
     void add(final WirelessTagClient client, final int sensorId) {
         //Get data for the dates (the API cannot slice on time of day
         client.getStatsRaw(
