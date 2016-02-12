@@ -5,9 +5,14 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.stream.Stream;
 
+import uk.ac.abdn.foodsafety.common.Constants;
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
+import uk.ac.abdn.foodsafety.sensordata.MeatProbeReading;
 
 /**
  * 
@@ -35,7 +40,7 @@ public final class MeatProbeFilesParser {
      * Parses all files in the directory containing the meat probe files
      * @return A Stream containing every meat probe reading
      */
-    public Stream<String[]> parse() {
+    public Stream<MeatProbeReading> parse() {
         try {
             return 
                     //For each file in the given directory
@@ -49,9 +54,34 @@ public final class MeatProbeFilesParser {
                     //Split remaining lines by the commas
                     .map(line -> line.split(","))
                     //Skip any line that did not have exactly 2 commas (i.e. 3 parts)
-                    .filter(parts -> parts.length == 3);
+                    .filter(parts -> parts.length == 3)
+                    //Parse the line into a MeatProbeReading (or null if not parseable)
+                    .map(MeatProbeFilesParser::parseSingleReading)
+                    //Remove null values
+                    .filter(reading -> reading != null);
         } catch (final IOException e) {
             throw FoodSafetyException.meatProbeIOfailed(e);
+        }
+    }
+    
+    /**
+     * Parses a String array into a fully typed single reading.
+     * @param triple A String[] of length 3, e.g. {"42", "15/12/2015 02:16:14", "37.0"}
+     * @return A parsed reading, or null if the data could not be parsed
+     */
+    private static MeatProbeReading parseSingleReading(final String[] triple) {
+        try {
+            return new MeatProbeReading(
+                    Integer.parseInt(triple[0]), 
+                    LocalDateTime.parse(
+                            triple[1], 
+                            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
+                        .atZone(Constants.UK), 
+                    Double.parseDouble(triple[2]));
+        } catch (final NumberFormatException e) {
+            return null;
+        } catch (final DateTimeParseException e) {
+            return null;
         }
     }
     

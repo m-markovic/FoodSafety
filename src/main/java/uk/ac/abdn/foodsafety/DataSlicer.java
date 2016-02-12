@@ -3,11 +3,11 @@ package uk.ac.abdn.foodsafety;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.function.Consumer;
 
+import uk.ac.abdn.foodsafety.common.Constants;
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 import uk.ac.abdn.foodsafety.sensordata.TemperatureHumidityReading;
 import uk.ac.abdn.foodsafety.wirelesstag.WirelessTagClient;
@@ -20,8 +20,6 @@ import uk.ac.abdn.foodsafety.wirelesstag.WirelessTagClient;
  * these on to a FoodSafetyEngine.
  */
 final class DataSlicer {
-    private static final ZoneId ZONE_UK = ZoneId.of("Europe/London");
-
     /** Provide sliced sensor data to this object */
     private final Consumer<? super TemperatureHumidityReading> dataConsumer;
     
@@ -67,10 +65,10 @@ final class DataSlicer {
      */
     private static ZonedDateTime parse(final String userInput, final LocalTime defaultTime) {
         try {
-            return LocalDateTime.parse(userInput).atZone(ZONE_UK);
+            return LocalDateTime.parse(userInput).atZone(Constants.UK);
         } catch (final DateTimeParseException eLDT) {
             try {
-                return LocalDate.parse(userInput).atTime(defaultTime).atZone(ZONE_UK);
+                return LocalDate.parse(userInput).atTime(defaultTime).atZone(Constants.UK);
             } catch (final DateTimeParseException e) {
                 throw FoodSafetyException.userInputError(userInput, e);
             }

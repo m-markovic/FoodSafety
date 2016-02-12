@@ -3,10 +3,10 @@ package uk.ac.abdn.foodsafety.wirelesstag;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Stream;
 
+import uk.ac.abdn.foodsafety.common.Constants;
 import uk.ac.abdn.foodsafety.sensordata.TemperatureHumidityReading;
 
 /**
@@ -15,8 +15,6 @@ import uk.ac.abdn.foodsafety.sensordata.TemperatureHumidityReading;
  * It is intended to be deserialized from JSON by GSON.
  */
 public final class GetStatsRawResponse {
-    private static final ZoneId ZONE_UK = ZoneId.of("Europe/London");
-    
     /** This operation returns a sequence of readings for raw temperature/battery/humidity data. */
     private List<SingleDayTemperatureHumidityReadings> d;
 
@@ -54,7 +52,7 @@ public final class GetStatsRawResponse {
             for (int i = 0; i < tods.size(); i++) {
                 final LocalDateTime localDateTime = LocalDateTime.of(localDate, LocalTime.ofSecondOfDay(tods.get(i)));
                 result.accept(new TemperatureHumidityReading(
-                        localDateTime.atZone(ZONE_UK),
+                        localDateTime.atZone(Constants.UK),
                         temps.get(i),
                         caps.get(i)));
             }
