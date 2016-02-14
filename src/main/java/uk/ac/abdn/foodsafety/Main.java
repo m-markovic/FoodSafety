@@ -18,8 +18,13 @@ public class Main {
      * @param args fromDate toDate sensorId sensorId ...
      */
     public static void main(final String[] args) {
+        final FoodSafetyEngine engine = new FoodSafetyEngine();
+        final DataSlicer dataSlicer = new DataSlicer(
+                args[0], args[1], 
+                engine.temperatureHumidityConsumer(),
+                engine.meatProbeConsumer());
+        //TODO: Add parameter for meat probe directory
         assert args.length > 2 : "Parameter example: 2016-01-28 2016-01-29T15:34:59 1 2 3 4\nParameters are from to sensorId sensorId ...";
-        final DataSlicer dataSlicer = new DataSlicer(args[0], args[1], new FoodSafetyEngine());
         final WirelessTagClient client = new WirelessTagClient();
         for (int i = 2; i < args.length; i++) {
             dataSlicer.add(client, Integer.parseInt(args[i]));

@@ -8,6 +8,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
+import uk.ac.abdn.foodsafety.sensordata.MeatProbeReading;
 import uk.ac.abdn.foodsafety.sensordata.TemperatureHumidityReading;
 import eu.larkc.csparql.cep.api.RdfQuadruple;
 import eu.larkc.csparql.cep.api.RdfStream;
@@ -22,8 +23,7 @@ import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
  * and queries for this project.
  */
 public final class FoodSafetyEngine
-    extends CsparqlEngineImpl 
-    implements Consumer<TemperatureHumidityReading> {
+    extends CsparqlEngineImpl {
     private final RdfStream wirelessStream = new RdfStream("http://foodsafety/wirelessTag");
     
     /**
@@ -65,7 +65,6 @@ public final class FoodSafetyEngine
     /**
      * Puts seven RdfQuadruples to this engine, based on one temperature/humidity reading from a wireless tag.
      */
-    @Override
     public void accept(final TemperatureHumidityReading reading) {
         final String time = reading.time.format(DateTimeFormatter.ISO_LOCAL_TIME);
         final long timestamp = reading.time.toInstant().toEpochMilli();
@@ -80,5 +79,17 @@ public final class FoodSafetyEngine
         wirelessStream.put(new RdfQuadruple(baseUri + "humidityObservation/" + random2.toString(), baseUri + "value", Double.toString(reading.humidity), timestamp));
         wirelessStream.put(new RdfQuadruple(baseUri +  "humidityObservation/" + random2.toString(), baseUri +  "type", baseUri + "humidityObservation", timestamp));
         wirelessStream.put(new RdfQuadruple(baseUri + "humidityObservation/" + random2.toString(), baseUri + "time", time, timestamp));
+    }
+
+    public Consumer<TemperatureHumidityReading> temperatureHumidityConsumer() {
+        return reading -> this.accept(reading);
+    }
+
+    public Consumer<MeatProbeReading> meatProbeConsumer() {
+        return reading -> this.accept(reading);
+    }
+
+    public void accept(final MeatProbeReading reading) {
+        //TODO
     }
 }

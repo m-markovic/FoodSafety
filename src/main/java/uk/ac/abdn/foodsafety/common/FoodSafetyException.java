@@ -78,4 +78,13 @@ public final class FoodSafetyException extends RuntimeException {
     public static FoodSafetyException meatProbeIOfailed(final IOException e) {
         return new FoodSafetyException("Failure reading a meat probe file", e);
     }
+
+    /**
+     * Constructs an Exception to throw when an internal error happened
+     * @param msg The error message
+     * @return The constructed Exception
+     */
+    public static FoodSafetyException internalError(final String msg) {
+        return new FoodSafetyException(msg, null);
+    }
 }
