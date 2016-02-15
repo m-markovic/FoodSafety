@@ -25,14 +25,17 @@ import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
 public final class FoodSafetyEngine
     extends CsparqlEngineImpl {
     private final RdfStream wirelessStream = new RdfStream("http://foodsafety/wirelessTag");
+    private final RdfStream meatProbeStream = new RdfStream("http://foodsafety/meatprobe");
     
     /**
      * Initializes this engine.
      */
     public FoodSafetyEngine() {
         this.initialize();
-        this.registerStream(wirelessStream);
+        this.registerStream(this.wirelessStream);
+        this.registerStream(this.meatProbeStream);
         this.registerQueryFromResources("/wireless.sparql.txt");
+        this.registerQueryFromResources("/meatprobe.sparql.txt");
     }
     
     /**
@@ -81,6 +84,17 @@ public final class FoodSafetyEngine
         wirelessStream.put(new RdfQuadruple(baseUri + "humidityObservation/" + random2.toString(), baseUri + "time", time, timestamp));
     }
 
+    /**
+     * Puts three RdfQuadruples to this engine, based on one meat probe reading.
+     */
+    public void accept(final MeatProbeReading reading) {
+        final String baseUri = "http://foodsafety-onto#";
+        final long timestamp = reading.time.toInstant().toEpochMilli();
+        meatProbeStream.put(new RdfQuadruple(baseUri +  "meatProbe", baseUri + "observes", baseUri + "observation" + reading.id, timestamp));
+        meatProbeStream.put(new RdfQuadruple(baseUri + "observation" + reading.id, baseUri + "value", Double.toString(reading.temperature), timestamp));
+        meatProbeStream.put(new RdfQuadruple(baseUri + "observation" + reading.id, baseUri + "time", reading.time.format(DateTimeFormatter.ISO_DATE_TIME), timestamp));
+    }
+
     public Consumer<TemperatureHumidityReading> temperatureHumidityConsumer() {
         return reading -> this.accept(reading);
     }
@@ -89,7 +103,4 @@ public final class FoodSafetyEngine
         return reading -> this.accept(reading);
     }
 
-    public void accept(final MeatProbeReading reading) {
-        //TODO
-    }
 }

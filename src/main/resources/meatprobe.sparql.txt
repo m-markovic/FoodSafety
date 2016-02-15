@@ -1,0 +1,10 @@
+REGISTER QUERY noreasoning AS
+PREFIX fs:<http://foodsafety-onto#>
+SELECT  ?value
+FROM STREAM <http://foodsafety/meatprobe> [RANGE 180s STEP 5s]
+WHERE {
+  fs:meatProbe fs:observes ?obs.
+  ?obs fs:value ?value.
+  ?obs fs:time ?time
+}
+ORDER BY DESC(?time)

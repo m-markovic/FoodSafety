@@ -1,0 +1,6 @@
+{
+  "from": "2013-01-29T15:30:00", 
+  "to": "2017-01-29T15:40:00", 
+  "meatProbeDir": "src/test/resources/meatprobefiles/", 
+  "wirelessTags": []
+}
