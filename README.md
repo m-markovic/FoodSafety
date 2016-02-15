@@ -15,14 +15,9 @@ mvn eclipse:eclipse
 ```
 mvn package
 export WTCRED="me@myemail.com mypassword" # credentials for wirelesstag.net - NO space in the password
-java -ea -jar target/foodsafety-jar-with-dependencies.jar 2016-01-29T15:30:00 2016-01-29T15:39:56 2 3 4
+echo {\"from\": \"2016-01-29T15:30:00\", \"to\": \"2016-01-29T15:40:00\", \"meatProbeDir\": \"./mydata/\", \"wirelessTags\": [2,3]} > input.json
+java -ea -jar target/foodsafety-jar-with-dependencies.jar < input.json
 ```
-
-The input parameters are:
-  * ```from```
-  * ```to```
-  * any number of sensor IDs
-The two first parameters must be in ISO format, either as a date (2016-01-28) or a datetime (2016-01-29T15:39:56).
 
 The application will download temperature and humidity data for the sensor in the period from ```from``` to ```to```. These will be fed to a CSPARQL engine, and one simple query will continually be reporting to ```System.out```. 
 
