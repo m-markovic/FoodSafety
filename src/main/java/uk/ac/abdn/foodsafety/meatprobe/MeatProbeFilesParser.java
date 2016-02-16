@@ -22,7 +22,7 @@ import uk.ac.abdn.foodsafety.sensordata.MeatProbeReading;
  */
 public final class MeatProbeFilesParser {
     /** Charset used for decoding all meat probe files */
-    private static final Charset UTF8 = Charset.forName("UTF-8");
+    private static final Charset ISO88591 = Charset.forName("ISO-8859-1");
     
     /** The directory containing the meat probe files */
     private Path dir_path;
@@ -50,7 +50,7 @@ public final class MeatProbeFilesParser {
                     //Concatenate the lines of all the files
                     .reduce(Stream.empty(), Stream::concat)
                     //Remove the header lines
-                    .filter(line -> !line.contains("MeatProbe"))
+                    .filter(line -> !line.contains("Temperature"))
                     //Split remaining lines by the commas
                     .map(line -> line.split(","))
                     //Skip any line that did not have exactly 2 commas (i.e. 3 parts)
@@ -94,7 +94,7 @@ public final class MeatProbeFilesParser {
         try {
             return Files.isDirectory(path) 
                     ? Stream.empty() 
-                    : Files.readAllLines(path, UTF8).stream();
+                    : Files.readAllLines(path, ISO88591).stream();
         } catch (final IOException e) {
             throw FoodSafetyException.meatProbeIOfailed(e);
         }
