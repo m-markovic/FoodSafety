@@ -2,8 +2,6 @@ package uk.ac.abdn.foodsafety.csparql;
 
 import java.io.InputStream;
 import java.text.ParseException;
-import java.time.Instant;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.util.UUID;
@@ -27,6 +25,7 @@ import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
 public final class FoodSafetyEngine
     extends CsparqlEngineImpl {
     private final RdfStream rdfStream = new RdfStream("http://foodsafety/parsed");
+    private final FoodSafetyResultFormatter formatter = new FoodSafetyResultFormatter();
     private int quadruples = 0;
     private int readings = 0;
     
@@ -37,6 +36,14 @@ public final class FoodSafetyEngine
         this.initialize();
         this.registerStream(this.rdfStream);
         this.registerQueryFromResources("/meatprobe.sparql.txt");
+    }
+    
+    /**
+     * Call this once all streams have been processed.
+     * Currently dumps the internal Jena model.
+     */
+    public void done() {
+        this.formatter.dump();
     }
     
     /**
@@ -55,7 +62,7 @@ public final class FoodSafetyEngine
             scanner = new Scanner(resourceAsStream, "UTF-8");
             final String text = scanner.useDelimiter("\\A").next();
             //Register query and add observer
-            this.registerQuery(text, false).addObserver(new FoodSafetyResultFormatter());
+            this.registerQuery(text, false).addObserver(formatter);
         } catch (final ParseException e) {
             throw FoodSafetyException.internalError(e);
         } finally { //Close Scanner
@@ -112,9 +119,6 @@ public final class FoodSafetyEngine
     private void put(final RdfQuadruple q) {
         this.quadruples += 1;
         this.rdfStream.put(q);
-        if (this.quadruples % 100 == 1) {
-            System.out.println(String.format("%s, %d readings, %d quadruples", Instant.ofEpochMilli(q.getTimestamp()).atZone(ZoneId.of("Z")).format(DateTimeFormatter.ISO_INSTANT), this.readings, this.quadruples));
-        }
     }
 
     public Consumer<TemperatureHumidityReading> temperatureHumidityConsumer() {

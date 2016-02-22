@@ -44,6 +44,7 @@ public class Main {
         for (Integer id : input.wirelessTags) {
             dataSlicer.add(client, id);
         }
+        engine.done();
     }
     
     /**
