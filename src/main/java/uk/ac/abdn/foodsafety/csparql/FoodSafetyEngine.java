@@ -14,7 +14,6 @@ import uk.ac.abdn.foodsafety.sensordata.MeatProbeReading;
 import uk.ac.abdn.foodsafety.sensordata.TemperatureHumidityReading;
 import eu.larkc.csparql.cep.api.RdfQuadruple;
 import eu.larkc.csparql.cep.api.RdfStream;
-import eu.larkc.csparql.core.engine.ConsoleFormatter;
 import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
 
 //import eu.larkc.csparql.common.*;
@@ -56,7 +55,7 @@ public final class FoodSafetyEngine
             scanner = new Scanner(resourceAsStream, "UTF-8");
             final String text = scanner.useDelimiter("\\A").next();
             //Register query and add observer
-            this.registerQuery(text, false).addObserver(new ConsoleFormatter());
+            this.registerQuery(text, false).addObserver(new FoodSafetyResultFormatter());
         } catch (final ParseException e) {
             throw FoodSafetyException.internalError(e);
         } finally { //Close Scanner
