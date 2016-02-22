@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  *
  * Utilities for logging. Use pom.xml to control which logging framework to use.
  */
-final class Logging {
+public final class Logging {
     /** All application-specific logging will be associated with this class. */
     private static final Logger logger = LoggerFactory.getLogger(Logging.class);
 
@@ -17,7 +17,7 @@ final class Logging {
      * Log msg on level warn
      * @param msg Message to log
      */
-    static void warn(final String msg) {
+    public static void warn(final String msg) {
       logger.warn(msg);
     }
 
@@ -25,7 +25,7 @@ final class Logging {
      * Log msg on level debug
      * @param msg Message to log
      */
-    static void debug(final String msg) {
+    public static void debug(final String msg) {
         logger.debug(msg);
     }
 }

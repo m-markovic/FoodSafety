@@ -65,7 +65,7 @@
     <dependency>
       <groupId>eu.larkc.csparql</groupId>
       <artifactId>csparql-core</artifactId>
-      <version>0.9.6</version>
+      <version>0.9.7</version>
     </dependency>    
     <!--  Gson: Java to Json conversion -->
     <dependency>

@@ -2,6 +2,8 @@ package uk.ac.abdn.foodsafety.csparql;
 
 import java.io.InputStream;
 import java.text.ParseException;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.util.UUID;
@@ -15,6 +17,7 @@ import eu.larkc.csparql.cep.api.RdfStream;
 import eu.larkc.csparql.core.engine.ConsoleFormatter;
 import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
 
+//import eu.larkc.csparql.common.*;
 /**
  * 
  * @author nhc
@@ -24,17 +27,16 @@ import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
  */
 public final class FoodSafetyEngine
     extends CsparqlEngineImpl {
-    private final RdfStream wirelessStream = new RdfStream("http://foodsafety/wirelessTag");
-    private final RdfStream meatProbeStream = new RdfStream("http://foodsafety/meatprobe");
+    private final RdfStream rdfStream = new RdfStream("http://foodsafety/parsed");
+    private int quadruples = 0;
+    private int readings = 0;
     
     /**
      * Initializes this engine.
      */
     public FoodSafetyEngine() {
         this.initialize();
-        this.registerStream(this.wirelessStream);
-        this.registerStream(this.meatProbeStream);
-        this.registerQueryFromResources("/wireless.sparql.txt");
+        this.registerStream(this.rdfStream);
         this.registerQueryFromResources("/meatprobe.sparql.txt");
     }
     
@@ -73,26 +75,47 @@ public final class FoodSafetyEngine
         final long timestamp = reading.time.toInstant().toEpochMilli();
         final String baseUri = "http://foodsafety-onto#";
         UUID random = UUID.randomUUID();
-        wirelessStream.put(new RdfQuadruple(baseUri +  "wirelesstag", baseUri + "observes", baseUri + "temperatureObservation/" + random.toString(), timestamp));
-        wirelessStream.put(new RdfQuadruple(baseUri +  "temperatureObservation/" + random.toString(), baseUri +  "type", baseUri + "temperatureObservation", timestamp));
-        wirelessStream.put(new RdfQuadruple(baseUri + "temperatureObservation/" + random.toString(), baseUri + "value", Double.toString(reading.temperature), timestamp));
-        wirelessStream.put(new RdfQuadruple(baseUri + "temperatureObservation/" + random.toString(), baseUri + "time", time, timestamp));
+        this.put(new RdfQuadruple(baseUri +  "wirelesstag", baseUri + "observes", baseUri + "temperatureObservation/" + random.toString(), timestamp));
+        this.put(new RdfQuadruple(baseUri +  "temperatureObservation/" + random.toString(), baseUri +  "type", baseUri + "temperatureObservation", timestamp));
+        this.put(new RdfQuadruple(baseUri + "temperatureObservation/" + random.toString(), baseUri + "value", Double.toString(reading.temperature), timestamp));
+        this.put(new RdfQuadruple(baseUri + "temperatureObservation/" + random.toString(), baseUri + "time", time, timestamp));
         UUID random2 = UUID.randomUUID();
-        wirelessStream.put(new RdfQuadruple(baseUri +  "wirelesstag", baseUri + "observes", baseUri + "humidityObservation/" + random2.toString(), timestamp));
-        wirelessStream.put(new RdfQuadruple(baseUri + "humidityObservation/" + random2.toString(), baseUri + "value", Double.toString(reading.humidity), timestamp));
-        wirelessStream.put(new RdfQuadruple(baseUri +  "humidityObservation/" + random2.toString(), baseUri +  "type", baseUri + "humidityObservation", timestamp));
-        wirelessStream.put(new RdfQuadruple(baseUri + "humidityObservation/" + random2.toString(), baseUri + "time", time, timestamp));
+        this.put(new RdfQuadruple(baseUri +  "wirelesstag", baseUri + "observes", baseUri + "humidityObservation/" + random2.toString(), timestamp));
+        this.put(new RdfQuadruple(baseUri + "humidityObservation/" + random2.toString(), baseUri + "value", Double.toString(reading.humidity), timestamp));
+        this.put(new RdfQuadruple(baseUri +  "humidityObservation/" + random2.toString(), baseUri +  "type", baseUri + "humidityObservation", timestamp));
+        this.put(new RdfQuadruple(baseUri + "humidityObservation/" + random2.toString(), baseUri + "time", time, timestamp));
     }
 
     /**
      * Puts three RdfQuadruples to this engine, based on one meat probe reading.
      */
     public void accept(final MeatProbeReading reading) {
+        this.readings  += 1;
         final String baseUri = "http://foodsafety-onto#";
         final long timestamp = reading.time.toInstant().toEpochMilli();
-        meatProbeStream.put(new RdfQuadruple(baseUri +  "meatProbe", baseUri + "observes", baseUri + "observation" + reading.id, timestamp));
-        meatProbeStream.put(new RdfQuadruple(baseUri + "observation" + reading.id, baseUri + "value", Double.toString(reading.temperature), timestamp));
-        meatProbeStream.put(new RdfQuadruple(baseUri + "observation" + reading.id, baseUri + "time", reading.time.format(DateTimeFormatter.ISO_DATE_TIME), timestamp));
+        this.put(new RdfQuadruple(
+                baseUri +  "meatProbe", 
+                baseUri + "observes", 
+                baseUri + "observation" + reading.id, 
+                timestamp));
+        this.put(new RdfQuadruple(
+                baseUri + "observation" + reading.id, 
+                baseUri + "value", 
+                String.format("\"%f\"^^http://www.w3.org/2001/XMLSchema#decimal", reading.temperature), 
+                timestamp));
+        this.put(new RdfQuadruple(
+                baseUri + "observation" + reading.id, 
+                baseUri + "time", 
+                String.format("\"%s\"^^http://www.w3.org/2001/XMLSchema#dateTime", reading.time.format(DateTimeFormatter.ISO_INSTANT)), 
+                timestamp));
+    }
+
+    private void put(final RdfQuadruple q) {
+        this.quadruples += 1;
+        this.rdfStream.put(q);
+        if (this.quadruples % 100 == 1) {
+            System.out.println(String.format("%s, %d readings, %d quadruples", Instant.ofEpochMilli(q.getTimestamp()).atZone(ZoneId.of("Z")).format(DateTimeFormatter.ISO_INSTANT), this.readings, this.quadruples));
+        }
     }
 
     public Consumer<TemperatureHumidityReading> temperatureHumidityConsumer() {

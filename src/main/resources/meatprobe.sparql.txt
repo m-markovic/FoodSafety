@@ -1,10 +1,9 @@
-REGISTER QUERY noreasoning AS
+REGISTER QUERY meatteamp AS
 PREFIX fs:<http://foodsafety-onto#>
-SELECT  ?value
-FROM STREAM <http://foodsafety/meatprobe> [RANGE 180s STEP 5s]
+SELECT (MIN(?time) AS ?mintime) (MAX(?time) AS ?maxtime) (MAX(?value) AS ?maxtemp)
+FROM STREAM <http://foodsafety/parsed> [RANGE 1m TUMBLING]
 WHERE {
   fs:meatProbe fs:observes ?obs.
   ?obs fs:value ?value.
   ?obs fs:time ?time
 }
-ORDER BY DESC(?time)
