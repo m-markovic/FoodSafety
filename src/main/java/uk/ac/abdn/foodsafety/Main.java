@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
-import uk.ac.abdn.foodsafety.csparql.FoodSafetyEngine;
+import uk.ac.abdn.foodsafety.csparql.SingleTagEngine;
 import uk.ac.abdn.foodsafety.meatprobe.MeatProbeFilesParser;
 import uk.ac.abdn.foodsafety.wirelesstag.WirelessTagClient;
 
@@ -31,21 +31,20 @@ public class Main {
     public static void main(final String[] args) {
         //Parse input
         final Input input = Input.parseFromStdIn();
-        //Create a reasoner and wrap it in an object for slicing data according to time
-        final FoodSafetyEngine engine = new FoodSafetyEngine();
-        final DataSlicer dataSlicer = new DataSlicer(
-                input.from, input.to, 
-                engine);
-        //Get meat probe data
-        dataSlicer.add(new MeatProbeFilesParser(input.meatProbeDir));
-        //Get wireless tag data
-        if (input.wirelessTags.size() > 0) {
-            final WirelessTagClient client = new WirelessTagClient();
-            for (Integer id : input.wirelessTags) {
-                dataSlicer.add(client, id);
-            }            
-        }
-        engine.done();
+        //Connect to wireless tag site
+        final WirelessTagClient client = new WirelessTagClient();
+        //Analyze each tag
+        for (Integer id : input.wirelessTags) {
+            final SingleTagEngine engine = new SingleTagEngine();
+            final ReadingsCompiler rc = new ReadingsCompiler(
+                    input.from, input.to, 
+                    engine);
+            //Get meat probe data
+            rc.add(new MeatProbeFilesParser(input.meatProbeDir));
+            //Get wireless tag data
+            rc.add(client, id);
+            engine.done();
+        }            
     }
     
     /**

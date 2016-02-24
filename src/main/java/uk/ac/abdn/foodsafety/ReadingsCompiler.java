@@ -10,8 +10,6 @@ import java.util.function.Consumer;
 import uk.ac.abdn.foodsafety.common.Constants;
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 import uk.ac.abdn.foodsafety.meatprobe.MeatProbeFilesParser;
-import uk.ac.abdn.foodsafety.sensordata.MeatProbeReading;
-import uk.ac.abdn.foodsafety.sensordata.TemperatureHumidityReading;
 import uk.ac.abdn.foodsafety.sensordata.TimedTemperatureReading;
 import uk.ac.abdn.foodsafety.wirelesstag.WirelessTagClient;
 
@@ -19,10 +17,10 @@ import uk.ac.abdn.foodsafety.wirelesstag.WirelessTagClient;
  * 
  * @author nhc
  *
- * A DataSlicer picks slices of sensor data and passes
+ * A ReadingsCompiler picks slices of sensor data and passes
  * these on to a reasoner.
  */
-final class DataSlicer {
+final class ReadingsCompiler {
     /** Provide sliced sensor data to this objects*/
     private final Consumer<TimedTemperatureReading> consumer;
     
@@ -41,13 +39,13 @@ final class DataSlicer {
      * LocalDate/LocalDateTime in the ISO format, e.g. "2016-01-31T15:36:59"
      * @param dataConsumer The object to provide sliced data to
      */
-    DataSlicer(
+    ReadingsCompiler(
             final String from, 
             final String to, 
             final Consumer<TimedTemperatureReading> consumer) {
         this.consumer = consumer;
-        this.fromDateTime = DataSlicer.parse(from, LocalTime.MIN);
-        this.toDateTime = DataSlicer.parse(to, LocalTime.MAX);
+        this.fromDateTime = ReadingsCompiler.parse(from, LocalTime.MIN);
+        this.toDateTime = ReadingsCompiler.parse(to, LocalTime.MAX);
     }
 
     /**

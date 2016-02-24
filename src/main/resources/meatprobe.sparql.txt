@@ -1,9 +1,9 @@
 REGISTER QUERY meatteamp AS
-PREFIX fs:<http://foodsafety-onto#>
-SELECT (MIN(?time) AS ?mintime) (MAX(?time) AS ?maxtime) (MAX(?value) AS ?maxtemp)
-FROM STREAM <http://foodsafety/parsed> [RANGE 1m TUMBLING]
+PREFIX fs:<http://foodsafety#>
+SELECT ?type ?temp ?time
+FROM STREAM <http://foodsafety/parsed> [RANGE 2m TUMBLING]
 WHERE {
-  fs:meatProbe fs:observes ?obs.
-  ?obs fs:value ?value.
+  ?obs fs:type ?type.
+  ?obs fs:temp ?temp.
   ?obs fs:time ?time
 }

@@ -20,11 +20,11 @@ import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
  * A FoodSafetyEngine is a specific CsparqlEngine with methods
  * and queries for this project.
  */
-public final class FoodSafetyEngine
+public final class SingleTagEngine
     extends CsparqlEngineImpl 
     implements Consumer<TimedTemperatureReading> {
     private final RdfStream rdfStream = new RdfStream("http://foodsafety/parsed");
-    private final FoodSafetyResultFormatter formatter = new FoodSafetyResultFormatter();
+    private final WindowMaker formatter = new WindowMaker(new WindowReasoner());
     private final Stream.Builder<TimedTemperatureReading> readings = Stream.builder();
 
     private int numQuadruples = 0;
@@ -33,7 +33,7 @@ public final class FoodSafetyEngine
     /**
      * Initializes this engine.
      */
-    public FoodSafetyEngine() {
+    public SingleTagEngine() {
         this.initialize();
         this.registerStream(this.rdfStream);
         this.registerQueryFromResources("/meatprobe.sparql.txt");
@@ -46,11 +46,10 @@ public final class FoodSafetyEngine
     public void done() {
         this.readings.build()
             .sorted(Comparator.comparing(r -> r.time))
-            .map(r -> r.toRdf())
+            .map(WindowMaker::quadruples)
             .reduce(Stream.empty(), Stream::concat)
             .forEach(tuple -> this.put(tuple));
         ;
-        this.formatter.dump();
     }
     
     /**
@@ -62,7 +61,7 @@ public final class FoodSafetyEngine
      */
     private void registerQueryFromResources(final String path) {
         //Get InputStream for the file
-        final InputStream resourceAsStream = FoodSafetyEngine.class.getResourceAsStream(path);
+        final InputStream resourceAsStream = SingleTagEngine.class.getResourceAsStream(path);
         Scanner scanner = null;
         try {
             //Read entire file as UTF-8 into String

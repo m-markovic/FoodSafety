@@ -26,7 +26,7 @@ public final class MeatProbeReading extends TimedTemperatureReading {
     }
 
     @Override
-    protected String observationType() {
+    public String observationType() {
         return "meatprobe";
     }
 }

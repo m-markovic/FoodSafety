@@ -8,10 +8,7 @@ import java.time.ZonedDateTime;
  *
  * Represents one timestamped temperature/humidity reading from a sensor.
  */
-public final class TemperatureHumidityReading extends Reading {
-    /** Temperature in Celsius, e.g. 19.946533012390137 */
-    public final Double temperature;
-    
+public final class TemperatureHumidityReading extends TimedTemperatureReading {
     /** Humidity e.g. 24.85736083984375 */
     public final Double humidity;
     
@@ -24,8 +21,12 @@ public final class TemperatureHumidityReading extends Reading {
             final ZonedDateTime time,
             final Double temperature,
             final Double humidity) {
-        super(time);
-        this.temperature = temperature;
+        super(time, temperature);
         this.humidity = humidity;
+    }
+
+    @Override
+    public String observationType() {
+        return "tag";
     }
 }
