@@ -1,5 +1,7 @@
 package uk.ac.abdn.foodsafety.csparql;
 
+import java.time.ZonedDateTime;
+import java.util.GregorianCalendar;
 import java.util.Observable;
 import java.util.UUID;
 
@@ -20,7 +22,7 @@ import eu.larkc.csparql.core.ResultFormatter;
  */
 final class FoodSafetyResultFormatter extends ResultFormatter {
     /** All query results will be added to this model. */
-    private OntModel model = ModelFactory.createOntologyModel();
+    private OntModel model;
     
     /**
      * Dumps the internal model on System.out
@@ -31,13 +33,15 @@ final class FoodSafetyResultFormatter extends ResultFormatter {
     
     @Override
     public void update(final Observable ignored, final Object rdfTableUntyped) {
+        model = ModelFactory.createOntologyModel();
         final RDFTable rdfTable = (RDFTable) rdfTableUntyped;
         for (RDFTuple tuple : rdfTable) {
-            this.addMeatProbeResult(
-                    tuple.get(0),
-                    tuple.get(1),
-                    tuple.get(2));
+                this.addMeatProbeResult(
+                        tuple.get(0),
+                        tuple.get(1),
+                        tuple.get(2));
         }
+        this.dump();
     }
 
     /**
@@ -47,9 +51,9 @@ final class FoodSafetyResultFormatter extends ResultFormatter {
      * @param temp Max temperature in the interval
      */
     private void addMeatProbeResult(
-            final String minDate, 
-            final String maxDate,
-            final String temp) {
+            final String type, 
+            final String temp,
+            final String time) {
         Individual newObservation = this.model.createIndividual(
                 "http://FoodSafety/observation/mp/" + UUID.randomUUID(),
                 this.model.createClass(Prefix.SSN + "Observation"));
@@ -62,11 +66,11 @@ final class FoodSafetyResultFormatter extends ResultFormatter {
         // set time of observation
         newObservation.setPropertyValue(this.model.createProperty(
                 Prefix.SSN + "observationSamplingTime"),
-                this.model.createTypedLiteral(minDate));
+                this.model.createTypedLiteral(GregorianCalendar.from(ZonedDateTime.parse(time))));
         // link  observation value to sensor reading 
         newObservationValue.setPropertyValue(this.model.createProperty(
                 Prefix.SSN + "hasQuantityValue"),
-                this.model.createLiteral(temp));
+                this.model.createTypedLiteral(Double.parseDouble(temp)));
     }
     
     private static class Prefix {

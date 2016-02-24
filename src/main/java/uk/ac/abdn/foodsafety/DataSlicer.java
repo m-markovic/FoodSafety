@@ -12,6 +12,7 @@ import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 import uk.ac.abdn.foodsafety.meatprobe.MeatProbeFilesParser;
 import uk.ac.abdn.foodsafety.sensordata.MeatProbeReading;
 import uk.ac.abdn.foodsafety.sensordata.TemperatureHumidityReading;
+import uk.ac.abdn.foodsafety.sensordata.TimedTemperatureReading;
 import uk.ac.abdn.foodsafety.wirelesstag.WirelessTagClient;
 
 /**
@@ -22,9 +23,8 @@ import uk.ac.abdn.foodsafety.wirelesstag.WirelessTagClient;
  * these on to a reasoner.
  */
 final class DataSlicer {
-    /** Provide sliced sensor data to these objects */
-    private final Consumer<TemperatureHumidityReading> thConsumer;
-    private final Consumer<MeatProbeReading> mpConsumer;
+    /** Provide sliced sensor data to this objects*/
+    private final Consumer<TimedTemperatureReading> consumer;
     
     /** Slice sensor data by time of reading: Must be after this time. */
     private final ZonedDateTime fromDateTime;
@@ -44,10 +44,8 @@ final class DataSlicer {
     DataSlicer(
             final String from, 
             final String to, 
-            final Consumer<TemperatureHumidityReading> thConsumer,
-            final Consumer<MeatProbeReading> mpConsumer) {
-        this.thConsumer = thConsumer;
-        this.mpConsumer = mpConsumer;
+            final Consumer<TimedTemperatureReading> consumer) {
+        this.consumer = consumer;
         this.fromDateTime = DataSlicer.parse(from, LocalTime.MIN);
         this.toDateTime = DataSlicer.parse(to, LocalTime.MAX);
     }
@@ -68,7 +66,7 @@ final class DataSlicer {
           .filter((reading) -> reading.time.isAfter(this.fromDateTime))
           .filter((reading) -> reading.time.isBefore(this.toDateTime))
         //Pass on to the consumer
-          .forEach(this.thConsumer);
+          .forEach(this.consumer);
     }
     
     /**
@@ -83,7 +81,7 @@ final class DataSlicer {
           .filter((reading) -> reading.time.isAfter(this.fromDateTime))
           .filter((reading) -> reading.time.isBefore(this.toDateTime))
         //Pass on to the consumer
-          .forEach(this.mpConsumer);
+          .forEach(this.consumer);
     }
 
     /**

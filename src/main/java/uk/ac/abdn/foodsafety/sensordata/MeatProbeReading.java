@@ -8,12 +8,9 @@ import java.time.ZonedDateTime;
  *
  * Represents one ID'ed and timestamped temperature reading from a meat probe.
  */
-public final class MeatProbeReading extends Reading {
+public final class MeatProbeReading extends TimedTemperatureReading {
     /** ID from the meat probe */
     public final int id;
-    
-    /** Temperature in Celsius, e.g. 31.3 */
-    public final Double temperature;
     
     /**
      * @param id ID from the meat probe
@@ -24,8 +21,12 @@ public final class MeatProbeReading extends Reading {
             final int id,
             final ZonedDateTime time,
             final Double temperature) {
-        super(time);
+        super(time, temperature);
         this.id = id;
-        this.temperature = temperature;
+    }
+
+    @Override
+    protected String observationType() {
+        return "meatprobe";
     }
 }

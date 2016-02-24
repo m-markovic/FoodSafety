@@ -1,0 +1,9 @@
+REGISTER QUERY meatteamp AS
+PREFIX fs:<http://foodsafety#>
+SELECT ?type ?temp ?time
+FROM STREAM <http://foodsafety/parsed> [RANGE 2m TUMBLING]
+WHERE {
+  ?obs fs:type ?type.
+  ?obs fs:temp ?temp.
+  ?obs fs:time ?time
+}

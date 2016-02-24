@@ -2,19 +2,17 @@ package uk.ac.abdn.foodsafety.csparql;
 
 import java.io.InputStream;
 import java.text.ParseException;
-import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.Scanner;
-import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
-import uk.ac.abdn.foodsafety.sensordata.MeatProbeReading;
-import uk.ac.abdn.foodsafety.sensordata.TemperatureHumidityReading;
+import uk.ac.abdn.foodsafety.sensordata.TimedTemperatureReading;
 import eu.larkc.csparql.cep.api.RdfQuadruple;
 import eu.larkc.csparql.cep.api.RdfStream;
 import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
 
-//import eu.larkc.csparql.common.*;
 /**
  * 
  * @author nhc
@@ -23,11 +21,14 @@ import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
  * and queries for this project.
  */
 public final class FoodSafetyEngine
-    extends CsparqlEngineImpl {
+    extends CsparqlEngineImpl 
+    implements Consumer<TimedTemperatureReading> {
     private final RdfStream rdfStream = new RdfStream("http://foodsafety/parsed");
     private final FoodSafetyResultFormatter formatter = new FoodSafetyResultFormatter();
-    private int quadruples = 0;
-    private int readings = 0;
+    private final Stream.Builder<TimedTemperatureReading> readings = Stream.builder();
+
+    private int numQuadruples = 0;
+    private int numReadings = 0;
     
     /**
      * Initializes this engine.
@@ -43,6 +44,12 @@ public final class FoodSafetyEngine
      * Currently dumps the internal Jena model.
      */
     public void done() {
+        this.readings.build()
+            .sorted(Comparator.comparing(r -> r.time))
+            .map(r -> r.toRdf())
+            .reduce(Stream.empty(), Stream::concat)
+            .forEach(tuple -> this.put(tuple));
+        ;
         this.formatter.dump();
     }
     
@@ -74,59 +81,15 @@ public final class FoodSafetyEngine
     }
     
     /**
-     * Puts seven RdfQuadruples to this engine, based on one temperature/humidity reading from a wireless tag.
+     * Puts RdfQuadruples into this engine, based on one temperature reading
      */
-    public void accept(final TemperatureHumidityReading reading) {
-        final String time = reading.time.format(DateTimeFormatter.ISO_LOCAL_TIME);
-        final long timestamp = reading.time.toInstant().toEpochMilli();
-        final String baseUri = "http://foodsafety-onto#";
-        UUID random = UUID.randomUUID();
-        this.put(new RdfQuadruple(baseUri +  "wirelesstag", baseUri + "observes", baseUri + "temperatureObservation/" + random.toString(), timestamp));
-        this.put(new RdfQuadruple(baseUri +  "temperatureObservation/" + random.toString(), baseUri +  "type", baseUri + "temperatureObservation", timestamp));
-        this.put(new RdfQuadruple(baseUri + "temperatureObservation/" + random.toString(), baseUri + "value", Double.toString(reading.temperature), timestamp));
-        this.put(new RdfQuadruple(baseUri + "temperatureObservation/" + random.toString(), baseUri + "time", time, timestamp));
-        UUID random2 = UUID.randomUUID();
-        this.put(new RdfQuadruple(baseUri +  "wirelesstag", baseUri + "observes", baseUri + "humidityObservation/" + random2.toString(), timestamp));
-        this.put(new RdfQuadruple(baseUri + "humidityObservation/" + random2.toString(), baseUri + "value", Double.toString(reading.humidity), timestamp));
-        this.put(new RdfQuadruple(baseUri +  "humidityObservation/" + random2.toString(), baseUri +  "type", baseUri + "humidityObservation", timestamp));
-        this.put(new RdfQuadruple(baseUri + "humidityObservation/" + random2.toString(), baseUri + "time", time, timestamp));
-    }
-
-    /**
-     * Puts three RdfQuadruples to this engine, based on one meat probe reading.
-     */
-    public void accept(final MeatProbeReading reading) {
-        this.readings  += 1;
-        final String baseUri = "http://foodsafety-onto#";
-        final long timestamp = reading.time.toInstant().toEpochMilli();
-        this.put(new RdfQuadruple(
-                baseUri +  "meatProbe", 
-                baseUri + "observes", 
-                baseUri + "observation" + reading.id, 
-                timestamp));
-        this.put(new RdfQuadruple(
-                baseUri + "observation" + reading.id, 
-                baseUri + "value", 
-                String.format("\"%f\"^^http://www.w3.org/2001/XMLSchema#decimal", reading.temperature), 
-                timestamp));
-        this.put(new RdfQuadruple(
-                baseUri + "observation" + reading.id, 
-                baseUri + "time", 
-                String.format("\"%s\"^^http://www.w3.org/2001/XMLSchema#dateTime", reading.time.format(DateTimeFormatter.ISO_INSTANT)), 
-                timestamp));
+    public void accept(final TimedTemperatureReading reading) {
+        this.numReadings += 1;
+        this.readings.accept(reading);
     }
 
     private void put(final RdfQuadruple q) {
-        this.quadruples += 1;
+        this.numQuadruples += 1;
         this.rdfStream.put(q);
     }
-
-    public Consumer<TemperatureHumidityReading> temperatureHumidityConsumer() {
-        return reading -> this.accept(reading);
-    }
-
-    public Consumer<MeatProbeReading> meatProbeConsumer() {
-        return reading -> this.accept(reading);
-    }
-
 }

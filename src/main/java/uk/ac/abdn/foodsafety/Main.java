@@ -35,14 +35,15 @@ public class Main {
         final FoodSafetyEngine engine = new FoodSafetyEngine();
         final DataSlicer dataSlicer = new DataSlicer(
                 input.from, input.to, 
-                engine.temperatureHumidityConsumer(),
-                engine.meatProbeConsumer());
+                engine);
         //Get meat probe data
         dataSlicer.add(new MeatProbeFilesParser(input.meatProbeDir));
         //Get wireless tag data
-        final WirelessTagClient client = new WirelessTagClient();
-        for (Integer id : input.wirelessTags) {
-            dataSlicer.add(client, id);
+        if (input.wirelessTags.size() > 0) {
+            final WirelessTagClient client = new WirelessTagClient();
+            for (Integer id : input.wirelessTags) {
+                dataSlicer.add(client, id);
+            }            
         }
         engine.done();
     }
