@@ -1,8 +1,8 @@
-package uk.ac.abdn.foodsafety.csparql;
+package uk.ac.abdn.foodsafety.sensordata;
 
 import java.time.ZonedDateTime;
 
-final class WindowReading {
+public final class WindowReading {
     /** E.g. "meatprobe" or "tag" */
     public final String type;
     
@@ -12,7 +12,7 @@ final class WindowReading {
     /** Timestamp of the reading */
     public final ZonedDateTime time;
     
-    WindowReading(
+    public WindowReading(
             final String type,
             final Double temperature,
             final ZonedDateTime time) {

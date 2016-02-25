@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
  * @author nhc
  *
  * Utilities for logging. Use pom.xml to control which logging framework to use.
+ * TODO: Coordinate System.out, slf4j and log4j
  */
 public final class Logging {
     /** All application-specific logging will be associated with this class. */
@@ -18,7 +19,7 @@ public final class Logging {
      * @param msg Message to log
      */
     public static void warn(final String msg) {
-      logger.warn(msg);
+        System.out.println(msg); //logger.warn(msg);
     }
 
     /**
@@ -26,6 +27,14 @@ public final class Logging {
      * @param msg Message to log
      */
     public static void debug(final String msg) {
-        logger.debug(msg);
+        System.out.println(msg); //logger.debug(msg);
+    }
+
+    /**
+     * Log msg on level info
+     * @param msg Message to log
+     */
+    public static void info(String msg) {
+        System.out.println(msg); //logger.info(msg);
     }
 }

@@ -21,7 +21,7 @@ import uk.ac.abdn.foodsafety.wirelesstag.WirelessTagClient;
  * these on to a reasoner.
  */
 final class ReadingsCompiler {
-    /** Provide sliced sensor data to this objects*/
+    /** Provide sliced sensor data to this object */
     private final Consumer<TimedTemperatureReading> consumer;
     
     /** Slice sensor data by time of reading: Must be after this time. */

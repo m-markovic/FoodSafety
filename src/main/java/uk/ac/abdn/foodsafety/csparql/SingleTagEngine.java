@@ -8,6 +8,8 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
+import uk.ac.abdn.foodsafety.common.Logging;
+import uk.ac.abdn.foodsafety.provenance.ProvenanceReasoner;
 import uk.ac.abdn.foodsafety.sensordata.TimedTemperatureReading;
 import eu.larkc.csparql.cep.api.RdfQuadruple;
 import eu.larkc.csparql.cep.api.RdfStream;
@@ -24,7 +26,7 @@ public final class SingleTagEngine
     extends CsparqlEngineImpl 
     implements Consumer<TimedTemperatureReading> {
     private final RdfStream rdfStream = new RdfStream("http://foodsafety/parsed");
-    private final WindowMaker formatter = new WindowMaker(new WindowReasoner());
+    private final SingleTagWindowBuilder formatter = new SingleTagWindowBuilder(new ProvenanceReasoner());
     private final Stream.Builder<TimedTemperatureReading> readings = Stream.builder();
 
     private int numQuadruples = 0;
@@ -36,20 +38,21 @@ public final class SingleTagEngine
     public SingleTagEngine() {
         this.initialize();
         this.registerStream(this.rdfStream);
-        this.registerQueryFromResources("/meatprobe.sparql.txt");
+        this.registerQueryFromResources("/window.sparql.txt");
     }
     
     /**
      * Call this once all streams have been processed.
-     * Currently dumps the internal Jena model.
      */
     public void done() {
         this.readings.build()
             .sorted(Comparator.comparing(r -> r.time))
-            .map(WindowMaker::quadruples)
+            .map(SingleTagWindowBuilder::quadruples)
             .reduce(Stream.empty(), Stream::concat)
-            .forEach(tuple -> this.put(tuple));
+            .forEachOrdered(tuple -> this.put(tuple));
         ;
+        Logging.info(String.format("Total number of readings: %d", this.numReadings));
+        Logging.info(String.format("Total number of quadruples put into C-Sparql: %d", this.numQuadruples));
     }
     
     /**
@@ -80,13 +83,18 @@ public final class SingleTagEngine
     }
     
     /**
-     * Puts RdfQuadruples into this engine, based on one temperature reading
+     * Saves the reading, to be processed when done() is called.
+     * @param A reading from a wireless tag or the meat probe.
      */
     public void accept(final TimedTemperatureReading reading) {
         this.numReadings += 1;
         this.readings.accept(reading);
     }
 
+    /**
+     * Puts the given quadruple into this engine's single stream.
+     * @param q An RdfQuadruple
+     */
     private void put(final RdfQuadruple q) {
         this.numQuadruples += 1;
         this.rdfStream.put(q);

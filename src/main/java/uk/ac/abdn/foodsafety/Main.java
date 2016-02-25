@@ -17,7 +17,7 @@ import uk.ac.abdn.foodsafety.wirelesstag.WirelessTagClient;
  *
  * Command-line interface for the FoodSafety project.
  */
-public class Main {
+public final class Main {
     /**
      * Creates a Csparql engine and provides it with downloaded readings
      * from wireless tags.
@@ -25,12 +25,25 @@ public class Main {
      * for the given sensors.
      * 
      * This application requires its input to be provided on stdin. Example input:
-     * {"from": "2016-01-29T15:30:00", "to": "2016-01-29T15:40:00", "meatProbeDir": "./mydata/", "wirelessTags": [2,3]}
+     * {"from": "2016-01-29T15:30:00", "to": "2016-01-29T15:40:00", "meatProbeDir": "mydata/", "wirelessTags": [2,3]}
      * @param args not used
      */
     public static void main(final String[] args) {
-        //Parse input
+        //Parse command-line input
         final Input input = Input.parseFromStdIn();
+        try {
+            run(input);
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Analyzes the readings of each tag in the input paired with the
+     * meat probe readings.
+     * @param input Parsed input from System.in
+     */
+    private static void run(final Input input) {
         //Connect to wireless tag site
         final WirelessTagClient client = new WirelessTagClient();
         //Analyze each tag
