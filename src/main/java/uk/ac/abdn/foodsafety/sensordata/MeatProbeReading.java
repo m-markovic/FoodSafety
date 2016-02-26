@@ -21,12 +21,7 @@ public final class MeatProbeReading extends TimedTemperatureReading {
             final int id,
             final ZonedDateTime time,
             final Double temperature) {
-        super(time, temperature);
+        super(time, temperature, "http://example.org/meatCoreTemp");
         this.id = id;
-    }
-
-    @Override
-    public String observationType() {
-        return "meatprobe";
     }
 }

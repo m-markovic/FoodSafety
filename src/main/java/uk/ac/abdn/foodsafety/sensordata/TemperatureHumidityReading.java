@@ -21,12 +21,7 @@ public final class TemperatureHumidityReading extends TimedTemperatureReading {
             final ZonedDateTime time,
             final Double temperature,
             final Double humidity) {
-        super(time, temperature);
+        super(time, temperature, "http://example.org/wirelessTag");
         this.humidity = humidity;
-    }
-
-    @Override
-    public String observationType() {
-        return "tag";
     }
 }

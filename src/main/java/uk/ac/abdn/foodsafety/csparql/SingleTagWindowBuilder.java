@@ -43,7 +43,7 @@ final class SingleTagWindowBuilder extends ResultFormatter {
         final String uuidUri = uri("obs", UUID.randomUUID().toString());
         final long timestamp = r.time.toInstant().toEpochMilli();
         return Arrays.stream(new RdfQuadruple[] {
-            new RdfQuadruple(uuidUri, uri("type"), r.observationType(), timestamp),
+            new RdfQuadruple(uuidUri, uri("foi"), r.foi, timestamp),
             new RdfQuadruple(uuidUri, uri("temp"), Double.toString(r.temperature), timestamp),
             new RdfQuadruple(uuidUri, uri("time"), r.time.format(DateTimeFormatter.ISO_DATE_TIME), timestamp)
         });
