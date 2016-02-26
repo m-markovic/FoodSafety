@@ -87,4 +87,14 @@ public final class FoodSafetyException extends RuntimeException {
     public static FoodSafetyException internalError(final String msg) {
         return new FoodSafetyException(msg, null);
     }
+
+    /**
+     * Constructs an Exception to throw when some file IO related to annotations failed.
+     * @param e Exception caught during file IO
+     * @return The wrapping Exception
+     */
+    public static FoodSafetyException annotationIOfailed(IOException e) {
+        return new FoodSafetyException("Failure reading annotation file", e);
+
+    }
 }

@@ -6,10 +6,14 @@ import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
 
 import uk.ac.abdn.foodsafety.common.Constants;
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 import uk.ac.abdn.foodsafety.meatprobe.MeatProbeFilesParser;
+import uk.ac.abdn.foodsafety.sensordata.MeatProbeReading;
+import uk.ac.abdn.foodsafety.sensordata.TemperatureHumidityReading;
 import uk.ac.abdn.foodsafety.sensordata.TimedTemperatureReading;
 import uk.ac.abdn.foodsafety.wirelesstag.WirelessTagClient;
 
@@ -30,6 +34,9 @@ final class ReadingsCompiler {
     /** Slice sensor data by time of reading: Must be before this time. */
     private final ZonedDateTime toDateTime;
 
+    /** Every reading is passed through this operator */
+    private final UnaryOperator<TimedTemperatureReading> annotator;
+
     /**
      * Parses from and to as LocalDate/LocalDateTime in the ISO format
      * and registers both of these along with the dataConsumer.
@@ -37,17 +44,31 @@ final class ReadingsCompiler {
      * LocalDate/LocalDateTime in the ISO format, e.g. "2016-01-31T15:36:59"
      * @param to Slice sensor data by only providing readings before this time.
      * LocalDate/LocalDateTime in the ISO format, e.g. "2016-01-31T15:36:59"
+     * @param annotator Pass every  
      * @param dataConsumer The object to provide sliced data to
      */
     ReadingsCompiler(
             final String from, 
             final String to, 
+            final UnaryOperator<TimedTemperatureReading> annotator, 
             final Consumer<TimedTemperatureReading> consumer) {
         this.consumer = consumer;
+        this.annotator = annotator;
         this.fromDateTime = ReadingsCompiler.parse(from, LocalTime.MIN);
         this.toDateTime = ReadingsCompiler.parse(to, LocalTime.MAX);
     }
 
+    private <T extends TimedTemperatureReading> void filterAnnotateConsume(final Stream<T> readings) {
+        readings
+        //Filter by time of day
+        .filter((reading) -> reading.time.isAfter(this.fromDateTime))
+        .filter((reading) -> reading.time.isBefore(this.toDateTime))
+        //Annotate
+        .map(this.annotator)
+        //Pass on to the consumer
+        .forEach(this.consumer);
+    }
+    
     /**
      * Gets data from a specific wireless tag, slices that data
      * and provides the result to the registered consumer.
@@ -55,16 +76,12 @@ final class ReadingsCompiler {
      * @param sensorId The ID of the sensor to get data for, e.g. 3
      */
     void add(final WirelessTagClient client, final int sensorId) {
-        //Get data for the dates (the API cannot slice on time of day
-        client.getStatsRaw(
-                sensorId, 
-                this.fromDateTime.toLocalDate(), 
-                this.toDateTime.toLocalDate())
-        //Filter by time of day
-          .filter((reading) -> reading.time.isAfter(this.fromDateTime))
-          .filter((reading) -> reading.time.isBefore(this.toDateTime))
-        //Pass on to the consumer
-          .forEach(this.consumer);
+        //Get data for the dates (the API cannot slice on time of day)
+        final Stream<TemperatureHumidityReading> readings = client.getStatsRaw(
+            sensorId,
+            this.fromDateTime.toLocalDate(), 
+            this.toDateTime.toLocalDate());
+        this.filterAnnotateConsume(readings);
     }
     
     /**
@@ -74,12 +91,8 @@ final class ReadingsCompiler {
      */
     void add(final MeatProbeFilesParser parser) {
         //Get data
-        parser.parse()
-        //Filter by time of day
-          .filter((reading) -> reading.time.isAfter(this.fromDateTime))
-          .filter((reading) -> reading.time.isBefore(this.toDateTime))
-        //Pass on to the consumer
-          .forEach(this.consumer);
+        final Stream<MeatProbeReading> readings = parser.parse();
+        this.filterAnnotateConsume(readings);
     }
 
     /**

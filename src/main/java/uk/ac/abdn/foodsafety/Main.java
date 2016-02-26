@@ -8,6 +8,7 @@ import java.util.List;
 import com.google.gson.Gson;
 
 import uk.ac.abdn.foodsafety.csparql.SingleTagEngine;
+import uk.ac.abdn.foodsafety.meatprobe.FoiAnnotator;
 import uk.ac.abdn.foodsafety.meatprobe.MeatProbeFilesParser;
 import uk.ac.abdn.foodsafety.wirelesstag.WirelessTagClient;
 
@@ -50,7 +51,8 @@ public final class Main {
         for (Integer id : input.wirelessTags) {
             final SingleTagEngine engine = new SingleTagEngine();
             final ReadingsCompiler rc = new ReadingsCompiler(
-                    input.from, input.to, 
+                    input.from, input.to,
+                    new FoiAnnotator(input.annotationsFile),
                     engine);
             //Get meat probe data
             rc.add(new MeatProbeFilesParser(input.meatProbeDir));
@@ -71,6 +73,7 @@ public final class Main {
         private String from;
         private String to;
         private String meatProbeDir;
+        private String annotationsFile;
         private List<Integer> wirelessTags;
         
         /**
