@@ -6,7 +6,6 @@ import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.function.Consumer;
-import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import uk.ac.abdn.foodsafety.common.Constants;
@@ -34,9 +33,6 @@ final class ReadingsCompiler {
     /** Slice sensor data by time of reading: Must be before this time. */
     private final ZonedDateTime toDateTime;
 
-    /** Every reading is passed through this operator */
-    private final UnaryOperator<TimedTemperatureReading> annotator;
-
     /**
      * Parses from and to as LocalDate/LocalDateTime in the ISO format
      * and registers both of these along with the dataConsumer.
@@ -50,21 +46,17 @@ final class ReadingsCompiler {
     ReadingsCompiler(
             final String from, 
             final String to, 
-            final UnaryOperator<TimedTemperatureReading> annotator, 
             final Consumer<TimedTemperatureReading> consumer) {
         this.consumer = consumer;
-        this.annotator = annotator;
         this.fromDateTime = ReadingsCompiler.parse(from, LocalTime.MIN);
         this.toDateTime = ReadingsCompiler.parse(to, LocalTime.MAX);
     }
 
-    private <T extends TimedTemperatureReading> void filterAnnotateConsume(final Stream<T> readings) {
+    private <T extends TimedTemperatureReading> void filterAndConsume(final Stream<T> readings) {
         readings
         //Filter by time of day
         .filter((reading) -> reading.time.isAfter(this.fromDateTime))
         .filter((reading) -> reading.time.isBefore(this.toDateTime))
-        //Annotate
-        .map(this.annotator)
         //Pass on to the consumer
         .forEach(this.consumer);
     }
@@ -81,7 +73,7 @@ final class ReadingsCompiler {
             sensorId,
             this.fromDateTime.toLocalDate(), 
             this.toDateTime.toLocalDate());
-        this.filterAnnotateConsume(readings);
+        this.filterAndConsume(readings);
     }
     
     /**
@@ -92,7 +84,7 @@ final class ReadingsCompiler {
     void add(final MeatProbeFilesParser parser) {
         //Get data
         final Stream<MeatProbeReading> readings = parser.parse();
-        this.filterAnnotateConsume(readings);
+        this.filterAndConsume(readings);
     }
 
     /**

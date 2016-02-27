@@ -52,8 +52,7 @@ public final class Main {
             final SingleTagEngine engine = new SingleTagEngine();
             final ReadingsCompiler rc = new ReadingsCompiler(
                     input.from, input.to,
-                    new FoiAnnotator(input.annotationsFile),
-                    engine);
+                    new FoiAnnotator(input.annotationsFile).andThen(engine));
             //Get meat probe data
             rc.add(new MeatProbeFilesParser(input.meatProbeDir));
             //Get wireless tag data
