@@ -50,13 +50,16 @@ public final class Main {
         //Analyze each tag
         for (Integer id : input.wirelessTags) {
             final SingleTagEngine engine = new SingleTagEngine();
-            final ReadingsCompiler rc = new ReadingsCompiler(
-                    input.from, input.to,
-                    new FoiAnnotator(input.annotationsFile).andThen(engine));
             //Get meat probe data
-            rc.add(new MeatProbeFilesParser(input.meatProbeDir));
+            new ReadingsCompiler(
+                    input.from, input.to,
+                    new FoiAnnotator(input.annotationsFile).andThen(engine))
+                .add(new MeatProbeFilesParser(input.meatProbeDir));
             //Get wireless tag data
-            rc.add(client, id);
+            new ReadingsCompiler(
+                    input.from, input.to,
+                    new FoiAnnotator(input.annotationsFile).andThen(engine))
+                .add(client, id);
             engine.done();
         }            
     }
