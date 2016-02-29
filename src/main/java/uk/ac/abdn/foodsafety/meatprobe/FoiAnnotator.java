@@ -73,6 +73,6 @@ public final class FoiAnnotator
     
     @SuppressWarnings("serial")
     private static class Annotations extends HashMap<String,String> {
-        // This is imply an alias to pass to GSON
+        // This is merely an alias to pass to GSON
     }
 }
