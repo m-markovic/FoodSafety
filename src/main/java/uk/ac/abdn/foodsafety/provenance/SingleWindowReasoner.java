@@ -36,7 +36,6 @@ final class SingleWindowReasoner
             Individual sensor, 
             String sensorType,
             String observedProperty,
-            String foi, 
             Individual oldObservation)
     {
         // ---- individuals 
@@ -48,7 +47,8 @@ final class SingleWindowReasoner
                 model.createClass(Prefix.SK + "QuantityObservationValue"));
         Individual property = model.createIndividual(observedProperty,
                 model.createClass(Prefix.SSN + "Property"));
-        Individual fetureOfInterest = model.createIndividual(foi,
+        Individual fetureOfInterest = model.createIndividual(
+                reading.foi,
                 model.createClass(Prefix.SSN + "FeatureOfInterest"));
         Literal sensorReading = model.createTypedLiteral(reading.temperature);
         // ---- properties
