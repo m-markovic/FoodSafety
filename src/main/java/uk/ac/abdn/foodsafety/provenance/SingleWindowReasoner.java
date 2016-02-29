@@ -31,12 +31,12 @@ final class SingleWindowReasoner
                 this.model.createClass(SingleWindowReasoner.Prefix.SSN + "Observation"));
     }
     
-    private Individual anotateSingleSensorData(
+    private Individual annotateSingleSensorData(
             final WindowReading reading,
-            Individual sensor, 
-            String sensorType,
-            String observedProperty,
-            Individual oldObservation)
+            final Individual sensor, 
+            final String sensorType,
+            final String observedProperty,
+            final Individual oldObservation)
     {
         // ---- individuals 
         Individual newObservation = model.createIndividual("http://FoodSafety/observation/"+sensorType+"/" + UUID.randomUUID(),
@@ -85,6 +85,46 @@ final class SingleWindowReasoner
         // ---- properties
        return newObservation;
     }
+    
+    // create instances of individual sensors for temp, humidity, movement and meat probe (note Sensing Device is subclass of ssn:Sensor)
+    public Individual sensorDescribtion (
+            final Individual mainSystem, 
+            final String sensorType) {
+        final Individual sensor = model.createIndividual(
+                "http://FoodSafety/sensor/sensingDevice/"+UUID.randomUUID(),
+                model.createClass(Prefix.SSN+"SensingDevice"));
+        sensor.addRDFType(
+                model.getResource(sensorType));
+        mainSystem.setPropertyValue(
+                model.createProperty(Prefix.SSN+ "hasSubsystem"),
+                sensor);
+        return sensor; 
+    }
+
+    /**
+     * @param r Reading to make provenance model for
+     * @param sensorID
+     * @param oldObservation Latest observation
+     * @return New observation (which is already added to this.model)
+     */
+    public Individual generateMeatProbeAnnotations(
+            final WindowReading r, 
+            final String sensorID, 
+            final Individual oldObservation) {
+        final Individual meatprobe = model.createIndividual(
+                "http://FoodSafety/sensor/meatProbe/"+sensorID,
+                model.createClass(Prefix.SSN+"System"));
+        // create instances of individual sensors for temp, humidity and movement (note Sensing Device is subclass of ssn:Sensor)
+        final Individual meatprobeSensor = sensorDescribtion(
+                meatprobe,
+                Prefix.METEO+"TmeperatureSensor");
+        return annotateSingleSensorData(
+                r, 
+                meatprobeSensor, 
+                "temperature", 
+                Prefix.FS_EXT+"meatCoreTemp",
+                oldObservation);
+    }
 
     public void log() {
         Logging.info(String.format("Window model had %d triples", model.size()));
@@ -92,6 +132,18 @@ final class SingleWindowReasoner
 
     @SuppressWarnings("unused")
     private static class Prefix {
+        public static final String ALL_AS_STRING = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" + 
+                "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" + 
+                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + 
+                "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" + 
+                "PREFIX ssn: <http://purl.oclc.org/NET/ssnx/ssn#>\n" + 
+                "PREFIX sk: <http://purl.oclc.org/NET/ssnx/product/smart-knife#>\n" + 
+                "PREFIX fs:<https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#>\n" + 
+                "PREFIX prov:<http://www.w3.org/ns/prov#>\n" + 
+                "PREFIX fs-ex:<https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#>\n" + 
+                "PREFIX sc-prov:<https://w3id.org/abdn/socialcomp/sc-prov#>";
+        
+        
         public static String SSN = "http://purl.oclc.org/NET/ssnx/ssn#";
         public static String PROV = "http://www.w3.org/ns/prov#";
         public static String RDFS = "http://www.w3.org/2000/01/rdf-schema#";
@@ -99,6 +151,8 @@ final class SingleWindowReasoner
         public static String XSD = "http://www.w3.org/2001/XMLSchema#";
         public static String METEO = "https://www.w3.org/2005/Incubator/ssn/ssnx/meteo/aws#";
         public static String SK = "http://purl.oclc.org/NET/ssnx/product/smart-knife#";
-        public static String FS = "http://example.org/food-safety#";
+        public static String FS = "https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#";
+        public static String FS_EXT = "https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#";
+        public static String SC = "http://example.org/sc-prov#";
     }
 }
