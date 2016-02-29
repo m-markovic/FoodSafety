@@ -32,56 +32,54 @@ final class SingleWindowReasoner
     }
     
     private Individual anotateSingleSensorData(
-            OntModel modelToWriteTo, 
+            final WindowReading reading,
             Individual sensor, 
             String sensorType,
-            Literal dateTime, 
-            String value, 
             String observedProperty,
             String foi, 
             Individual oldObservation)
     {
         // ---- individuals 
-        Individual newObservation = modelToWriteTo.createIndividual("http://FoodSafety/observation/"+sensorType+"/" + UUID.randomUUID(),
-                modelToWriteTo.createClass(Prefix.SSN + "Observation"));
-        Individual newSensorOutput = modelToWriteTo.createIndividual("http://FoodSafety/sensorOutput/"+sensorType+"/" + UUID.randomUUID(),
-                modelToWriteTo.createClass(Prefix.SSN + "SensorOutput"));
-        Individual newObservationValue = modelToWriteTo.createIndividual("http://FoodSafety/observationValue/"+sensorType+"/" + UUID.randomUUID(),
-                modelToWriteTo.createClass(Prefix.SK + "QuantityObservationValue"));
-        Individual property = modelToWriteTo.createIndividual(observedProperty,
-                modelToWriteTo.createClass(Prefix.SSN + "Property"));
-        Individual fetureOfInterest = modelToWriteTo.createIndividual(foi,
-                modelToWriteTo.createClass(Prefix.SSN + "FeatureOfInterest"));
-        value = value.replace ("\"","");
-        Literal sensorReading = modelToWriteTo.createTypedLiteral(Double.parseDouble(value));
+        Individual newObservation = model.createIndividual("http://FoodSafety/observation/"+sensorType+"/" + UUID.randomUUID(),
+                model.createClass(Prefix.SSN + "Observation"));
+        Individual newSensorOutput = model.createIndividual("http://FoodSafety/sensorOutput/"+sensorType+"/" + UUID.randomUUID(),
+                model.createClass(Prefix.SSN + "SensorOutput"));
+        Individual newObservationValue = model.createIndividual("http://FoodSafety/observationValue/"+sensorType+"/" + UUID.randomUUID(),
+                model.createClass(Prefix.SK + "QuantityObservationValue"));
+        Individual property = model.createIndividual(observedProperty,
+                model.createClass(Prefix.SSN + "Property"));
+        Individual fetureOfInterest = model.createIndividual(foi,
+                model.createClass(Prefix.SSN + "FeatureOfInterest"));
+        Literal sensorReading = model.createTypedLiteral(reading.temperature);
         // ---- properties
         // set time of observation
-        newObservation.setPropertyValue(modelToWriteTo.createProperty(Prefix.SSN + "observationSamplingTime"),
-                dateTime);
+        newObservation.setPropertyValue(
+                model.createProperty(Prefix.SSN + "observationSamplingTime"),
+                this.model.createTypedLiteral(GregorianCalendar.from(reading.time)));
         // link sensor and sensor output
-        newSensorOutput.setPropertyValue(modelToWriteTo.createProperty(Prefix.SSN + "isProducedBy"),
+        newSensorOutput.setPropertyValue(model.createProperty(Prefix.SSN + "isProducedBy"),
                 sensor);
         // link observation and sensor output
-        newObservation.setPropertyValue(modelToWriteTo.createProperty(Prefix.SSN + "observationResult"),
+        newObservation.setPropertyValue(model.createProperty(Prefix.SSN + "observationResult"),
                 newSensorOutput);
         // link sensor output and quantity observation value 
-        newSensorOutput.setPropertyValue(modelToWriteTo.createProperty(Prefix.SSN + "hasValue"),
+        newSensorOutput.setPropertyValue(model.createProperty(Prefix.SSN + "hasValue"),
                 newObservationValue);
         // link  observation value to sensor reading 
-        newObservationValue.setPropertyValue(modelToWriteTo.createProperty(Prefix.SK + "hasQuantityValue"),
+        newObservationValue.setPropertyValue(model.createProperty(Prefix.SK + "hasQuantityValue"),
                 sensorReading);
         // link  observation to foi
-        newObservation.setPropertyValue(modelToWriteTo.createProperty(Prefix.SSN + "featureOfInterest"),
+        newObservation.setPropertyValue(model.createProperty(Prefix.SSN + "featureOfInterest"),
                 fetureOfInterest);        
         // link  foi and property
-        fetureOfInterest.setPropertyValue(modelToWriteTo.createProperty(Prefix.SSN + "hasProperty"),
+        fetureOfInterest.setPropertyValue(model.createProperty(Prefix.SSN + "hasProperty"),
                 property);
         // link  property and sensor
-        sensor.setPropertyValue(modelToWriteTo.createProperty(Prefix.SSN + "observes"),
+        sensor.setPropertyValue(model.createProperty(Prefix.SSN + "observes"),
                         property);
         if (oldObservation != null) {
         // link  new observation to the previous one 
-        newObservation.setPropertyValue(modelToWriteTo.createProperty(Prefix.FS + "follows"),
+        newObservation.setPropertyValue(model.createProperty(Prefix.FS + "follows"),
                         oldObservation);
         }
         // ---- properties
