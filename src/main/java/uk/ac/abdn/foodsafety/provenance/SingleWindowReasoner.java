@@ -18,17 +18,14 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
  *
  * A SingleWindowReasoner reasons about provenance for readings
  * in a single time window.
- * TODO: This is only a stub.
  */
 final class SingleWindowReasoner
     implements Consumer<WindowReading> {
     private final OntModel model = ModelFactory.createOntologyModel();
     
-    @SuppressWarnings("unused")
+    @Override
     public void accept(final WindowReading reading) {
-        Individual newObservation = this.model.createIndividual(
-                "http://FoodSafety/observation/mp/" + UUID.randomUUID(),
-                this.model.createClass(SingleWindowReasoner.Prefix.SSN + "Observation"));
+        //TODO call below methods
     }
     
     private Individual annotateSingleSensorData(
@@ -123,6 +120,36 @@ final class SingleWindowReasoner
                 meatprobeSensor, 
                 "temperature", 
                 Prefix.FS_EXT+"meatCoreTemp",
+                oldObservation);
+    }
+    
+    /**
+     * @param r Reading to make provenance model for
+     * @param sensorID
+     * @param oldObservation Latest observation
+     * @return New observation (which is already added to this.model)
+     */
+    public Individual generateWirelessTagSensorAnnotations(
+            final WindowReading r,
+            String sensorID,
+            final Individual oldObservation) {
+        //static ssn info relevant to all data coming from the same sensor 
+        //create instance of main System that will represent a single wirelesstag
+        final Individual  wirelessTagSystem = 
+                model.createIndividual(
+                        "http://FoodSafety/sensor/wirelesstag/"+sensorID,
+                        model.createClass(Prefix.SSN+"System"));
+        // create instances of individual sensors for temp, humidity and movement (note Sensing Device is subclass of ssn:Sensor)
+        final Individual  temperatureSensor = 
+                sensorDescribtion(
+                        wirelessTagSystem,
+                        Prefix.METEO+"TmeperatureSensor");
+        // annotate data from temperature sensor 
+        return annotateSingleSensorData(
+                r, 
+                temperatureSensor, 
+                "temperature", 
+                Prefix.FS_EXT+"meatSurfaceTemp", 
                 oldObservation);
     }
 
