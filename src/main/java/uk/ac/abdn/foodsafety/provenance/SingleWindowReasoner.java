@@ -22,12 +22,82 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 final class SingleWindowReasoner
     implements Consumer<WindowReading> {
     private final OntModel model = ModelFactory.createOntologyModel();
+    private Individual lastWirelessObservation = null;
+    private Individual lastMeatProbeObservation = null;
     
     @Override
     public void accept(final WindowReading reading) {
-        //TODO call below methods
+        //TODO: Less hacky criterion for being wireless/meatprobe
+        if (reading.foi.equals("http://example.org/wirelessTag")) {
+            this.lastWirelessObservation =
+                    this.generateWirelessTagSensorAnnotations(
+                            reading, 
+                            "wt", //TODO: Do we need to be specific? 
+                            this.lastWirelessObservation);
+        } else {
+            this.lastMeatProbeObservation =
+                    this.generateMeatProbeAnnotations(
+                            reading, 
+                            "mp", //TODO: Do we need to be specific?
+                            this.lastMeatProbeObservation);
+        }
     }
     
+    /**
+     * @param r Reading to make provenance model for
+     * @param sensorID
+     * @param oldObservation Latest observation
+     * @return New observation (which is already added to this.model)
+     */
+    private Individual generateMeatProbeAnnotations(
+            final WindowReading r, 
+            final String sensorID, 
+            final Individual oldObservation) {
+        final Individual meatprobe = model.createIndividual(
+                "http://FoodSafety/sensor/meatProbe/"+sensorID,
+                model.createClass(Prefix.SSN+"System"));
+        // create instances of individual sensors for temp, humidity and movement (note Sensing Device is subclass of ssn:Sensor)
+        final Individual meatprobeSensor = sensorDescribtion(
+                meatprobe,
+                Prefix.METEO+"TmeperatureSensor");
+        return annotateSingleSensorData(
+                r, 
+                meatprobeSensor, 
+                "temperature", 
+                Prefix.FS_EXT+"meatCoreTemp",
+                oldObservation);
+    }
+    
+    /**
+     * @param r Reading to make provenance model for
+     * @param sensorID
+     * @param oldObservation Latest observation
+     * @return New observation (which is already added to this.model)
+     */
+    private Individual generateWirelessTagSensorAnnotations(
+            final WindowReading r,
+            String sensorID,
+            final Individual oldObservation) {
+        //static ssn info relevant to all data coming from the same sensor 
+        //create instance of main System that will represent a single wirelesstag
+        final Individual  wirelessTagSystem = 
+                model.createIndividual(
+                        "http://FoodSafety/sensor/wirelesstag/"+sensorID,
+                        model.createClass(Prefix.SSN+"System"));
+        // create instances of individual sensors for temp, humidity and movement (note Sensing Device is subclass of ssn:Sensor)
+        final Individual  temperatureSensor = 
+                sensorDescribtion(
+                        wirelessTagSystem,
+                        Prefix.METEO+"TmeperatureSensor");
+        // annotate data from temperature sensor 
+        return annotateSingleSensorData(
+                r, 
+                temperatureSensor, 
+                "temperature", 
+                Prefix.FS_EXT+"meatSurfaceTemp", 
+                oldObservation);
+    }
+
     private Individual annotateSingleSensorData(
             final WindowReading reading,
             final Individual sensor, 
@@ -98,60 +168,6 @@ final class SingleWindowReasoner
         return sensor; 
     }
 
-    /**
-     * @param r Reading to make provenance model for
-     * @param sensorID
-     * @param oldObservation Latest observation
-     * @return New observation (which is already added to this.model)
-     */
-    public Individual generateMeatProbeAnnotations(
-            final WindowReading r, 
-            final String sensorID, 
-            final Individual oldObservation) {
-        final Individual meatprobe = model.createIndividual(
-                "http://FoodSafety/sensor/meatProbe/"+sensorID,
-                model.createClass(Prefix.SSN+"System"));
-        // create instances of individual sensors for temp, humidity and movement (note Sensing Device is subclass of ssn:Sensor)
-        final Individual meatprobeSensor = sensorDescribtion(
-                meatprobe,
-                Prefix.METEO+"TmeperatureSensor");
-        return annotateSingleSensorData(
-                r, 
-                meatprobeSensor, 
-                "temperature", 
-                Prefix.FS_EXT+"meatCoreTemp",
-                oldObservation);
-    }
-    
-    /**
-     * @param r Reading to make provenance model for
-     * @param sensorID
-     * @param oldObservation Latest observation
-     * @return New observation (which is already added to this.model)
-     */
-    public Individual generateWirelessTagSensorAnnotations(
-            final WindowReading r,
-            String sensorID,
-            final Individual oldObservation) {
-        //static ssn info relevant to all data coming from the same sensor 
-        //create instance of main System that will represent a single wirelesstag
-        final Individual  wirelessTagSystem = 
-                model.createIndividual(
-                        "http://FoodSafety/sensor/wirelesstag/"+sensorID,
-                        model.createClass(Prefix.SSN+"System"));
-        // create instances of individual sensors for temp, humidity and movement (note Sensing Device is subclass of ssn:Sensor)
-        final Individual  temperatureSensor = 
-                sensorDescribtion(
-                        wirelessTagSystem,
-                        Prefix.METEO+"TmeperatureSensor");
-        // annotate data from temperature sensor 
-        return annotateSingleSensorData(
-                r, 
-                temperatureSensor, 
-                "temperature", 
-                Prefix.FS_EXT+"meatSurfaceTemp", 
-                oldObservation);
-    }
 
     public void log() {
         Logging.info(String.format("Window model had %d triples", model.size()));
