@@ -5,7 +5,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 import uk.ac.abdn.foodsafety.common.Logging;
-import uk.ac.abdn.foodsafety.simulator.sensordata.WindowReading;
+import uk.ac.abdn.foodsafety.simulator.sensordata.TimedTemperatureReading;
 
 import com.hp.hpl.jena.ontology.Individual;
 import com.hp.hpl.jena.ontology.OntModel;
@@ -20,13 +20,13 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
  * in a single time window.
  */
 final class SingleWindowReasoner
-    implements Consumer<WindowReading> {
+    implements Consumer<TimedTemperatureReading> {
     private final OntModel model = ModelFactory.createOntologyModel();
     private Individual lastWirelessObservation = null;
     private Individual lastMeatProbeObservation = null;
     
     @Override
-    public void accept(final WindowReading reading) {
+    public void accept(final TimedTemperatureReading reading) {
         //TODO: Less hacky criterion for being wireless/meatprobe
         if (reading.foi.equals("http://example.org/wirelessTag")) {
             this.lastWirelessObservation =
@@ -50,7 +50,7 @@ final class SingleWindowReasoner
      * @return New observation (which is already added to this.model)
      */
     private Individual generateMeatProbeAnnotations(
-            final WindowReading r, 
+            final TimedTemperatureReading r, 
             final String sensorID, 
             final Individual oldObservation) {
         final Individual meatprobe = model.createIndividual(
@@ -75,7 +75,7 @@ final class SingleWindowReasoner
      * @return New observation (which is already added to this.model)
      */
     private Individual generateWirelessTagSensorAnnotations(
-            final WindowReading r,
+            final TimedTemperatureReading r,
             String sensorID,
             final Individual oldObservation) {
         //static ssn info relevant to all data coming from the same sensor 
@@ -99,7 +99,7 @@ final class SingleWindowReasoner
     }
 
     private Individual annotateSingleSensorData(
-            final WindowReading reading,
+            final TimedTemperatureReading reading,
             final Individual sensor, 
             final String sensorType,
             final String observedProperty,

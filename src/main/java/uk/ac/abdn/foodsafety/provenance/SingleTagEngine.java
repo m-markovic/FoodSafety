@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
-import uk.ac.abdn.foodsafety.common.Logging;
 import uk.ac.abdn.foodsafety.simulator.sensordata.TimedTemperatureReading;
 import eu.larkc.csparql.cep.api.RdfQuadruple;
 import eu.larkc.csparql.cep.api.RdfStream;
@@ -25,11 +24,7 @@ public final class SingleTagEngine
     extends CsparqlEngineImpl 
     implements Consumer<TimedTemperatureReading> {
     private final RdfStream rdfStream = new RdfStream("http://foodsafety/parsed");
-    private final SingleTagWindowBuilder formatter = new SingleTagWindowBuilder(null);
     private final Stream.Builder<TimedTemperatureReading> readings = Stream.builder();
-
-    private int numQuadruples = 0;
-    private int numReadings = 0;
     
     /**
      * Initializes this engine.
@@ -46,12 +41,7 @@ public final class SingleTagEngine
     public void done() {
         this.readings.build()
             .sorted(Comparator.comparing(r -> r.time))
-            .map(SingleTagWindowBuilder::quadruples)
-            .reduce(Stream.empty(), Stream::concat)
-            .forEachOrdered(tuple -> this.put(tuple));
         ;
-        Logging.info(String.format("Total number of readings: %d", this.numReadings));
-        Logging.info(String.format("Total number of quadruples put into C-Sparql: %d", this.numQuadruples));
     }
     
     /**
@@ -70,7 +60,7 @@ public final class SingleTagEngine
             scanner = new Scanner(resourceAsStream, "UTF-8");
             final String text = scanner.useDelimiter("\\A").next();
             //Register query and add observer
-            this.registerQuery(text, false).addObserver(formatter);
+            this.registerQuery(text, false);//.addObserver(formatter);
         } catch (final ParseException e) {
             throw FoodSafetyException.internalError(e);
         } finally { //Close Scanner
@@ -86,7 +76,6 @@ public final class SingleTagEngine
      * @param A reading from a wireless tag or the meat probe.
      */
     public void accept(final TimedTemperatureReading reading) {
-        this.numReadings += 1;
         this.readings.accept(reading);
     }
 
@@ -95,7 +84,6 @@ public final class SingleTagEngine
      * @param q An RdfQuadruple
      */
     private void put(final RdfQuadruple q) {
-        this.numQuadruples += 1;
         this.rdfStream.put(q);
     }
 }
