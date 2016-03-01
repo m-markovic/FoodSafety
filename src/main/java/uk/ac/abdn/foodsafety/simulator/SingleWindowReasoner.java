@@ -1,11 +1,11 @@
-package uk.ac.abdn.foodsafety.provenance;
+package uk.ac.abdn.foodsafety.simulator;
 
 import java.util.GregorianCalendar;
 import java.util.UUID;
 import java.util.function.Consumer;
 
 import uk.ac.abdn.foodsafety.common.Logging;
-import uk.ac.abdn.foodsafety.sensordata.WindowReading;
+import uk.ac.abdn.foodsafety.simulator.sensordata.WindowReading;
 
 import com.hp.hpl.jena.ontology.Individual;
 import com.hp.hpl.jena.ontology.OntModel;

@@ -1,4 +1,4 @@
-package uk.ac.abdn.foodsafety.wirelesstag;
+package uk.ac.abdn.foodsafety.simulator.wirelesstag;
 
 import java.util.List;
 

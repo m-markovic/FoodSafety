@@ -1,4 +1,4 @@
-package uk.ac.abdn.foodsafety.csparql;
+package uk.ac.abdn.foodsafety.provenance;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -8,8 +8,8 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import uk.ac.abdn.foodsafety.sensordata.TimedTemperatureReading;
-import uk.ac.abdn.foodsafety.sensordata.WindowReading;
+import uk.ac.abdn.foodsafety.simulator.sensordata.TimedTemperatureReading;
+import uk.ac.abdn.foodsafety.simulator.sensordata.WindowReading;
 import eu.larkc.csparql.cep.api.RdfQuadruple;
 import eu.larkc.csparql.common.RDFTable;
 import eu.larkc.csparql.core.ResultFormatter;

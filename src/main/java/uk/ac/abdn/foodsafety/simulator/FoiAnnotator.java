@@ -1,4 +1,4 @@
-package uk.ac.abdn.foodsafety.meatprobe;
+package uk.ac.abdn.foodsafety.simulator;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -17,7 +17,7 @@ import com.google.gson.JsonSyntaxException;
 
 import uk.ac.abdn.foodsafety.common.Constants;
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
-import uk.ac.abdn.foodsafety.sensordata.TimedTemperatureReading;
+import uk.ac.abdn.foodsafety.simulator.sensordata.TimedTemperatureReading;
 
 /**
  * 

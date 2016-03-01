@@ -1,4 +1,4 @@
-package uk.ac.abdn.foodsafety;
+package uk.ac.abdn.foodsafety.simulator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,11 +10,11 @@ import java.util.stream.Stream;
 
 import uk.ac.abdn.foodsafety.common.Constants;
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
-import uk.ac.abdn.foodsafety.meatprobe.MeatProbeFilesParser;
-import uk.ac.abdn.foodsafety.sensordata.MeatProbeReading;
-import uk.ac.abdn.foodsafety.sensordata.TemperatureHumidityReading;
-import uk.ac.abdn.foodsafety.sensordata.TimedTemperatureReading;
-import uk.ac.abdn.foodsafety.wirelesstag.WirelessTagClient;
+import uk.ac.abdn.foodsafety.simulator.meatprobe.MeatProbeFilesParser;
+import uk.ac.abdn.foodsafety.simulator.sensordata.MeatProbeReading;
+import uk.ac.abdn.foodsafety.simulator.sensordata.TemperatureHumidityReading;
+import uk.ac.abdn.foodsafety.simulator.sensordata.TimedTemperatureReading;
+import uk.ac.abdn.foodsafety.simulator.wirelesstag.WirelessTagClient;
 
 /**
  * 
@@ -23,7 +23,7 @@ import uk.ac.abdn.foodsafety.wirelesstag.WirelessTagClient;
  * A ReadingsCompiler picks slices of sensor data and passes
  * these on to a reasoner.
  */
-final class ReadingsCompiler {
+public final class ReadingsCompiler {
     /** Provide sliced sensor data to this object */
     private final Consumer<TimedTemperatureReading> consumer;
     
@@ -43,7 +43,7 @@ final class ReadingsCompiler {
      * @param annotator Pass every  
      * @param dataConsumer The object to provide sliced data to
      */
-    ReadingsCompiler(
+    public ReadingsCompiler(
             final String from, 
             final String to, 
             final Consumer<TimedTemperatureReading> consumer) {
@@ -67,7 +67,7 @@ final class ReadingsCompiler {
      * @param client Facade to the wireless tag API
      * @param sensorId The ID of the sensor to get data for, e.g. 3
      */
-    void add(final WirelessTagClient client, final int sensorId) {
+    public void add(final WirelessTagClient client, final int sensorId) {
         //Get data for the dates (the API cannot slice on time of day)
         final Stream<TemperatureHumidityReading> readings = client.getStatsRaw(
             sensorId,
@@ -81,7 +81,7 @@ final class ReadingsCompiler {
      * and provides the result to the registered consumer.
      * @param parser parser for the meat probe files
      */
-    void add(final MeatProbeFilesParser parser) {
+    public void add(final MeatProbeFilesParser parser) {
         //Get data
         final Stream<MeatProbeReading> readings = parser.parse();
         this.filterAndConsume(readings);

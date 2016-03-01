@@ -10,7 +10,8 @@ import java.util.stream.Collectors;
 import org.junit.Test;
 
 import uk.ac.abdn.foodsafety.common.Constants;
-import uk.ac.abdn.foodsafety.sensordata.MeatProbeReading;
+import uk.ac.abdn.foodsafety.simulator.meatprobe.MeatProbeFilesParser;
+import uk.ac.abdn.foodsafety.simulator.sensordata.MeatProbeReading;
 
 public class TestMeatProbeFilesParser {
 

@@ -1,4 +1,4 @@
-package uk.ac.abdn.foodsafety.wirelesstag;
+package uk.ac.abdn.foodsafety.simulator.wirelesstag;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 import javax.net.ssl.HttpsURLConnection;
 
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
-import uk.ac.abdn.foodsafety.sensordata.TemperatureHumidityReading;
+import uk.ac.abdn.foodsafety.simulator.sensordata.TemperatureHumidityReading;
 
 import com.google.gson.Gson;
 
@@ -23,7 +23,7 @@ import com.google.gson.Gson;
  * An HTTP Client for mywirelesstag.com
  * 
  * Credentials must be given in an environment variable,
- * @see uk.ac.abdn.foodsafety.wirelesstag.SignInRequest
+ * @see uk.ac.abdn.foodsafety.simulator.wirelesstag.SignInRequest
  */
 public class WirelessTagClient {
     /** Base URL for all requests made */

@@ -7,10 +7,11 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
-import uk.ac.abdn.foodsafety.csparql.SingleTagEngine;
-import uk.ac.abdn.foodsafety.meatprobe.FoiAnnotator;
-import uk.ac.abdn.foodsafety.meatprobe.MeatProbeFilesParser;
-import uk.ac.abdn.foodsafety.wirelesstag.WirelessTagClient;
+import uk.ac.abdn.foodsafety.provenance.SingleTagEngine;
+import uk.ac.abdn.foodsafety.simulator.FoiAnnotator;
+import uk.ac.abdn.foodsafety.simulator.ReadingsCompiler;
+import uk.ac.abdn.foodsafety.simulator.meatprobe.MeatProbeFilesParser;
+import uk.ac.abdn.foodsafety.simulator.wirelesstag.WirelessTagClient;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package uk.ac.abdn.foodsafety.sensordata;
+package uk.ac.abdn.foodsafety.simulator.sensordata;
 
 import java.time.ZonedDateTime;
 

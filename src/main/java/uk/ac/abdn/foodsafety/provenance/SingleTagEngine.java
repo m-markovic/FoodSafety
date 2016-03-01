@@ -1,4 +1,4 @@
-package uk.ac.abdn.foodsafety.csparql;
+package uk.ac.abdn.foodsafety.provenance;
 
 import java.io.InputStream;
 import java.text.ParseException;
@@ -9,8 +9,7 @@ import java.util.stream.Stream;
 
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 import uk.ac.abdn.foodsafety.common.Logging;
-import uk.ac.abdn.foodsafety.provenance.ProvenanceReasoner;
-import uk.ac.abdn.foodsafety.sensordata.TimedTemperatureReading;
+import uk.ac.abdn.foodsafety.simulator.sensordata.TimedTemperatureReading;
 import eu.larkc.csparql.cep.api.RdfQuadruple;
 import eu.larkc.csparql.cep.api.RdfStream;
 import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
@@ -26,7 +25,7 @@ public final class SingleTagEngine
     extends CsparqlEngineImpl 
     implements Consumer<TimedTemperatureReading> {
     private final RdfStream rdfStream = new RdfStream("http://foodsafety/parsed");
-    private final SingleTagWindowBuilder formatter = new SingleTagWindowBuilder(new ProvenanceReasoner());
+    private final SingleTagWindowBuilder formatter = new SingleTagWindowBuilder(null);
     private final Stream.Builder<TimedTemperatureReading> readings = Stream.builder();
 
     private int numQuadruples = 0;

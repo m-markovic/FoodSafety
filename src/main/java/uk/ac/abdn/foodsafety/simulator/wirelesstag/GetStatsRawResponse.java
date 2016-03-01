@@ -1,4 +1,4 @@
-package uk.ac.abdn.foodsafety.wirelesstag;
+package uk.ac.abdn.foodsafety.simulator.wirelesstag;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import uk.ac.abdn.foodsafety.common.Constants;
-import uk.ac.abdn.foodsafety.sensordata.TemperatureHumidityReading;
+import uk.ac.abdn.foodsafety.simulator.sensordata.TemperatureHumidityReading;
 
 /**
  * A GetStatsRawResponse represents the data sent in a
