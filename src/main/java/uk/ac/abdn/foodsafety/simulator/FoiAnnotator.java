@@ -9,7 +9,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
@@ -30,7 +30,7 @@ import uk.ac.abdn.foodsafety.simulator.sensordata.TimedTemperatureReading;
  * {"2016-12-240T12:34:56+00:00": "http://example.org/meatItem345"}
  */
 public final class FoiAnnotator
-    implements Consumer<TimedTemperatureReading> {
+    implements UnaryOperator<TimedTemperatureReading> {
     private Map<ZonedDateTime, String> time2foi = 
             new HashMap<ZonedDateTime, String>();
     
@@ -67,8 +67,9 @@ public final class FoiAnnotator
      * it is left unchanged.
      */
     @Override
-    public void accept(final TimedTemperatureReading r) {
+    public TimedTemperatureReading apply(final TimedTemperatureReading r) {
         r.foi = this.time2foi.getOrDefault(r.time, r.foi);
+        return r;
     }
     
     @SuppressWarnings("serial")

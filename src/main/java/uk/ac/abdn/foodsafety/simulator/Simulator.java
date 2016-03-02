@@ -92,8 +92,7 @@ public final class Simulator {
     public void add(final MeatProbeFilesParser parser, final FoiAnnotator foiAnnotator) {
         //Get data
         final Stream<MeatProbeReading> readings = parser.parse();
-        readings.forEach(foiAnnotator);
-        this.filterAndCache(readings);
+        this.filterAndCache(readings.map(foiAnnotator));
     }
 
     /**

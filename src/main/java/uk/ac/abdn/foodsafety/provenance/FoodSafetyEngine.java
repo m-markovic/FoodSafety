@@ -24,7 +24,7 @@ import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
  * A FoodSafetyEngine is a specific CsparqlEngine with methods
  * and queries for this project.
  */
-public final class SingleTagEngine
+public final class FoodSafetyEngine
     extends CsparqlEngineImpl 
     implements Function<ZonedDateTime, Consumer<Model>> {
     private final RdfStream rdfStream = new RdfStream("http://foodsafety/ssn");
@@ -32,7 +32,7 @@ public final class SingleTagEngine
     /**
      * Initializes this engine.
      */
-    public SingleTagEngine() {
+    public FoodSafetyEngine() {
         this.initialize();
         this.registerStream(this.rdfStream);
         this.registerQueryFromResources("/window.sparql.txt");
@@ -47,7 +47,7 @@ public final class SingleTagEngine
      */
     private void registerQueryFromResources(final String path) {
         //Get InputStream for the file
-        final InputStream resourceAsStream = SingleTagEngine.class.getResourceAsStream(path);
+        final InputStream resourceAsStream = FoodSafetyEngine.class.getResourceAsStream(path);
         Scanner scanner = null;
         try {
             //Read entire file as UTF-8 into String

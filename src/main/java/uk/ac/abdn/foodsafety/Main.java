@@ -6,7 +6,7 @@ import java.nio.charset.Charset;
 
 import com.google.gson.Gson;
 
-import uk.ac.abdn.foodsafety.provenance.SingleTagEngine;
+import uk.ac.abdn.foodsafety.provenance.FoodSafetyEngine;
 import uk.ac.abdn.foodsafety.simulator.FoiAnnotator;
 import uk.ac.abdn.foodsafety.simulator.Simulator;
 import uk.ac.abdn.foodsafety.simulator.meatprobe.MeatProbeFilesParser;
@@ -47,7 +47,7 @@ public final class Main {
     private static void run(final Input input) {
         //Connect to wireless tag site
         final WirelessTagClient client = new WirelessTagClient();
-        final SingleTagEngine engine = new SingleTagEngine();
+        final FoodSafetyEngine engine = new FoodSafetyEngine();
         final Simulator simulator = new Simulator(input.from, input.to, engine);
         //Get meat probe data
         simulator
