@@ -3,13 +3,12 @@ package uk.ac.abdn.foodsafety;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.util.List;
 
 import com.google.gson.Gson;
 
 import uk.ac.abdn.foodsafety.provenance.SingleTagEngine;
 import uk.ac.abdn.foodsafety.simulator.FoiAnnotator;
-import uk.ac.abdn.foodsafety.simulator.ReadingsCompiler;
+import uk.ac.abdn.foodsafety.simulator.Simulator;
 import uk.ac.abdn.foodsafety.simulator.meatprobe.MeatProbeFilesParser;
 import uk.ac.abdn.foodsafety.simulator.wirelesstag.WirelessTagClient;
 
@@ -48,21 +47,16 @@ public final class Main {
     private static void run(final Input input) {
         //Connect to wireless tag site
         final WirelessTagClient client = new WirelessTagClient();
-        //Analyze each tag
-        for (Integer id : input.wirelessTags) {
-            final SingleTagEngine engine = new SingleTagEngine();
-            //Get meat probe data
-            new ReadingsCompiler(
-                    input.from, input.to,
-                    new FoiAnnotator(input.annotationsFile).andThen(engine))
-                .add(new MeatProbeFilesParser(input.meatProbeDir));
-            //Get wireless tag data
-            new ReadingsCompiler(
-                    input.from, input.to,
-                    new FoiAnnotator(input.annotationsFile).andThen(engine))
-                .add(client, id);
-            engine.done();
-        }            
+        final SingleTagEngine engine = new SingleTagEngine();
+        final Simulator simulator = new Simulator(input.from, input.to, engine);
+        //Get meat probe data
+        simulator
+            .add(new MeatProbeFilesParser(input.meatProbeDir),
+                 new FoiAnnotator(input.annotationsFile));
+        //Get wireless tag data
+        simulator
+            .add(client, input.wirelessTagId);
+        engine.done();
     }
     
     /**
@@ -77,7 +71,7 @@ public final class Main {
         private String to;
         private String meatProbeDir;
         private String annotationsFile;
-        private List<Integer> wirelessTags;
+        private int wirelessTagId;
         
         /**
          * Read and parse JSON from stdin

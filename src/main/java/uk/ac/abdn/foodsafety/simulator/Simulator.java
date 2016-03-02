@@ -23,7 +23,7 @@ import uk.ac.abdn.foodsafety.simulator.wirelesstag.WirelessTagClient;
  * A ReadingsCompiler picks slices of sensor data and passes
  * these on to a reasoner.
  */
-public final class ReadingsCompiler {
+public final class Simulator {
     /** Provide sliced sensor data to this object */
     private final Consumer<TimedTemperatureReading> consumer;
     
@@ -43,13 +43,13 @@ public final class ReadingsCompiler {
      * @param annotator Pass every  
      * @param dataConsumer The object to provide sliced data to
      */
-    public ReadingsCompiler(
+    public Simulator(
             final String from, 
             final String to, 
             final Consumer<TimedTemperatureReading> consumer) {
         this.consumer = consumer;
-        this.fromDateTime = ReadingsCompiler.parse(from, LocalTime.MIN);
-        this.toDateTime = ReadingsCompiler.parse(to, LocalTime.MAX);
+        this.fromDateTime = Simulator.parse(from, LocalTime.MIN);
+        this.toDateTime = Simulator.parse(to, LocalTime.MAX);
     }
 
     private <T extends TimedTemperatureReading> void filterAndConsume(final Stream<T> readings) {
@@ -80,10 +80,12 @@ public final class ReadingsCompiler {
      * Gets data from a directory of meat probe files, slices that data
      * and provides the result to the registered consumer.
      * @param parser parser for the meat probe files
+     * @param foiAnnotator object to replace raw fields with manual annotations
      */
-    public void add(final MeatProbeFilesParser parser) {
+    public void add(final MeatProbeFilesParser parser, final FoiAnnotator foiAnnotator) {
         //Get data
         final Stream<MeatProbeReading> readings = parser.parse();
+        readings.forEach(foiAnnotator);
         this.filterAndConsume(readings);
     }
 
