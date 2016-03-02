@@ -3,6 +3,7 @@ package uk.ac.abdn.foodsafety.provenance;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.time.ZonedDateTime;
+import java.util.Observable;
 import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -13,8 +14,11 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
+import uk.ac.abdn.foodsafety.common.Logging;
 import eu.larkc.csparql.cep.api.RdfQuadruple;
 import eu.larkc.csparql.cep.api.RdfStream;
+import eu.larkc.csparql.common.RDFTable;
+import eu.larkc.csparql.core.ResultFormatter;
 import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
 
 /**
@@ -27,6 +31,8 @@ import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
 public final class FoodSafetyEngine
     extends CsparqlEngineImpl 
     implements Function<ZonedDateTime, Consumer<Model>> {
+    
+    /** This engine's sole stream */
     private final RdfStream rdfStream = new RdfStream("http://foodsafety/ssn");
     
     /**
@@ -54,7 +60,7 @@ public final class FoodSafetyEngine
             scanner = new Scanner(resourceAsStream, "UTF-8");
             final String text = scanner.useDelimiter("\\A").next();
             //Register query and add observer
-            this.registerQuery(text, false);//.addObserver(formatter);
+            this.registerQuery(text, false).addObserver(new TmpFormatter());
         } catch (final ParseException e) {
             throw FoodSafetyException.internalError(e);
         } finally { //Close Scanner
@@ -85,5 +91,16 @@ public final class FoodSafetyEngine
                     (o.isResource()) ? o.asResource().getURI() : o.asLiteral().getLexicalForm(),
                     timestamp));
         }
+    }
+    
+    private static class TmpFormatter extends ResultFormatter {
+        /**
+         * Called when C-Sparql emits a window.
+         */
+        @Override
+        public void update(final Observable ignored, final Object rdfTableUntyped) {
+            final RDFTable rdfTable = (RDFTable) rdfTableUntyped;
+            Logging.info(String.format("Emitted %d triples", rdfTable.size()));
+        }   
     }
 }
