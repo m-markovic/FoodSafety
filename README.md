@@ -24,13 +24,12 @@ mvn eclipse:clean eclipse:eclipse
 
 ## Building and running
 
+Edit the info in ```src/test/resources/example-input.json.txt```, then
 ```
 mvn clean package
 export WTCRED="me@myemail.com mypassword" # credentials for wirelesstag.net - NO space in the password
-java -ea -jar target/foodsafety-jar-with-dependencies.jar < src/test/resources/example-input.json
+java -ea -jar target/foodsafety-jar-with-dependencies.jar < src/test/resources/example-input.json.txt
 ```
-
-The application will download temperature and humidity data for the sensor in the period from ```from``` to ```to```. These will be fed to a CSPARQL engine, and one simple query will continually be reporting to ```System.out```. 
 
 ## Run static analyses
 

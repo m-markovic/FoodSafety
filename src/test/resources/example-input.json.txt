@@ -1,7 +1,7 @@
 {
-  "from": "2013-01-29T15:30:00", 
-  "to": "2017-01-29T15:40:00", 
+  "from": "2016-02-10T14:27:30", 
+  "to": "2016-02-10T14:32:30",
+  "wirelessTags": 2,
   "meatProbeDir": "src/test/resources/meatprobefiles/", 
-  "annotationsFile": "src/test/resources/annotations.json.txt", 
-  "wirelessTags": []
+  "annotationsFile": "src/test/resources/annotations.json.txt"
 }
