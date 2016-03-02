@@ -8,8 +8,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
+import eu.larkc.csparql.cep.api.RdfQuadruple;
 import eu.larkc.csparql.cep.api.RdfStream;
 import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
 
@@ -23,7 +27,7 @@ import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
 public final class SingleTagEngine
     extends CsparqlEngineImpl 
     implements Function<ZonedDateTime, Consumer<Model>> {
-    private final RdfStream rdfStream = new RdfStream("http://foodsafety/parsed");
+    private final RdfStream rdfStream = new RdfStream("http://foodsafety/ssn");
     
     /**
      * Initializes this engine.
@@ -66,7 +70,20 @@ public final class SingleTagEngine
         return (m -> this.add(t, m));
     }
 
-    private void add(ZonedDateTime t, Model m) {
-        // TODO
+    private void add(final ZonedDateTime t, final Model m) {
+        final long timestamp = t.toInstant().toEpochMilli();
+        final StmtIterator it = m.listStatements();
+        while (it.hasNext()) {
+            final Statement triple = it.nextStatement();
+            final RDFNode o = triple.getObject();
+            if (o.isAnon()) {
+                FoodSafetyException.internalError(String.format("Blank node in %s", m.toString()));
+            };
+            this.rdfStream.put(new RdfQuadruple(
+                    triple.getSubject().getURI(),
+                    triple.getPredicate().getURI(),
+                    (o.isResource()) ? o.asResource().getURI() : o.asLiteral().getLexicalForm(),
+                    timestamp));
+        }
     }
 }
