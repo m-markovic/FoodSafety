@@ -56,7 +56,7 @@ public final class Main {
         //Get wireless tag data
         simulator
             .add(client, input.wirelessTagId);
-        engine.done();
+        simulator.done();
     }
     
     /**

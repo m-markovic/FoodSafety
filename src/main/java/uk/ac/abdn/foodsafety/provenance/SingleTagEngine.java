@@ -2,10 +2,8 @@ package uk.ac.abdn.foodsafety.provenance;
 
 import java.io.InputStream;
 import java.text.ParseException;
-import java.util.Comparator;
 import java.util.Scanner;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 import uk.ac.abdn.foodsafety.simulator.sensordata.TimedTemperatureReading;
@@ -24,7 +22,6 @@ public final class SingleTagEngine
     extends CsparqlEngineImpl 
     implements Consumer<TimedTemperatureReading> {
     private final RdfStream rdfStream = new RdfStream("http://foodsafety/parsed");
-    private final Stream.Builder<TimedTemperatureReading> readings = Stream.builder();
     
     /**
      * Initializes this engine.
@@ -34,16 +31,7 @@ public final class SingleTagEngine
         this.registerStream(this.rdfStream);
         this.registerQueryFromResources("/window.sparql.txt");
     }
-    
-    /**
-     * Call this once all streams have been processed.
-     */
-    public void done() {
-        this.readings.build()
-            .sorted(Comparator.comparing(r -> r.time))
-        ;
-    }
-    
+        
     /**
      * Registers a SPARQL query read from /src/main/resources
      * The query must be encoded in UTF-8.
@@ -76,7 +64,7 @@ public final class SingleTagEngine
      * @param A reading from a wireless tag or the meat probe.
      */
     public void accept(final TimedTemperatureReading reading) {
-        this.readings.accept(reading);
+        //TODO
     }
 
     /**

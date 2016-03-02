@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.Comparator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -33,6 +34,9 @@ public final class Simulator {
     /** Slice sensor data by time of reading: Must be before this time. */
     private final ZonedDateTime toDateTime;
 
+    /** Cache for sorting all readings by timestamp */
+    private final Stream.Builder<TimedTemperatureReading> readings = Stream.builder();
+
     /**
      * Parses from and to as LocalDate/LocalDateTime in the ISO format
      * and registers both of these along with the dataConsumer.
@@ -52,13 +56,13 @@ public final class Simulator {
         this.toDateTime = Simulator.parse(to, LocalTime.MAX);
     }
 
-    private <T extends TimedTemperatureReading> void filterAndConsume(final Stream<T> readings) {
+    private <T extends TimedTemperatureReading> void filterAndCache(final Stream<T> readings) {
         readings
         //Filter by time of day
         .filter((reading) -> reading.time.isAfter(this.fromDateTime))
         .filter((reading) -> reading.time.isBefore(this.toDateTime))
-        //Pass on to the consumer
-        .forEach(this.consumer);
+        //Pass on to the cache
+        .forEach(this.readings);
     }
     
     /**
@@ -73,7 +77,7 @@ public final class Simulator {
             sensorId,
             this.fromDateTime.toLocalDate(), 
             this.toDateTime.toLocalDate());
-        this.filterAndConsume(readings);
+        this.filterAndCache(readings);
     }
     
     /**
@@ -86,7 +90,17 @@ public final class Simulator {
         //Get data
         final Stream<MeatProbeReading> readings = parser.parse();
         readings.forEach(foiAnnotator);
-        this.filterAndConsume(readings);
+        this.filterAndCache(readings);
+    }
+
+    /**
+     * Call this once all readings have been added.
+     */
+    public void done() {
+        this.readings.build()
+            .sorted(Comparator.comparing(r -> r.time))
+            .forEachOrdered(this.consumer);
+        ;
     }
 
     /**
