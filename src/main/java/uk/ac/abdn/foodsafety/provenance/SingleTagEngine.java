@@ -2,13 +2,14 @@ package uk.ac.abdn.foodsafety.provenance;
 
 import java.io.InputStream;
 import java.text.ParseException;
+import java.time.ZonedDateTime;
 import java.util.Scanner;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import com.hp.hpl.jena.rdf.model.Model;
 
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
-import eu.larkc.csparql.cep.api.RdfQuadruple;
 import eu.larkc.csparql.cep.api.RdfStream;
 import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
 
@@ -21,7 +22,7 @@ import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
  */
 public final class SingleTagEngine
     extends CsparqlEngineImpl 
-    implements Consumer<Model> {
+    implements Function<ZonedDateTime, Consumer<Model>> {
     private final RdfStream rdfStream = new RdfStream("http://foodsafety/parsed");
     
     /**
@@ -60,18 +61,12 @@ public final class SingleTagEngine
         
     }
     
-    /**
-     * TODO
-     */
-    public void accept(final Model model) {
-        //TODO
+    @Override
+    public Consumer<Model> apply(final ZonedDateTime t) {
+        return (m -> this.add(t, m));
     }
 
-    /**
-     * Puts the given quadruple into this engine's single stream.
-     * @param q An RdfQuadruple
-     */
-    private void put(final RdfQuadruple q) {
-        this.rdfStream.put(q);
+    private void add(ZonedDateTime t, Model m) {
+        // TODO
     }
 }

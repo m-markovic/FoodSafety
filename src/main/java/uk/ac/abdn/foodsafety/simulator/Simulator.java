@@ -7,6 +7,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.Comparator;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import com.hp.hpl.jena.rdf.model.Model;
@@ -52,7 +53,7 @@ public final class Simulator {
     public Simulator(
             final String from, 
             final String to, 
-            final Consumer<Model> engine) {
+            final Function<ZonedDateTime, Consumer<Model>> engine) {
         this.consumer = new SSNModeller(engine);
         this.fromDateTime = Simulator.parse(from, LocalTime.MIN);
         this.toDateTime = Simulator.parse(to, LocalTime.MAX);

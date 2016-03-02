@@ -1,8 +1,10 @@
 package uk.ac.abdn.foodsafety.simulator;
 
+import java.time.ZonedDateTime;
 import java.util.GregorianCalendar;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import uk.ac.abdn.foodsafety.simulator.sensordata.TimedTemperatureReading;
 
@@ -24,10 +26,11 @@ final class SSNModeller
     private OntModel model;
     private Individual lastWirelessObservation = null;
     private Individual lastMeatProbeObservation = null;
-    private final Consumer<Model> modelConsumer;
+    private final Function<ZonedDateTime, Consumer<Model>> modelConsumer;
     
-    SSNModeller(final Consumer<Model> modelConsumer) {
-        this.modelConsumer = modelConsumer;
+    //TODO: Add first observation urls?
+    SSNModeller(final Function<ZonedDateTime, Consumer<Model>> engine) {
+        this.modelConsumer = engine;
     }
     
     @Override
@@ -47,7 +50,7 @@ final class SSNModeller
                             "mp", //TODO: Do we need to be specific?
                             this.lastMeatProbeObservation);
         }
-        modelConsumer.accept(this.model);
+        modelConsumer.apply(reading.time).accept(this.model);
         this.model = null;
     }
     
