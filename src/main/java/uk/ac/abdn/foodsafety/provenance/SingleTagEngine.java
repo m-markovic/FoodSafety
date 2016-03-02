@@ -5,8 +5,9 @@ import java.text.ParseException;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
+import com.hp.hpl.jena.rdf.model.Model;
+
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
-import uk.ac.abdn.foodsafety.simulator.sensordata.TimedTemperatureReading;
 import eu.larkc.csparql.cep.api.RdfQuadruple;
 import eu.larkc.csparql.cep.api.RdfStream;
 import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
@@ -20,7 +21,7 @@ import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
  */
 public final class SingleTagEngine
     extends CsparqlEngineImpl 
-    implements Consumer<TimedTemperatureReading> {
+    implements Consumer<Model> {
     private final RdfStream rdfStream = new RdfStream("http://foodsafety/parsed");
     
     /**
@@ -60,10 +61,9 @@ public final class SingleTagEngine
     }
     
     /**
-     * Saves the reading, to be processed when done() is called.
-     * @param A reading from a wireless tag or the meat probe.
+     * TODO
      */
-    public void accept(final TimedTemperatureReading reading) {
+    public void accept(final Model model) {
         //TODO
     }
 

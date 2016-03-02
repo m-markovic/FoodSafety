@@ -4,12 +4,12 @@ import java.util.GregorianCalendar;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import uk.ac.abdn.foodsafety.common.Logging;
 import uk.ac.abdn.foodsafety.simulator.sensordata.TimedTemperatureReading;
 
 import com.hp.hpl.jena.ontology.Individual;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 /**
@@ -19,14 +19,20 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
  * A SingleWindowReasoner reasons about provenance for readings
  * in a single time window.
  */
-final class SingleWindowReasoner
+final class SSNModeller
     implements Consumer<TimedTemperatureReading> {
-    private final OntModel model = ModelFactory.createOntologyModel();
+    private OntModel model;
     private Individual lastWirelessObservation = null;
     private Individual lastMeatProbeObservation = null;
+    private final Consumer<Model> modelConsumer;
+    
+    SSNModeller(final Consumer<Model> modelConsumer) {
+        this.modelConsumer = modelConsumer;
+    }
     
     @Override
     public void accept(final TimedTemperatureReading reading) {
+        this.model = ModelFactory.createOntologyModel();
         //TODO: Less hacky criterion for being wireless/meatprobe
         if (reading.foi.equals("http://example.org/wirelessTag")) {
             this.lastWirelessObservation =
@@ -41,6 +47,8 @@ final class SingleWindowReasoner
                             "mp", //TODO: Do we need to be specific?
                             this.lastMeatProbeObservation);
         }
+        modelConsumer.accept(this.model);
+        this.model = null;
     }
     
     /**
@@ -154,7 +162,7 @@ final class SingleWindowReasoner
     }
     
     // create instances of individual sensors for temp, humidity, movement and meat probe (note Sensing Device is subclass of ssn:Sensor)
-    public Individual sensorDescribtion (
+    private Individual sensorDescribtion (
             final Individual mainSystem, 
             final String sensorType) {
         final Individual sensor = model.createIndividual(
@@ -166,11 +174,6 @@ final class SingleWindowReasoner
                 model.createProperty(Prefix.SSN+ "hasSubsystem"),
                 sensor);
         return sensor; 
-    }
-
-
-    public void log() {
-        Logging.info(String.format("Window model had %d triples", model.size()));
     }
 
     @SuppressWarnings("unused")

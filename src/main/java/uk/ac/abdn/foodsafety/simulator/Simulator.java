@@ -9,6 +9,8 @@ import java.util.Comparator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import com.hp.hpl.jena.rdf.model.Model;
+
 import uk.ac.abdn.foodsafety.common.Constants;
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 import uk.ac.abdn.foodsafety.simulator.meatprobe.MeatProbeFilesParser;
@@ -50,8 +52,8 @@ public final class Simulator {
     public Simulator(
             final String from, 
             final String to, 
-            final Consumer<TimedTemperatureReading> consumer) {
-        this.consumer = consumer;
+            final Consumer<Model> engine) {
+        this.consumer = new SSNModeller(engine);
         this.fromDateTime = Simulator.parse(from, LocalTime.MIN);
         this.toDateTime = Simulator.parse(to, LocalTime.MAX);
     }
