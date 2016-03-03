@@ -23,8 +23,10 @@ mvn eclipse:clean eclipse:eclipse
 ```
 
 ## Building and running
-
-Edit the info in ```src/test/resources/example-input.json.txt```, then
+```
+cp -r config-example/ config
+```
+Edit the info in ```src/test/resources/example-input.json.txt``` and ```config```, then
 ```
 mvn clean package
 export WTCRED="me@myemail.com mypassword" # credentials for wirelesstag.net - NO space in the password

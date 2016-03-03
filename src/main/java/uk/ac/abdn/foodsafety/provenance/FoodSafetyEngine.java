@@ -1,20 +1,18 @@
 package uk.ac.abdn.foodsafety.provenance;
 
-import java.io.InputStream;
-import java.text.ParseException;
 import java.time.ZonedDateTime;
 import java.util.Observable;
-import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import uk.ac.abdn.foodsafety.common.FoodSafetyException;
+import uk.ac.abdn.foodsafety.common.Logging;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
-import uk.ac.abdn.foodsafety.common.FoodSafetyException;
-import uk.ac.abdn.foodsafety.common.Logging;
 import eu.larkc.csparql.cep.api.RdfQuadruple;
 import eu.larkc.csparql.cep.api.RdfStream;
 import eu.larkc.csparql.common.RDFTable;
@@ -41,36 +39,9 @@ public final class FoodSafetyEngine
     public FoodSafetyEngine() {
         this.initialize();
         this.registerStream(this.rdfStream);
-        this.registerQueryFromResources("/window.sparql.txt");
+        new Configurator(this);
     }
-        
-    /**
-     * Registers a SPARQL query read from /src/main/resources
-     * The query must be encoded in UTF-8.
-     * A ConsoleFormatter will be added as observer to the query.
-     * @param path The path to the query, relative to FoodSafety/src/main/resources,
-     * example: "/myquery.sparql.txt"
-     */
-    private void registerQueryFromResources(final String path) {
-        //Get InputStream for the file
-        final InputStream resourceAsStream = FoodSafetyEngine.class.getResourceAsStream(path);
-        Scanner scanner = null;
-        try {
-            //Read entire file as UTF-8 into String
-            scanner = new Scanner(resourceAsStream, "UTF-8");
-            final String text = scanner.useDelimiter("\\A").next();
-            //Register query and add observer
-            this.registerQuery(text, false).addObserver(new TmpFormatter());
-        } catch (final ParseException e) {
-            throw FoodSafetyException.internalError(e);
-        } finally { //Close Scanner
-            if (scanner != null) {
-                scanner.close();
-            }
-        }
-        
-    }
-    
+
     @Override
     public Consumer<Model> apply(final ZonedDateTime t) {
         return (m -> this.add(t, m));
@@ -93,7 +64,7 @@ public final class FoodSafetyEngine
         }
     }
     
-    private static class TmpFormatter extends ResultFormatter {
+    static class TmpFormatter extends ResultFormatter {
         /**
          * Called when C-Sparql emits a window.
          */

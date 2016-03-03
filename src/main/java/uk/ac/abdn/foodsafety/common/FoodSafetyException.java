@@ -95,6 +95,23 @@ public final class FoodSafetyException extends RuntimeException {
      */
     public static FoodSafetyException annotationIOfailed(IOException e) {
         return new FoodSafetyException("Failure reading annotation file", e);
+    }
 
+    /**
+     * Constructs an Exception to throw when reading the configuration files failed.
+     * @param e Exception caught during configuration
+     * @return The wrapping Exception
+     */
+    public static FoodSafetyException configurationError(final Exception e) {
+        return new FoodSafetyException("Failure reading configuration", e);
+    }
+
+    /**
+     * Constructs an Exception to throw when reading the configuration files failed.
+     * @param msg error message
+     * @return The wrapping Exception
+     */
+    public static FoodSafetyException configurationError(final String msg) {
+        return new FoodSafetyException(String.format("Failure reading configuration: %s", msg), null);
     }
 }
