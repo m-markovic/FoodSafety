@@ -12,7 +12,9 @@ import com.hp.hpl.jena.ontology.OntModelSpec;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.sparql.util.NodeFactoryExtra;
+import com.hp.hpl.jena.update.UpdateAction;
 
+import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 import uk.ac.abdn.foodsafety.common.Logging;
 import eu.larkc.csparql.common.RDFTable;
 import eu.larkc.csparql.core.ResultFormatter;
@@ -40,13 +42,18 @@ class FoodSafetyFormatter extends ResultFormatter {
     /** Model containing the latest provenance found */
     private Optional<Model> oldProv = Optional.empty();
 
+    /** Final resting place for inferred provenance */
+    private final Model persistentModel;
+
     /**
      * Registers the query name and prepares for configuration by
      * addSparql() and setOwl()
      * @param queryName Name picked up from directory - used for logging
+     * @param persistentModel All inferred provenance will be added to this model
      */
-    FoodSafetyFormatter(final String queryName) {
+    FoodSafetyFormatter(final String queryName, final Model persistentModel) {
         this.queryName = queryName;
+        this.persistentModel = persistentModel;
         //Initialize SPARQL update query collections
         for (Stage s : Stage.values()) {
             this.sparqlUpdateQueries.put(s, new ArrayList<String>());
@@ -72,8 +79,35 @@ class FoodSafetyFormatter extends ResultFormatter {
         this.infer();
     }
 
+    /**
+     * Runs coldstart or warm SPARQL queries, updating Jena models as appropriate.
+     */
     private void infer() {
-        // TODO Auto-generated method stub
+        final Model provmod = ModelFactory.createDefaultModel();
+        final long s = provmod.size();
+        provmod.add(this.m.get());
+        if (this.oldProv.isPresent()) {
+          //this modification needs to happen before updating old_provmod and persistentmodel
+            provmod.add(this.oldProv.get());
+            this.sparqlUpdateQueries.get(Stage.WARM).stream()
+                .forEach(query -> UpdateAction.parseExecute(query, provmod));//TODO log execution time
+            provmod.remove(this.m.get());
+            provmod.remove(this.oldProv.get());
+            if (provmod.size() > s) { //we inferred something
+                this.oldProv = Optional.of(provmod);
+                this.persistentModel.add(provmod);
+            }
+        } else { //First run
+            this.sparqlUpdateQueries.get(Stage.COLDSTART).stream()
+                .forEach(query -> UpdateAction.parseExecute(query, provmod));//TODO log execution time
+            provmod.remove(this.m.get());
+            if (provmod.size() > s) { //we inferred something
+                this.oldProv = Optional.of(provmod);
+                this.persistentModel.add(provmod);
+            } else { //No inference - error
+                throw FoodSafetyException.configurationError(String.format("The coldstart SPARQL for %s did not infer anything", this.queryName));
+            }
+        }
     }
 
     /**

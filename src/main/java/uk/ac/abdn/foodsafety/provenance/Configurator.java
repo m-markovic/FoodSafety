@@ -9,6 +9,9 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.hp.hpl.jena.rdf.model.Model;
+
+import eu.larkc.csparql.core.engine.CsparqlEngine;
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 
 /**
@@ -29,18 +32,22 @@ final class Configurator {
     private static final Path CONFIG_ROOT = Paths.get("config/foodsafety/");
     
     /** The engine to configure */
-    private final FoodSafetyEngine engine;
+    private final CsparqlEngine engine;
 
     /** Observer for each query */
     private Map<String, FoodSafetyFormatter> observers = new HashMap<>();
+
+    /** The persistent model to add inferred provenance to */
+    private final Model persistentModel;
     
     /**
      * Registers the engine to configure
      * @param foodSafetyEngine The engine to configure
-     * @throws IOException 
+     * @param persistentModel The persistent model to add inferred provenance to
      */
-    public Configurator(final FoodSafetyEngine foodSafetyEngine) {
+    public Configurator(final CsparqlEngine foodSafetyEngine, final Model persistentModel) {
         this.engine = foodSafetyEngine;
+        this.persistentModel = persistentModel;
         try {
             Files.walk(CONFIG_ROOT)
                 .filter(Files::isRegularFile)
@@ -50,6 +57,11 @@ final class Configurator {
         }
     }
     
+    /**
+     * Reads file content and interprets the file path in order to add this content
+     * to the right place.
+     * @param file A file in the configuration dir.
+     */
     private void addFile(final Path file) {
         final String content = read(file);
         final Path rel = CONFIG_ROOT.relativize(file);
@@ -67,9 +79,14 @@ final class Configurator {
         }
     }
     
+    /**
+     * Registers a new C-SPARQL query.
+     * @param name Derived from the file path
+     * @param content The text of the C-SPARQL query
+     */
     private void registerQuery(final String name, final String content) {
         try {
-            this.observers.put(name, new FoodSafetyFormatter(name));
+            this.observers.put(name, new FoodSafetyFormatter(name, this.persistentModel));
             this.engine.registerQuery(
                     content, 
                     false)
@@ -79,6 +96,11 @@ final class Configurator {
         }
     }
     
+    /**
+     * Utility for reading a file entirely, as ISO88591
+     * @param file Any regular file
+     * @return The file's content
+     */
     private static String read(final Path file) {
         try {
             return String.join("\n", Files.readAllLines(file, ISO88591));

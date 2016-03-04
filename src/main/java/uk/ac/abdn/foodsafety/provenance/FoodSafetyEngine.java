@@ -29,13 +29,16 @@ public final class FoodSafetyEngine
     /** This engine's sole stream */
     private final RdfStream rdfStream = new RdfStream("http://foodsafety/ssn");
     
+    /** Persistent model to be dumped when done */
+    private Model persistentModel;
+    
     /**
      * Initializes this engine.
      */
     public FoodSafetyEngine() {
         this.initialize();
         this.registerStream(this.rdfStream);
-        new Configurator(this);
+        new Configurator(this, this.persistentModel);
     }
 
     @Override
