@@ -1,12 +1,10 @@
 package uk.ac.abdn.foodsafety.provenance;
 
 import java.time.ZonedDateTime;
-import java.util.Observable;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
-import uk.ac.abdn.foodsafety.common.Logging;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -15,8 +13,6 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 import eu.larkc.csparql.cep.api.RdfQuadruple;
 import eu.larkc.csparql.cep.api.RdfStream;
-import eu.larkc.csparql.common.RDFTable;
-import eu.larkc.csparql.core.ResultFormatter;
 import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
 
 /**
@@ -62,16 +58,5 @@ public final class FoodSafetyEngine
                     (o.isResource()) ? o.asResource().getURI() : o.asLiteral().getLexicalForm(),
                     timestamp));
         }
-    }
-    
-    static class TmpFormatter extends ResultFormatter {
-        /**
-         * Called when C-Sparql emits a window.
-         */
-        @Override
-        public void update(final Observable ignored, final Object rdfTableUntyped) {
-            final RDFTable rdfTable = (RDFTable) rdfTableUntyped;
-            Logging.info(String.format("Emitted %d triples", rdfTable.size()));
-        }   
     }
 }
