@@ -41,6 +41,10 @@ public final class FoodSafetyEngine
         this.registerStream(this.rdfStream);
         new Configurator(this, this.persistentModel);
     }
+    
+    public void done() {
+        this.persistentModel.write(System.out, "N3");
+    }
 
     @Override
     public Consumer<Model> apply(final ZonedDateTime t) {

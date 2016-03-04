@@ -57,6 +57,7 @@ public final class Main {
         simulator
             .add(client, input.wirelessTagId);
         simulator.done();
+        engine.done();
     }
     
     /**
