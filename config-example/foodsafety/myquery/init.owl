@@ -1,0 +1,405 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY FoodSafetyOntology "https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#" >
+]>
+
+
+<rdf:RDF xmlns="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl"
+     xml:base="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl"
+     xmlns:FoodSafetyOntology="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl">
+        <owl:imports rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#executedAt -->
+
+    <owl:ObjectProperty rdf:about="&FoodSafetyOntology;executedAt"/>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#hasParameter -->
+
+    <owl:ObjectProperty rdf:about="&FoodSafetyOntology;hasParameter"/>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#hasState -->
+
+    <owl:ObjectProperty rdf:about="&FoodSafetyOntology;hasState"/>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#includes -->
+
+    <owl:ObjectProperty rdf:about="&FoodSafetyOntology;includes"/>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#isAssociatedWith -->
+
+    <owl:ObjectProperty rdf:about="&FoodSafetyOntology;isAssociatedWith"/>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#isOptionalResourceFor -->
+
+    <owl:ObjectProperty rdf:about="&FoodSafetyOntology;isOptionalResourceFor"/>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#isRequiredResourceFor -->
+
+    <owl:ObjectProperty rdf:about="&FoodSafetyOntology;isRequiredResourceFor"/>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#isResultOf -->
+
+    <owl:ObjectProperty rdf:about="&FoodSafetyOntology;isResultOf"/>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#restrics -->
+
+    <owl:ObjectProperty rdf:about="&FoodSafetyOntology;restrics"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#hasValue -->
+
+    <owl:DatatypeProperty rdf:about="&FoodSafetyOntology;hasValue"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#Constraint -->
+
+    <owl:Class rdf:about="&FoodSafetyOntology;Constraint"/>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#HaccpStep -->
+
+    <owl:Class rdf:about="&FoodSafetyOntology;HaccpStep"/>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#Parameter -->
+
+    <owl:Class rdf:about="&FoodSafetyOntology;Parameter"/>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#PhysicalObject -->
+
+    <owl:Class rdf:about="&FoodSafetyOntology;PhysicalObject"/>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#PhysicalPremisses -->
+
+    <owl:Class rdf:about="&FoodSafetyOntology;PhysicalPremisses"/>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#Plan -->
+
+    <owl:Class rdf:about="&FoodSafetyOntology;Plan"/>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#ChilledMeatStorageTemp -->
+
+    <owl:Class rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#ChilledMeatStorageTemp">
+        <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#TemperatureConstraint"/>
+    </owl:Class>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#CookedMeatCoreTemp -->
+
+    <owl:Class rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#CookedMeatCoreTemp">
+        <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#TemperatureConstraint"/>
+    </owl:Class>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#Cooking -->
+
+    <owl:Class rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#Cooking">
+        <rdfs:subClassOf rdf:resource="&FoodSafetyOntology;HaccpStep"/>
+    </owl:Class>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#Cooling -->
+
+    <owl:Class rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#Cooling">
+        <rdfs:subClassOf rdf:resource="&FoodSafetyOntology;HaccpStep"/>
+    </owl:Class>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#CoreTemp -->
+
+    <owl:Class rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#CoreTemp">
+        <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#Temperature"/>
+    </owl:Class>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#FSA_TemperatureThreshold -->
+
+    <owl:Class rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#FSA_TemperatureThreshold">
+        <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#FSA_Threshold"/>
+    </owl:Class>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#FSA_Threshold -->
+
+    <owl:Class rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#FSA_Threshold">
+        <rdfs:subClassOf rdf:resource="&FoodSafetyOntology;Parameter"/>
+    </owl:Class>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#FoodItem -->
+
+    <owl:Class rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#FoodItem">
+        <rdfs:subClassOf rdf:resource="&FoodSafetyOntology;PhysicalObject"/>
+    </owl:Class>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#HaccpConstraint -->
+
+    <owl:Class rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#HaccpConstraint">
+        <rdfs:subClassOf rdf:resource="&FoodSafetyOntology;Constraint"/>
+    </owl:Class>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#Ingredient -->
+
+    <owl:Class rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#Ingredient">
+        <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#FoodItem"/>
+    </owl:Class>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#MinceBeef -->
+
+    <owl:Class rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#MinceBeef">
+        <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#Ingredient"/>
+    </owl:Class>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#Preparation -->
+
+    <owl:Class rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#Preparation">
+        <rdfs:subClassOf rdf:resource="&FoodSafetyOntology;HaccpStep"/>
+    </owl:Class>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#SurfaceTemp -->
+
+    <owl:Class rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#SurfaceTemp">
+        <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#Temperature"/>
+    </owl:Class>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#Temperature -->
+
+    <owl:Class rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#Temperature">
+        <rdfs:subClassOf rdf:resource="&FoodSafetyOntology;Parameter"/>
+    </owl:Class>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#TemperatureConstraint -->
+
+    <owl:Class rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#TemperatureConstraint">
+        <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#HaccpConstraint"/>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#CookedMeatThreshold -->
+
+    <owl:NamedIndividual rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#CookedMeatThreshold">
+        <rdf:type rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#FSA_TemperatureThreshold"/>
+        <FoodSafetyOntology:hasValue rdf:datatype="&xsd;integer">75</FoodSafetyOntology:hasValue>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#HaccpTempConstraintChilledFood -->
+
+    <owl:NamedIndividual rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#HaccpTempConstraintChilledFood">
+        <rdf:type rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#ChilledMeatStorageTemp"/>
+        <FoodSafetyOntology:restrics rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#chilledMeat"/>
+        <FoodSafetyOntology:hasParameter rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#chilledStorageThreshold"/>
+        <FoodSafetyOntology:isAssociatedWith rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#cooling"/>
+        <FoodSafetyOntology:hasParameter rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#meatSurfaceTemp"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#HaccpTemperatureConstraintCookedFood -->
+
+    <owl:NamedIndividual rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#HaccpTemperatureConstraintCookedFood">
+        <rdf:type rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#CookedMeatCoreTemp"/>
+        <FoodSafetyOntology:hasParameter rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#CookedMeatThreshold"/>
+        <FoodSafetyOntology:restrics rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#cookedMeat"/>
+        <FoodSafetyOntology:isAssociatedWith rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#cooking"/>
+        <FoodSafetyOntology:hasParameter rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#meatCoreTemp"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#chilledMeat -->
+
+    <owl:NamedIndividual rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#chilledMeat">
+        <rdf:type rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#MinceBeef"/>
+        <FoodSafetyOntology:isResultOf rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#cooling"/>
+        <FoodSafetyOntology:isOptionalResourceFor rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#preparation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#chilledStorageThreshold -->
+
+    <owl:NamedIndividual rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#chilledStorageThreshold">
+        <rdf:type rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#FSA_TemperatureThreshold"/>
+        <FoodSafetyOntology:hasValue rdf:datatype="&xsd;integer">5</FoodSafetyOntology:hasValue>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#cookedMeat -->
+
+    <owl:NamedIndividual rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#cookedMeat">
+        <rdf:type rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#MinceBeef"/>
+        <FoodSafetyOntology:isResultOf rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#cooking"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#cooking -->
+
+    <owl:NamedIndividual rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#cooking">
+        <rdf:type rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#Cooking"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#cooling -->
+
+    <owl:NamedIndividual rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#cooling">
+        <rdf:type rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#Cooling"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#meatCoreTemp -->
+
+    <owl:NamedIndividual rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#meatCoreTemp">
+        <rdf:type rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#CoreTemp"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#meatOutOfStorage -->
+
+    <owl:NamedIndividual rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#meatOutOfStorage">
+        <rdf:type rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#MinceBeef"/>
+        <FoodSafetyOntology:isRequiredResourceFor rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#cooking"/>
+        <FoodSafetyOntology:isResultOf rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#preparation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#meatSurfaceTemp -->
+
+    <owl:NamedIndividual rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#meatSurfaceTemp">
+        <rdf:type rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#SurfaceTemp"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#preparation -->
+
+    <owl:NamedIndividual rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#preparation">
+        <rdf:type rdf:resource="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#Preparation"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#ryeAndSoda -->
+
+    <owl:NamedIndividual rdf:about="https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#ryeAndSoda"/>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.5.1) http://owlapi.sourceforge.net -->
+

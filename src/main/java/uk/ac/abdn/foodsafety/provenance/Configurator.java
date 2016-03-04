@@ -13,6 +13,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 
 import eu.larkc.csparql.core.engine.CsparqlEngine;
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
+import uk.ac.abdn.foodsafety.common.Logging;
 
 /**
  * 
@@ -63,19 +64,20 @@ final class Configurator {
      * @param file A file in the configuration dir.
      */
     private void addFile(final Path file) {
+        Logging.info(file.toString());
         final String content = read(file);
         final Path rel = CONFIG_ROOT.relativize(file);
         if ((rel.getNameCount() == 2) && (rel.getFileName().toString().equals(QUERY_FILE))) {
             //<CONFIG_ROOT>/<name>/csparql-query.rq: A C-SPARQL query
-            this.registerQuery(rel.getName(0).toString(), content);
-        } if ((rel.getNameCount() == 2) && (rel.getFileName().toString().equals(OWL_FILE))) {
+            this.registerQuery(rel.getName(0), content);
+        } else if ((rel.getNameCount() == 2) && (rel.getFileName().toString().equals(OWL_FILE))) {
             //<CONFIG_ROOT>/<name>/init.owl: An OWL file for initializing our Jena model
-            this.observers.get(rel.getName(0).toString()).setOwl(content);
+            formatter(rel.getName(0)).setOwl(content);
         } else if ((rel.getNameCount() == 3) && (rel.getFileName().toString().endsWith(".rq"))) {
             //<CONFIG_ROOT>/<name>/[coldstart/warm]/<othername>: A SPARQL update to be executed on the output of a query
-            this.observers.get(rel.getName(1).toString()).addSparql(rel.getName(2).toString(), content);
+            formatter(rel.getName(0)).addSparql(rel.getName(1).toString(), content);
         } else {
-            throw FoodSafetyException.configurationError(String.format("Unexpected file %s", file.toString()));
+            throw FoodSafetyException.configurationError(String.format("Unexpected file %s at depth %d, filename=%s", rel.toString(), rel.getNameCount(), rel.getFileName().toString()));
         }
     }
     
@@ -84,18 +86,24 @@ final class Configurator {
      * @param name Derived from the file path
      * @param content The text of the C-SPARQL query
      */
-    private void registerQuery(final String name, final String content) {
+    private void registerQuery(final Path name, final String content) {
         try {
-            this.observers.put(name, new FoodSafetyFormatter(name, this.persistentModel));
             this.engine.registerQuery(
                     content, 
                     false)
-                .addObserver(this.observers.get(name));
+                .addObserver(formatter(name));
         } catch (final ParseException e) {
             throw FoodSafetyException.configurationError(e);
         }
     }
     
+    private FoodSafetyFormatter formatter(final Path nameAsPath) {
+        final String name = nameAsPath.toString();
+        if (!this.observers.containsKey(name)){
+            this.observers.put(name, new FoodSafetyFormatter(name, this.persistentModel));
+        }
+        return this.observers.get(name.toString());
+    }
     /**
      * Utility for reading a file entirely, as ISO88591
      * @param file Any regular file
