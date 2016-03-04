@@ -7,6 +7,7 @@ import java.util.function.Function;
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
@@ -30,7 +31,7 @@ public final class FoodSafetyEngine
     private final RdfStream rdfStream = new RdfStream("http://foodsafety/ssn");
     
     /** Persistent model to be dumped when done */
-    private Model persistentModel;
+    private Model persistentModel = ModelFactory.createDefaultModel();
     
     /**
      * Initializes this engine.

@@ -11,12 +11,15 @@ import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.ontology.OntModelSpec;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.sparql.util.NodeFactoryExtra;
 import com.hp.hpl.jena.update.UpdateAction;
 
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 import uk.ac.abdn.foodsafety.common.Logging;
 import eu.larkc.csparql.common.RDFTable;
+import eu.larkc.csparql.common.RDFTuple;
 import eu.larkc.csparql.core.ResultFormatter;
 
 /**
@@ -70,13 +73,26 @@ class FoodSafetyFormatter extends ResultFormatter {
         //TODO: Do more than logging
         Logging.info(String.format("Query %s emitted %d triples", this.queryName, rdfTable.size()));
         rdfTable.stream()
-            .map(t -> this.m.get().createStatement(
-                    this.m.get().createResource(t.get(0)), 
-                    this.m.get().createProperty(t.get(1)),
-                    this.m.get().asRDFNode(NodeFactoryExtra.parseNode(t.get(2)))
-                ))
+            .map(this::convert)
             .forEach(s -> this.m.get().add(s));
         this.infer();
+    }
+    
+    private Statement convert(final RDFTuple t) {
+        RDFNode o;
+        try {
+            o = this.m.get().asRDFNode(NodeFactoryExtra.parseNode(t.get(2)));
+        } catch (final Exception e){
+            o = this.m.get().createResource(t.get(2));
+        }
+        try {
+            return this.m.get().createStatement(
+                    this.m.get().createResource(t.get(0)), 
+                    this.m.get().createProperty(t.get(1)),
+                    o);
+        } catch (final Exception e) {
+            throw FoodSafetyException.internalError(String.format("Problem converting %s", t.get(2)));
+        }
     }
 
     /**
