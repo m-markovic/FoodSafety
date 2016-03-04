@@ -54,13 +54,13 @@ final class Configurator {
         final String content = read(file);
         final Path rel = CONFIG_ROOT.relativize(file);
         if ((rel.getNameCount() == 2) && (rel.getFileName().toString().equals(QUERY_FILE))) {
-            //A C-SPARQL query
+            //<CONFIG_ROOT>/<name>/csparql-query.rq: A C-SPARQL query
             this.registerQuery(rel.getName(0).toString(), content);
         } if ((rel.getNameCount() == 2) && (rel.getFileName().toString().equals(OWL_FILE))) {
-            //An OWL file for initializing our Jena model
+            //<CONFIG_ROOT>/<name>/init.owl: An OWL file for initializing our Jena model
             this.observers.get(rel.getName(0).toString()).setOwl(content);
         } else if ((rel.getNameCount() == 3) && (rel.getFileName().toString().endsWith(".rq"))) {
-            //A SPARQL update to be executed on the output of a query
+            //<CONFIG_ROOT>/<name>/[coldstart/warm]/<othername>: A SPARQL update to be executed on the output of a query
             this.observers.get(rel.getName(1).toString()).addSparql(rel.getName(2).toString(), content);
         } else {
             throw FoodSafetyException.configurationError(String.format("Unexpected file %s", file.toString()));
