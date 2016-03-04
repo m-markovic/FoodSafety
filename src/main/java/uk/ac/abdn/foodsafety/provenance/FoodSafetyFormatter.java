@@ -11,6 +11,7 @@ import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.ontology.OntModelSpec;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.sparql.util.NodeFactoryExtra;
 
 import uk.ac.abdn.foodsafety.common.Logging;
 import eu.larkc.csparql.common.RDFTable;
@@ -54,12 +55,25 @@ class FoodSafetyFormatter extends ResultFormatter {
     
     /**
      * Called when C-Sparql emits a window.
+     * Adds all triples to the internal model, then runs infer().
      */
     @Override
     public void update(final Observable ignored, final Object rdfTableUntyped) {
         final RDFTable rdfTable = (RDFTable) rdfTableUntyped;
         //TODO: Do more than logging
         Logging.info(String.format("Query %s emitted %d triples", this.queryName, rdfTable.size()));
+        rdfTable.stream()
+            .map(t -> this.m.get().createStatement(
+                    this.m.get().createResource(t.get(0)), 
+                    this.m.get().createProperty(t.get(1)),
+                    this.m.get().asRDFNode(NodeFactoryExtra.parseNode(t.get(2)))
+                ))
+            .forEach(s -> this.m.get().add(s));
+        this.infer();
+    }
+
+    private void infer() {
+        // TODO Auto-generated method stub
     }
 
     /**
