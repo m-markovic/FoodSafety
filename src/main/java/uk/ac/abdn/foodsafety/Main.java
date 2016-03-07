@@ -26,7 +26,7 @@ public final class Main {
      * for the given sensors.
      * 
      * This application requires its input to be provided on stdin. Example input:
-     * {"from": "2016-01-29T15:30:00", "to": "2016-01-29T15:40:00", "meatProbeDir": "mydata/", "wirelessTags": [2,3]}
+     * {"from": "2016-01-29T15:30:00", "to": "2016-01-29T15:40:00", "meatProbeDir": "mydata/", "wirelessTagId": 2}
      * @param args not used
      */
     public static void main(final String[] args) {

@@ -76,14 +76,19 @@ class FoodSafetyFormatter extends ResultFormatter {
         this.infer();
     }
     
+    /**
+     * Converts a in an RdfTuple to a Jena Statement.
+     * @param t must have URIs as element 0 and 1, and a URI or a Literal as element 2
+     * @return The Statement representing elements 0,1,2 of t
+     */
     private Statement convert(final RDFTuple t) {
         RDFNode o;
-        try {
+        try { //Try to parse t.get(2) as a Literal
             o = this.m.get().asRDFNode(NodeFactoryExtra.parseNode(t.get(2)));
-        } catch (final Exception e){
+        } catch (final Exception e) { //Failed to parse, it must be a URI
             o = this.m.get().createResource(t.get(2));
         }
-        try {
+        try { //Compose and return the Statement
             return this.m.get().createStatement(
                     this.m.get().createResource(t.get(0)), 
                     this.m.get().createProperty(t.get(1)),
@@ -101,7 +106,7 @@ class FoodSafetyFormatter extends ResultFormatter {
         final long s = provmod.size();
         provmod.add(this.m.get());
         if (this.oldProv.isPresent()) {
-          //this modification needs to happen before updating old_provmod and persistentmodel
+            //Note: this modification needs to happen before updating oldProv and persistentModel
             provmod.add(this.oldProv.get());
             this.sparqlUpdateQueries.get(Stage.WARM).stream()
                 .forEach(query -> UpdateAction.parseExecute(query, provmod));//TODO log execution time

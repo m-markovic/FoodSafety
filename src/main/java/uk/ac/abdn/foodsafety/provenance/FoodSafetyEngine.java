@@ -42,15 +42,27 @@ public final class FoodSafetyEngine
         new Configurator(this, this.persistentModel);
     }
     
+    /**
+     * Outputs the internal persistent Model of provenance on System.out
+     */
     public void done() {
         this.persistentModel.write(System.out, "N3");
     }
 
+    /**
+     * To a Jena Model for a given timestamp, use engine.apply(t).accept(model)
+     * This is equivalent to engine.add(t, m)
+     */
     @Override
     public Consumer<Model> apply(final ZonedDateTime t) {
         return (m -> this.add(t, m));
     }
 
+    /**
+     * Adds all triples in the given model to C-SPARQL
+     * @param t Every triple in m will be passed with this timestamp
+     * @param m A Model containing the triples to add
+     */
     private void add(final ZonedDateTime t, final Model m) {
         final long timestamp = t.toInstant().toEpochMilli();
         final StmtIterator it = m.listStatements();

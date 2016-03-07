@@ -30,7 +30,7 @@ Edit the info in ```src/test/resources/example-input.json.txt``` and ```config``
 ```
 mvn clean package
 export WTCRED="me@myemail.com mypassword" # credentials for wirelesstag.net - NO space in the password
-java -ea -jar target/foodsafety-jar-with-dependencies.jar < src/test/resources/example-input.json.txt
+java -jar target/foodsafety-jar-with-dependencies.jar < src/test/resources/example-input.json.txt
 ```
 
 ## Run static analyses
