@@ -75,7 +75,10 @@ final class Configurator {
             formatter(rel.getName(0)).setOwl(content);
         } else if ((rel.getNameCount() == 3) && (rel.getFileName().toString().endsWith(".rq"))) {
             //<CONFIG_ROOT>/<name>/[coldstart/warm]/<othername>: A SPARQL update to be executed on the output of a query
-            formatter(rel.getName(0)).addSparql(rel.getName(1).toString(), content);
+            formatter(rel.getName(0)).addSparql(
+                    rel.getName(1).toString(), 
+                    rel.getName(2).toString(), 
+                    content);
         } else {
             throw FoodSafetyException.configurationError(String.format("Unexpected file %s at depth %d, filename=%s", rel.toString(), rel.getNameCount(), rel.getFileName().toString()));
         }

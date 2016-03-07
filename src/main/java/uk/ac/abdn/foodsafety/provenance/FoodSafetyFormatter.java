@@ -1,13 +1,18 @@
 package uk.ac.abdn.foodsafety.provenance;
 
 import java.io.ByteArrayInputStream;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Optional;
 
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
+import uk.ac.abdn.foodsafety.common.Logging;
 
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.ontology.OntModelSpec;
@@ -36,8 +41,8 @@ class FoodSafetyFormatter extends ResultFormatter {
     private final String queryName;
     
     /** The SPARQL update queries to execute */
-    private EnumMap<Stage, List<String>> sparqlUpdateQueries =
-            new EnumMap<Stage, List<String>>(Stage.class);
+    private EnumMap<Stage, HashMap<String, String>> sparqlUpdateQueries =
+            new EnumMap<Stage, HashMap<String, String>>(Stage.class);
 
     /** Model accumulating the received triples along with the OWL ontology */
     private Optional<OntModel> m = Optional.empty();
@@ -59,7 +64,7 @@ class FoodSafetyFormatter extends ResultFormatter {
         this.persistentModel = persistentModel;
         //Initialize SPARQL update query collections
         for (Stage s : Stage.values()) {
-            this.sparqlUpdateQueries.put(s, new ArrayList<String>());
+            this.sparqlUpdateQueries.put(s, new HashMap<String, String>());
         }
     }
     
@@ -108,8 +113,8 @@ class FoodSafetyFormatter extends ResultFormatter {
         if (this.oldProv.isPresent()) {
             //Note: this modification needs to happen before updating oldProv and persistentModel
             provmod.add(this.oldProv.get());
-            this.sparqlUpdateQueries.get(Stage.WARM).stream()
-                .forEach(query -> UpdateAction.parseExecute(query, provmod));//TODO log execution time
+            this.sparqlUpdateQueries.get(Stage.WARM)
+                .forEach((name, query) -> update(name, query, provmod));
             provmod.remove(this.m.get());
             provmod.remove(this.oldProv.get());
             if (provmod.size() > s) { //we inferred something
@@ -117,8 +122,8 @@ class FoodSafetyFormatter extends ResultFormatter {
                 this.persistentModel.add(provmod);
             }
         } else { //First run
-            this.sparqlUpdateQueries.get(Stage.COLDSTART).stream()
-                .forEach(query -> UpdateAction.parseExecute(query, provmod));//TODO log execution time
+            this.sparqlUpdateQueries.get(Stage.COLDSTART)
+                .forEach((name, query) -> update(name, query, provmod));
             provmod.remove(this.m.get());
             if (provmod.size() > s) { //we inferred something
                 this.oldProv = Optional.of(provmod);
@@ -128,14 +133,36 @@ class FoodSafetyFormatter extends ResultFormatter {
             }
         }
     }
+    
+    /**
+     * Parse&execute a SPARQL update query, logging stats about the execution.
+     * @param name Name of the query, for logging
+     * @param query The SPARQL text
+     * @param provmod The model to update
+     */
+    private static void update(final String name, final String query, final Model provmod) {
+        final long beforeSize = provmod.size();
+        final Instant before = Instant.now();
+        UpdateAction.parseExecute(query, provmod);
+        final Instant after = Instant.now();
+        final long afterSize = provmod.size();
+        Logging.info(String.format(
+                "Query %s: %d ms ; %d triples generated", 
+                name, 
+                Duration.between(before, after).toMillis(),
+                afterSize - beforeSize));
+    }
 
     /**
      * Adds a SPARQL update query to the given stage.
      * @param stage Must be "coldstart" or "warm" to decide in which case the query will be executed.
+     * @param name name of this update
      * @param content The text of the query.
      */
-    public void addSparql(final String stage, final String content) {
-        this.sparqlUpdateQueries.get(Stage.valueOf(stage.toUpperCase())).add(content);
+    public void addSparql(final String stage, final String name, final String content) {
+        this.sparqlUpdateQueries.get(Stage.valueOf(stage.toUpperCase())).put(
+                String.format("%s/%s", stage, name), 
+                content);
     }
 
     /**
