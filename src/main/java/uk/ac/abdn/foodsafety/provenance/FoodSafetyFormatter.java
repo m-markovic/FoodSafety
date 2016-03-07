@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Optional;
 
+import uk.ac.abdn.foodsafety.common.FoodSafetyException;
+
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.ontology.OntModelSpec;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -16,8 +18,6 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.sparql.util.NodeFactoryExtra;
 import com.hp.hpl.jena.update.UpdateAction;
 
-import uk.ac.abdn.foodsafety.common.FoodSafetyException;
-import uk.ac.abdn.foodsafety.common.Logging;
 import eu.larkc.csparql.common.RDFTable;
 import eu.larkc.csparql.common.RDFTuple;
 import eu.larkc.csparql.core.ResultFormatter;
@@ -68,10 +68,8 @@ class FoodSafetyFormatter extends ResultFormatter {
      * Adds all triples to the internal model, then runs infer().
      */
     @Override
-    public void update(final Observable ignored, final Object rdfTableUntyped) {
+    public synchronized void update(final Observable ignored, final Object rdfTableUntyped) {
         final RDFTable rdfTable = (RDFTable) rdfTableUntyped;
-        //TODO: Do more than logging
-        Logging.info(String.format("Query %s emitted %d triples", this.queryName, rdfTable.size()));
         rdfTable.stream()
             .map(this::convert)
             .forEach(s -> this.m.get().add(s));
