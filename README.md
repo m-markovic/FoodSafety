@@ -70,6 +70,13 @@ If you would like to edit this project in Eclipse, we recommend you create a pro
 mvn eclipse:clean eclipse:eclipse
 ```
 
+## Using live data
+
+To run the FoodSafety engine with live data you will need to
+  * Change ```csparql.properties```, setting ```esper.externaltime.enabled``` to ```false```.
+  * Write Java code that constructs an instance of ```uk.ac.abdn.foodsafety.provenance.FoodSafetyEngine``` (call this ```engine```)
+  * Write Java code that encodes live data as SSN in a Jena ```Model``` (call this ```model```) and adds the data like this: ```engine.apply(ZonedDateTime.now()).accept(model)```. 
+
 ## Run static analyses
 
 To see if the updated code has any issues according to PMD or Findbugs, run
