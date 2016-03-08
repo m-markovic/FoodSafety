@@ -3,11 +3,8 @@ package uk.ac.abdn.foodsafety.provenance;
 import java.io.ByteArrayInputStream;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Observable;
 import java.util.Optional;
 
@@ -167,11 +164,11 @@ class FoodSafetyFormatter extends ResultFormatter {
 
     /**
      * Loads the given ontology into the internal Jena model.
-     * @param ontology Ontology, in OWL
+     * @param ontology Ontology, in TTL
      */
-    public void setOwl(final String ontology) {
+    public void setOntology(final String ontology) {
         final OntModel plan = ModelFactory.createOntologyModel();
-        plan.read(new ByteArrayInputStream(ontology.getBytes()), null);
+        plan.read(new ByteArrayInputStream(ontology.getBytes()), null, "TTL");
         this.m = Optional.of(ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF, plan));
     }
     
