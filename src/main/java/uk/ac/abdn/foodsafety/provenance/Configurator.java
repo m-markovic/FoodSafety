@@ -67,13 +67,13 @@ final class Configurator {
         Logging.info(file.toString());
         final String content = read(file);
         final Path rel = CONFIG_ROOT.relativize(file);
-        if ((rel.getNameCount() == 2) && (rel.getFileName().toString().equals(QUERY_FILE))) {
+        if (rel.getNameCount() == 2 && rel.getFileName().toString().equals(QUERY_FILE)) {
             //<CONFIG_ROOT>/<name>/csparql-query.rq: A C-SPARQL query
             this.registerQuery(rel.getName(0), content);
-        } else if ((rel.getNameCount() == 2) && (rel.getFileName().toString().equals(OWL_FILE))) {
+        } else if (rel.getNameCount() == 2 && rel.getFileName().toString().equals(OWL_FILE)) {
             //<CONFIG_ROOT>/<name>/init.ttl: A TTL ontology for initializing our Jena model
             formatter(rel.getName(0)).setOntology(content);
-        } else if ((rel.getNameCount() == 3) && (rel.getFileName().toString().endsWith(".rq"))) {
+        } else if (rel.getNameCount() == 3 && rel.getFileName().toString().endsWith(".rq")) {
             //<CONFIG_ROOT>/<name>/[coldstart/warm]/<othername>: A SPARQL update to be executed on the output of a query
             formatter(rel.getName(0)).addSparql(
                     rel.getName(1).toString(), 

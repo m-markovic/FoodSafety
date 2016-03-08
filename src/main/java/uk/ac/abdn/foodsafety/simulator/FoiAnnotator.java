@@ -55,7 +55,6 @@ public final class FoiAnnotator
                     LocalDateTime.parse(entry.getKey(), DateTimeFormatter.ISO_OFFSET_DATE_TIME)
                         .atZone(Constants.UK), 
                     entry.getValue()));
-            ;
         } catch (JsonSyntaxException e) {
             throw FoodSafetyException.userInputError(String.format("File '%s'", INPUT_PATH.toString()), e);
         } catch (JsonIOException e) {

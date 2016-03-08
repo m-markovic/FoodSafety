@@ -55,7 +55,7 @@ public final class FoodSafetyEngine
      */
     @Override
     public Consumer<Model> apply(final ZonedDateTime t) {
-        return (m -> this.add(t, m));
+        return m -> this.add(t, m);
     }
 
     /**
@@ -71,11 +71,11 @@ public final class FoodSafetyEngine
             final RDFNode o = triple.getObject();
             if (o.isAnon()) {
                 FoodSafetyException.internalError(String.format("Blank node in %s", m.toString()));
-            };
+            }
             this.rdfStream.put(new RdfQuadruple(
                     triple.getSubject().getURI(),
                     triple.getPredicate().getURI(),
-                    (o.isResource()) ? o.asResource().getURI() : o.asLiteral().getLexicalForm(),
+                    o.isResource() ? o.asResource().getURI() : o.asLiteral().getLexicalForm(),
                     timestamp));
         }
     }

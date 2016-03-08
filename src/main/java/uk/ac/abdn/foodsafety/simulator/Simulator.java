@@ -102,7 +102,6 @@ public final class Simulator {
         this.readings.build()
             .sorted(Comparator.comparing(r -> r.time))
             .forEachOrdered(this.consumer);
-        ;
     }
 
     /**
