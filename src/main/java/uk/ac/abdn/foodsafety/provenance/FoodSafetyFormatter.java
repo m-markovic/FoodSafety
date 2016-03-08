@@ -1,6 +1,7 @@
 package uk.ac.abdn.foodsafety.provenance;
 
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.EnumMap;
@@ -168,7 +169,7 @@ class FoodSafetyFormatter extends ResultFormatter {
      */
     public void setOntology(final String ontology) {
         final OntModel plan = ModelFactory.createOntologyModel();
-        plan.read(new ByteArrayInputStream(ontology.getBytes()), null, "TTL");
+        plan.read(new ByteArrayInputStream(ontology.getBytes(StandardCharsets.ISO_8859_1)), null, "TTL");
         this.m = Optional.of(ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF, plan));
     }
     
