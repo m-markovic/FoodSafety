@@ -3,6 +3,7 @@ package uk.ac.abdn.foodsafety.simulator;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -31,18 +32,21 @@ import uk.ac.abdn.foodsafety.simulator.sensordata.TimedTemperatureReading;
  */
 public final class FoiAnnotator
     implements UnaryOperator<TimedTemperatureReading> {
+    /** Path to the input JSON file */
+    private static final Path INPUT_PATH = Paths.get("config/simulator/annotations.json.txt");
+    
+    /** Internal cache of the annotations */
     private Map<ZonedDateTime, String> time2foi = 
             new HashMap<ZonedDateTime, String>();
     
     /**
      * Reads and parses the input JSON file
-     * @param pathAsString path to the input JSON file
      */
-    public FoiAnnotator(final String pathAsString) {
+    public FoiAnnotator() {
         try {
             new Gson().fromJson(
                 Files.newBufferedReader(
-                    Paths.get(pathAsString),
+                    INPUT_PATH,
                     Charset.forName("UTF-8")), 
                 Annotations.class)
             .entrySet()
@@ -53,9 +57,9 @@ public final class FoiAnnotator
                     entry.getValue()));
             ;
         } catch (JsonSyntaxException e) {
-            throw FoodSafetyException.userInputError(String.format("File '%s'", pathAsString), e);
+            throw FoodSafetyException.userInputError(String.format("File '%s'", INPUT_PATH.toString()), e);
         } catch (JsonIOException e) {
-            throw FoodSafetyException.userInputError(String.format("File '%s'", pathAsString), e);
+            throw FoodSafetyException.userInputError(String.format("File '%s'", INPUT_PATH.toString()), e);
         } catch (IOException e) {
             throw FoodSafetyException.annotationIOfailed(e);
         }

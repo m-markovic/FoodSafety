@@ -2,6 +2,8 @@ package uk.ac.abdn.foodsafety.meatprobe;
 
 import static org.junit.Assert.*;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.function.Function;
@@ -17,8 +19,7 @@ public class TestMeatProbeFilesParser {
 
     @Test
     public void test() {
-        final String file = TestMeatProbeFilesParser.class.getResource("/meatprobefiles").getFile();
-        final Map<Integer, MeatProbeReading> parsed = new MeatProbeFilesParser(file)
+        final Map<Integer, MeatProbeReading> parsed = new TestParser()
             .parse()
             .collect(Collectors.toMap(
                     reading -> reading.id, 
@@ -49,5 +50,17 @@ public class TestMeatProbeFilesParser {
         assertEquals(
                 dec15.atTime(2, 16, 34).atZone(Constants.UK), 
                 parsed.get(30857).time);
+    }
+    
+    /**
+     * 
+     * @author nhc
+     * 
+     * MeatProbeFilesParser reading its input from src/test/resources
+     */
+    private static final class TestParser extends MeatProbeFilesParser {
+        protected Path getPath() {
+            return Paths.get(TestMeatProbeFilesParser.class.getResource("/meatprobefiles").getFile());
+        }
     }
 }

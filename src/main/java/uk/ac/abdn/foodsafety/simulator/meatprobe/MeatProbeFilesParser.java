@@ -20,21 +20,12 @@ import uk.ac.abdn.foodsafety.simulator.sensordata.MeatProbeReading;
  *
  * Parser for an entire directory of meat probe files.
  */
-public final class MeatProbeFilesParser {
+public class MeatProbeFilesParser {
+    /** The directory containing the meat probe files */
+    private static final Path PATH = Paths.get("config/simulator/meatprobe");
+    
     /** Charset used for decoding all meat probe files */
     private static final Charset ISO88591 = Charset.forName("ISO-8859-1");
-    
-    /** The directory containing the meat probe files */
-    private Path dir_path;
-    
-    /**
-     * Converts the directory into a java.nio.file.Path and stores it
-     * @param directory Path to the directory containing the meat probe files,
-     * e.g. "mydata/meatprobefiles/"
-     */
-    public MeatProbeFilesParser(final String directory) {
-        this.dir_path = Paths.get(directory); 
-    }
     
     /**
      * Parses all files in the directory containing the meat probe files
@@ -44,7 +35,7 @@ public final class MeatProbeFilesParser {
         try {
             return 
                     //For each file in the given directory
-                    Files.walk(this.dir_path)
+                    Files.walk(this.getPath())
                     //Read all lines of the file
                     .map(MeatProbeFilesParser::readAllLines)
                     //Concatenate the lines of all the files
@@ -62,6 +53,14 @@ public final class MeatProbeFilesParser {
         } catch (final IOException e) {
             throw FoodSafetyException.meatProbeIOfailed(e);
         }
+    }
+    
+    /**
+     * Utility method for allowing unit tests of the parser
+     * @return The path of the directory containing the meat probe files
+     */
+    protected Path getPath() {
+        return PATH;
     }
     
     /**

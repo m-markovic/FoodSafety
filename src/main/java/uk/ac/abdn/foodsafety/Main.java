@@ -1,16 +1,20 @@
 package uk.ac.abdn.foodsafety;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import com.google.gson.Gson;
-
+import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 import uk.ac.abdn.foodsafety.provenance.FoodSafetyEngine;
 import uk.ac.abdn.foodsafety.simulator.FoiAnnotator;
 import uk.ac.abdn.foodsafety.simulator.Simulator;
 import uk.ac.abdn.foodsafety.simulator.meatprobe.MeatProbeFilesParser;
 import uk.ac.abdn.foodsafety.simulator.wirelesstag.WirelessTagClient;
+
+import com.google.gson.Gson;
 
 /**
  * 
@@ -20,18 +24,19 @@ import uk.ac.abdn.foodsafety.simulator.wirelesstag.WirelessTagClient;
  */
 public final class Main {
     /**
-     * Creates a Csparql engine and provides it with downloaded readings
-     * from wireless tags.
-     * The readings will contain temperature and humidity from fromDate to toDate
-     * for the given sensors.
+     * Creates a C-SPARQL engine for FoodSafety and provides it with simulated live data.
+     * The Simulator will read meat probe files from config/meatprobe/
+     * and will download wireless tag data from the internet.
+     * The readings will contain temperature from fromDate to toDate
      * 
-     * This application requires its input to be provided on stdin. Example input:
-     * {"from": "2016-01-29T15:30:00", "to": "2016-01-29T15:40:00", "meatProbeDir": "mydata/", "wirelessTagId": 2}
+     * This application requires its input to be provided in a file at Input.INPUT_PATH
+     * Example input:
+     * {"from": "2016-01-29T15:30:00", "to": "2016-01-29T15:40:00", "wirelessTagId": 2}
      * @param args not used
      */
     public static void main(final String[] args) {
-        //Parse command-line input
-        final Input input = Input.parseFromStdIn();
+        //Parse input file
+        final Input input = Input.readAndparse();
         try {
             run(input);
         } catch (final Exception e) {
@@ -42,7 +47,7 @@ public final class Main {
     /**
      * Analyzes the readings of each tag in the input paired with the
      * meat probe readings.
-     * @param input Parsed input from System.in
+     * @param input Parsed from file system
      */
     private static void run(final Input input) {
         //Connect to wireless tag site
@@ -51,8 +56,8 @@ public final class Main {
         final Simulator simulator = new Simulator(input.from, input.to, engine);
         //Get meat probe data
         simulator
-            .add(new MeatProbeFilesParser(input.meatProbeDir),
-                 new FoiAnnotator(input.annotationsFile));
+            .add(new MeatProbeFilesParser(),
+                 new FoiAnnotator());
         //Get wireless tag data
         simulator
             .add(client, input.wirelessTagId);
@@ -68,23 +73,26 @@ public final class Main {
      * This class is instantiated by the GSON library, parsed from JSON input.
      */
     private static final class Input {
+        private static final Path INPUT_PATH = Paths.get("config/simulator/input.json.txt");
+        
         private String from;
         private String to;
-        private String meatProbeDir;
-        private String annotationsFile;
         private int wirelessTagId;
         
         /**
-         * Read and parse JSON from stdin
+         * Read and parse JSON from INPUT_PATH
          * @return The parsed Input
          */
-        static Input parseFromStdIn() {
-            final BufferedReader responseReader = 
-                    new BufferedReader(
-                            new InputStreamReader(
-                                    System.in,
-                                    Charset.forName("UTF-8")));
-            return new Gson().fromJson(responseReader, Input.class);
+        static Input readAndparse() {
+            final BufferedReader inputReader;
+            try {
+                inputReader = Files.newBufferedReader(
+                        INPUT_PATH, 
+                        StandardCharsets.UTF_8);
+                return new Gson().fromJson(inputReader, Input.class);
+            } catch (final IOException e) {
+                throw FoodSafetyException.userInputError(INPUT_PATH.toString(), e);
+            }
         }
     }
 }
