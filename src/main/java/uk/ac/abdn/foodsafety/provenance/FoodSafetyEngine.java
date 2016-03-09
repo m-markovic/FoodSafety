@@ -75,7 +75,12 @@ public final class FoodSafetyEngine
             this.rdfStream.put(new RdfQuadruple(
                     triple.getSubject().getURI(),
                     triple.getPredicate().getURI(),
-                    o.isResource() ? o.asResource().getURI() : o.asLiteral().getLexicalForm(),
+                    o.isResource() ? 
+                            o.asResource().getURI() : 
+                                String.format(
+                                        "\"%s\"^^%s", 
+                                        o.asLiteral().getLexicalForm(),
+                                        o.asLiteral().getDatatypeURI()),
                     timestamp));
         }
     }
