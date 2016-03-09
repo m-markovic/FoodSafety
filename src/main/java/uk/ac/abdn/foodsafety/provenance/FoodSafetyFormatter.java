@@ -86,10 +86,14 @@ class FoodSafetyFormatter extends ResultFormatter {
      */
     private Statement convert(final RDFTuple t) {
         RDFNode o;
-        try { //Try to parse t.get(2) as a Literal
-            o = this.m.get().asRDFNode(NodeFactoryExtra.parseNode(t.get(2)));
-        } catch (final Exception e) { //Failed to parse, it must be a URI
-            o = this.m.get().createResource(t.get(2));
+        final String[] oSplit = t.get(2).split("\\^\\^"); //Split if this is a typed literal
+        if (oSplit.length == 2) {
+            o = this.m.get().asRDFNode(NodeFactoryExtra.createLiteralNode(
+                    oSplit[0].substring(1, oSplit[0].length() - 2), 
+                    null, 
+                    oSplit[1]));
+        } else {
+            o = this.m.get().createResource(t.get(2));            
         }
         try { //Compose and return the Statement
             return this.m.get().createStatement(
