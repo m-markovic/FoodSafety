@@ -181,18 +181,6 @@ final class SSNModeller
 
     @SuppressWarnings("unused")
     private static class Prefix {
-        public static final String ALL_AS_STRING = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" + 
-                "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" + 
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + 
-                "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" + 
-                "PREFIX ssn: <http://purl.oclc.org/NET/ssnx/ssn#>\n" + 
-                "PREFIX sk: <http://purl.oclc.org/NET/ssnx/product/smart-knife#>\n" + 
-                "PREFIX fs:<https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#>\n" + 
-                "PREFIX prov:<http://www.w3.org/ns/prov#>\n" + 
-                "PREFIX fs-ex:<https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#>\n" + 
-                "PREFIX sc-prov:<https://w3id.org/abdn/socialcomp/sc-prov#>";
-        
-        
         public static String SSN = "http://purl.oclc.org/NET/ssnx/ssn#";
         public static String PROV = "http://www.w3.org/ns/prov#";
         public static String RDFS = "http://www.w3.org/2000/01/rdf-schema#";
@@ -200,8 +188,8 @@ final class SSNModeller
         public static String XSD = "http://www.w3.org/2001/XMLSchema#";
         public static String METEO = "https://www.w3.org/2005/Incubator/ssn/ssnx/meteo/aws#";
         public static String SK = "http://purl.oclc.org/NET/ssnx/product/smart-knife#";
-        public static String FS = "https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso.owl#";
-        public static String FS_EXT = "https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended.owl#";
-        public static String SC = "http://example.org/sc-prov#";
+        public static String FS = "https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso#";
+        public static String FS_EXT = "https://raw.githubusercontent.com/m-markovic/FS-PROV-Ontology/master/fso_extended#";
+        public static String SC = "https://w3id.org/abdn/socialcomp/sc-prov#";
     }
 }
