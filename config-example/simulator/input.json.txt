@@ -1,5 +1,9 @@
 {
   "from": "2016-02-10T14:27:30", 
   "to": "2016-02-10T14:32:30",
-  "wirelessTags": 2
+  "foi2wirelessTagID": {
+    "http://foodsafety/1": 1,
+    "http://foodsafety/2": 2,
+    "http://foodsafety/6": 6
+   }
 }

@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 import javax.net.ssl.HttpsURLConnection;
 
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
+import uk.ac.abdn.foodsafety.common.Logging;
 import uk.ac.abdn.foodsafety.simulator.sensordata.TemperatureHumidityReading;
 
 import com.google.gson.Gson;
@@ -90,6 +91,7 @@ public class WirelessTagClient {
             final int sensorId,
             final LocalDate fromDate,
             final LocalDate toDate) {
+        Logging.info(String.format("Retrieving data for wireless tag %d...", sensorId));
         assert fromDate.isBefore(toDate) || fromDate.isEqual(toDate) : String.format(
                 "Cannot get data for this period because fromDate %s is not before toDate %s",
                 fromDate,
@@ -103,6 +105,7 @@ public class WirelessTagClient {
                     this.parseJsonResponse(
                         urlConnection, 
                         GetStatsRawResponse.class);
+            response.log();
             return response.stream();
           } catch (final IOException e) {
               throw FoodSafetyException.wirelessTagConnectionFailed(e);

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import uk.ac.abdn.foodsafety.common.Constants;
+import uk.ac.abdn.foodsafety.common.Logging;
 import uk.ac.abdn.foodsafety.simulator.sensordata.TemperatureHumidityReading;
 
 /**
@@ -58,5 +59,12 @@ public final class GetStatsRawResponse {
             }
             return result.build();
         }
+    }
+
+    /**
+     * Log the total number of readings in the response
+     */
+    public void log() {
+        Logging.info(String.format("Retrieved %d readings", this.d.stream().mapToInt(day -> day.temps.size()).sum()));
     }
 }

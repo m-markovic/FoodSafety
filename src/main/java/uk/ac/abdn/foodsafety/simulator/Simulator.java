@@ -8,6 +8,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Comparator;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import com.hp.hpl.jena.rdf.model.Model;
@@ -73,14 +74,18 @@ public final class Simulator {
      * and provides the result to the registered consumer.
      * @param client Facade to the wireless tag API
      * @param sensorId The ID of the sensor to get data for, e.g. 3
+     * @param foiAnnotator object to replace raw fields with manual annotations
      */
-    public void add(final WirelessTagClient client, final int sensorId) {
+    public void add(
+            final WirelessTagClient client, 
+            final int sensorId, 
+            final UnaryOperator<TimedTemperatureReading> foiAnnotator) {
         //Get data for the dates (the API cannot slice on time of day)
         final Stream<TemperatureHumidityReading> readings = client.getStatsRaw(
             sensorId,
             this.fromDateTime.toLocalDate(), 
             this.toDateTime.toLocalDate());
-        this.filterAndCache(readings);
+        this.filterAndCache(readings.map(foiAnnotator));
     }
     
     /**
@@ -89,7 +94,9 @@ public final class Simulator {
      * @param parser parser for the meat probe files
      * @param foiAnnotator object to replace raw fields with manual annotations
      */
-    public void add(final MeatProbeFilesParser parser, final FoiAnnotator foiAnnotator) {
+    public void add(
+            final MeatProbeFilesParser parser, 
+            final UnaryOperator<TimedTemperatureReading> foiAnnotator) {
         //Get data
         final Stream<MeatProbeReading> readings = parser.parse();
         this.filterAndCache(readings.map(foiAnnotator));

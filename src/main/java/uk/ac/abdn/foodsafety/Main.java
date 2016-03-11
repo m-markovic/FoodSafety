@@ -6,12 +6,14 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 import uk.ac.abdn.foodsafety.provenance.FoodSafetyEngine;
 import uk.ac.abdn.foodsafety.simulator.FoiAnnotator;
 import uk.ac.abdn.foodsafety.simulator.Simulator;
 import uk.ac.abdn.foodsafety.simulator.meatprobe.MeatProbeFilesParser;
+import uk.ac.abdn.foodsafety.simulator.sensordata.TimedTemperatureReading;
 import uk.ac.abdn.foodsafety.simulator.wirelesstag.WirelessTagClient;
 
 import com.google.gson.Gson;
@@ -59,12 +61,28 @@ public final class Main {
             .add(new MeatProbeFilesParser(),
                  new FoiAnnotator());
         //Get wireless tag data
-        simulator
-            .add(client, input.wirelessTagId);
+        input.foi2wirelessTagID.forEach(
+                (foi, id) -> simulator.add(
+                                client, 
+                                id,
+                                r -> setFoi(foi, r)));
         simulator.done();
         engine.done();
     }
     
+    /**
+     * Sets r.foi to foi
+     * @param foi Any feature of interest
+     * @param r Any reading
+     * @return r after update
+     */
+    private static TimedTemperatureReading setFoi(
+            final String foi, 
+            final TimedTemperatureReading r) {
+        r.foi = foi;
+        return r;
+    }
+
     /**
      * 
      * @author nhc
@@ -77,7 +95,7 @@ public final class Main {
         
         private String from;
         private String to;
-        private int wirelessTagId;
+        private HashMap<String, Integer> foi2wirelessTagID;
         
         /**
          * Read and parse JSON from INPUT_PATH
