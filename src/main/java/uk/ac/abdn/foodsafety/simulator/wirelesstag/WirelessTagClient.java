@@ -51,6 +51,7 @@ public class WirelessTagClient {
      */
     private static synchronized void ensureSignedIn(final WirelessTagClient instance) {
         if (!WirelessTagClient.signedIn) {
+            Logging.info("Logging in to wireless tag cloud");
             CookieHandler.setDefault(new CookieManager());
             instance.signIn();
             WirelessTagClient.signedIn = true;
