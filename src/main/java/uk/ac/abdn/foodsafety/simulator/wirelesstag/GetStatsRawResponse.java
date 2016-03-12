@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 import uk.ac.abdn.foodsafety.common.Constants;
 import uk.ac.abdn.foodsafety.common.Logging;
-import uk.ac.abdn.foodsafety.simulator.sensordata.TemperatureHumidityReading;
+import uk.ac.abdn.foodsafety.simulator.sensordata.WirelessTagReading;
 
 /**
  * A GetStatsRawResponse represents the data sent in a
@@ -19,7 +19,7 @@ public final class GetStatsRawResponse {
     /** This operation returns a sequence of readings for raw temperature/battery/humidity data. */
     private List<SingleDayTemperatureHumidityReadings> d;
 
-    public Stream<TemperatureHumidityReading> stream() {
+    public Stream<WirelessTagReading> stream() {
         return d.stream()
                 .map((day) -> day.stream())
                 .reduce(Stream.empty(), Stream::concat);
@@ -43,16 +43,16 @@ public final class GetStatsRawResponse {
         /** Humidity. Example: 24.85736083984375 */
         private List<Double> caps;
 
-        private Stream<TemperatureHumidityReading> stream() {
+        private Stream<WirelessTagReading> stream() {
             final String[] mdy = date.split("/");
             final LocalDate localDate = LocalDate.of(
                             Integer.parseInt(mdy[2]), 
                             Integer.parseInt(mdy[0]), 
                             Integer.parseInt(mdy[1]));
-            final Stream.Builder<TemperatureHumidityReading> result = Stream.builder();
+            final Stream.Builder<WirelessTagReading> result = Stream.builder();
             for (int i = 0; i < tods.size(); i++) {
                 final LocalDateTime localDateTime = LocalDateTime.of(localDate, LocalTime.ofSecondOfDay(tods.get(i)));
-                result.accept(new TemperatureHumidityReading(
+                result.accept(new WirelessTagReading(
                         localDateTime.atZone(Constants.UK),
                         temps.get(i),
                         caps.get(i)));

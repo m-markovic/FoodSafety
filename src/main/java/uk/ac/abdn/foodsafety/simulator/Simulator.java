@@ -17,7 +17,7 @@ import uk.ac.abdn.foodsafety.common.Constants;
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 import uk.ac.abdn.foodsafety.simulator.meatprobe.MeatProbeFilesParser;
 import uk.ac.abdn.foodsafety.simulator.sensordata.MeatProbeReading;
-import uk.ac.abdn.foodsafety.simulator.sensordata.TemperatureHumidityReading;
+import uk.ac.abdn.foodsafety.simulator.sensordata.WirelessTagReading;
 import uk.ac.abdn.foodsafety.simulator.sensordata.TimedTemperatureReading;
 import uk.ac.abdn.foodsafety.simulator.wirelesstag.WirelessTagClient;
 
@@ -81,7 +81,7 @@ public final class Simulator {
             final int sensorId, 
             final UnaryOperator<TimedTemperatureReading> foiAnnotator) {
         //Get data for the dates (the API cannot slice on time of day)
-        final Stream<TemperatureHumidityReading> readings = client.getStatsRaw(
+        final Stream<WirelessTagReading> readings = client.getStatsRaw(
             sensorId,
             this.fromDateTime.toLocalDate(), 
             this.toDateTime.toLocalDate());

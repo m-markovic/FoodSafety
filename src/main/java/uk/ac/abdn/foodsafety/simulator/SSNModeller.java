@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 import uk.ac.abdn.foodsafety.simulator.sensordata.TimedTemperatureReading;
 
 import com.hp.hpl.jena.ontology.Individual;
@@ -18,8 +19,8 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
  * 
  * @author nhc
  *
- * A SingleWindowReasoner reasons about provenance for readings
- * in a single time window.
+ * An SSNModeller expresses a parsed sensor reading in the SSN ontology,
+ * then passes the resulting model on to a C-SPARQL engine.
  */
 final class SSNModeller
     implements Consumer<TimedTemperatureReading> {
@@ -28,7 +29,7 @@ final class SSNModeller
     private Individual lastMeatProbeObservation = null;
     private final Function<ZonedDateTime, Consumer<Model>> modelConsumer;
     
-    //TODO: Add first observation urls?
+    //TODO: Add URLs to use as "last observation" when there hasn't been any observations yet?
     SSNModeller(final Function<ZonedDateTime, Consumer<Model>> engine) {
         this.modelConsumer = engine;
     }
@@ -36,19 +37,22 @@ final class SSNModeller
     @Override
     public void accept(final TimedTemperatureReading reading) {
         this.model = ModelFactory.createOntologyModel();
-        //TODO: Less hacky criterion for being wireless/meatprobe
-        if (reading.foi.equals("http://example.org/wirelessTag")) {
+        if (reading.sensorType == TimedTemperatureReading.SensorType.WIRELESS_TAG) {
             this.lastWirelessObservation =
                     this.generateWirelessTagSensorAnnotations(
                             reading, 
                             "wt", //TODO: Do we need to be specific? 
                             this.lastWirelessObservation);
-        } else {
+        } else if (reading.sensorType == TimedTemperatureReading.SensorType.MEAT_PROBE) {
             this.lastMeatProbeObservation =
                     this.generateMeatProbeAnnotations(
                             reading, 
                             "mp", //TODO: Do we need to be specific?
                             this.lastMeatProbeObservation);
+        } else {
+            throw FoodSafetyException.internalError(String.format(
+                    "The SSNModeller needs to handle the new sensor type %s", 
+                    reading.sensorType));
         }
         modelConsumer.apply(reading.time).accept(this.model);
         this.model = null;

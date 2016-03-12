@@ -16,7 +16,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 import uk.ac.abdn.foodsafety.common.Logging;
-import uk.ac.abdn.foodsafety.simulator.sensordata.TemperatureHumidityReading;
+import uk.ac.abdn.foodsafety.simulator.sensordata.WirelessTagReading;
 
 import com.google.gson.Gson;
 
@@ -88,7 +88,7 @@ public class WirelessTagClient {
      * @param toDate The last date to get data from - must be after fromDate
      * @return a Java Stream of sensor readings
      */
-    public Stream<TemperatureHumidityReading> getStatsRaw(
+    public Stream<WirelessTagReading> getStatsRaw(
             final int sensorId,
             final LocalDate fromDate,
             final LocalDate toDate) {

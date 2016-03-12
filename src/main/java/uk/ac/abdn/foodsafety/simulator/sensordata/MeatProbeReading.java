@@ -21,7 +21,11 @@ public final class MeatProbeReading extends TimedTemperatureReading {
             final int id,
             final ZonedDateTime time,
             final Double temperature) {
-        super(time, temperature, "http://example.org/meatCoreTemp");
+        super(
+            time, 
+            temperature, 
+            TimedTemperatureReading.SensorType.MEAT_PROBE, 
+            "http://example.org/meatCoreTemp");
         this.id = id;
     }
 }
