@@ -25,7 +25,8 @@ public final class MeatProbeReading extends TimedTemperatureReading {
             time, 
             temperature, 
             TimedTemperatureReading.SensorType.MEAT_PROBE, 
-            "http://example.org/meatCoreTemp");
+            "http://example.org/meatCoreTemp",
+            0);
         this.id = id;
     }
 }

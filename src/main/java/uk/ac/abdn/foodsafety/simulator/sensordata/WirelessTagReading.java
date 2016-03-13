@@ -16,16 +16,19 @@ public final class WirelessTagReading extends TimedTemperatureReading {
      * @param time Timestamp of the reading
      * @param temperature e.g. 19.946533012390137
      * @param humidity e.g. 24.85736083984375
+     * @param sensorId the ID of the sensor that made this reading
      */
     public WirelessTagReading(
             final ZonedDateTime time,
             final Double temperature,
-            final Double humidity) {
+            final Double humidity,
+            final int sensorId) {
         super(
             time, 
             temperature, 
             TimedTemperatureReading.SensorType.WIRELESS_TAG, 
-            "http://example.org/wirelessTag");
+            "http://example.org/wirelessTag",
+            sensorId);
         this.humidity = humidity;
     }
 }

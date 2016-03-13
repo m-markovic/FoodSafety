@@ -14,16 +14,21 @@ public abstract class TimedTemperatureReading {
 
     /** Wireless tag or meat probe? */
     public final SensorType sensorType;
+
+    /** the ID of the sensor that made this reading */
+    public final int sensorId;
     
     TimedTemperatureReading(
             final ZonedDateTime time,
             final Double temperature,
             final SensorType sensorType,
-            final String foi) {
+            final String foi,
+            final int sensorId) {
         this.time = time;
         this.temperature = temperature;
         this.sensorType = sensorType;
         this.foi = foi;
+        this.sensorId = sensorId;
     }
     
     /**

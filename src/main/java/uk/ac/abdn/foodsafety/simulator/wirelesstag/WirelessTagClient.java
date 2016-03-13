@@ -107,7 +107,7 @@ public class WirelessTagClient {
                         urlConnection, 
                         GetStatsRawResponse.class);
             response.log();
-            return response.stream();
+            return response.stream(sensorId);
           } catch (final IOException e) {
               throw FoodSafetyException.wirelessTagConnectionFailed(e);
           }

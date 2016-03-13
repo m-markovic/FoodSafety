@@ -41,13 +41,11 @@ final class SSNModeller
             this.lastWirelessObservation =
                     this.generateWirelessTagSensorAnnotations(
                             reading, 
-                            "wt", //TODO: Do we need to be specific? 
                             this.lastWirelessObservation);
         } else if (reading.sensorType == TimedTemperatureReading.SensorType.MEAT_PROBE) {
             this.lastMeatProbeObservation =
                     this.generateMeatProbeAnnotations(
                             reading, 
-                            "mp", //TODO: Do we need to be specific?
                             this.lastMeatProbeObservation);
         } else {
             throw FoodSafetyException.internalError(String.format(
@@ -65,11 +63,10 @@ final class SSNModeller
      * @return New observation (which is already added to this.model)
      */
     private Individual generateMeatProbeAnnotations(
-            final TimedTemperatureReading r, 
-            final String sensorID, 
+            final TimedTemperatureReading r,
             final Individual oldObservation) {
         final Individual meatprobe = model.createIndividual(
-                "http://FoodSafety/sensor/meatProbe/"+sensorID,
+                "http://FoodSafety/sensor/meatProbe/mp",
                 model.createClass(Prefix.SSN+"System"));
         // create instances of individual sensors for temp, humidity and movement (note Sensing Device is subclass of ssn:Sensor)
         final Individual meatprobeSensor = sensorDescribtion(
@@ -91,13 +88,12 @@ final class SSNModeller
      */
     private Individual generateWirelessTagSensorAnnotations(
             final TimedTemperatureReading r,
-            String sensorID,
             final Individual oldObservation) {
         //static ssn info relevant to all data coming from the same sensor 
         //create instance of main System that will represent a single wirelesstag
         final Individual  wirelessTagSystem = 
                 model.createIndividual(
-                        "http://FoodSafety/sensor/wirelesstag/"+sensorID,
+                        "http://FoodSafety/system/wirelesstag/" + r.sensorId,
                         model.createClass(Prefix.SSN+"System"));
         // create instances of individual sensors for temp, humidity and movement (note Sensing Device is subclass of ssn:Sensor)
         final Individual  temperatureSensor = 

@@ -19,9 +19,14 @@ public final class GetStatsRawResponse {
     /** This operation returns a sequence of readings for raw temperature/battery/humidity data. */
     private List<SingleDayTemperatureHumidityReadings> d;
 
-    public Stream<WirelessTagReading> stream() {
+    /**
+     * Parses all readings in the HTTP response
+     * @param sensorId The ID to associate with these readings
+     * @return A Stream of parsed readings
+     */
+    public Stream<WirelessTagReading> stream(final int sensorId) {
         return d.stream()
-                .map((day) -> day.stream())
+                .map((day) -> day.stream(sensorId))
                 .reduce(Stream.empty(), Stream::concat);
     }
 
@@ -43,7 +48,12 @@ public final class GetStatsRawResponse {
         /** Humidity. Example: 24.85736083984375 */
         private List<Double> caps;
 
-        private Stream<WirelessTagReading> stream() {
+        /**
+         * Parses all readings of this day
+         * @param sensorId The ID to associate with these readings
+         * @return A Stream of parsed readings
+         */
+        private Stream<WirelessTagReading> stream(final int sensorId) {
             final String[] mdy = date.split("/");
             final LocalDate localDate = LocalDate.of(
                             Integer.parseInt(mdy[2]), 
@@ -55,7 +65,8 @@ public final class GetStatsRawResponse {
                 result.accept(new WirelessTagReading(
                         localDateTime.atZone(Constants.UK),
                         temps.get(i),
-                        caps.get(i)));
+                        caps.get(i),
+                        sensorId));
             }
             return result.build();
         }
