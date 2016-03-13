@@ -142,14 +142,15 @@ class FoodSafetyFormatter extends ResultFormatter {
      * @param query The SPARQL text
      * @param provmod The model to update
      */
-    private static void update(final String name, final String query, final Model provmod) {
+    private void update(final String name, final String query, final Model provmod) {
         final long beforeSize = provmod.size();
         final Instant before = Instant.now();
         UpdateAction.parseExecute(query, provmod);
         final Instant after = Instant.now();
         final long afterSize = provmod.size();
         Logging.info(String.format(
-                "Query %s: %d ms ; %d triples generated", 
+                "Query %s update %s: %d ms ; %d triples generated",
+                this.queryName,
                 name, 
                 Duration.between(before, after).toMillis(),
                 afterSize - beforeSize));
