@@ -70,6 +70,8 @@ public final class Main {
                                 r -> setFoi(foi, r)));
         //Run the queries and inferences
         simulator.done();
+        //Log stats from engine
+        engine.log();
         //Output all inferred data on System.out
         persistentModel.write(System.out, "N3");
     }

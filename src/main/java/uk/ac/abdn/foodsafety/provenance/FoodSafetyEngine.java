@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
+import uk.ac.abdn.foodsafety.common.Logging;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -32,6 +33,9 @@ public final class FoodSafetyEngine
     /** Object to which all inferences will be passed */
     private final Consumer<Model> persistentModel;
     
+    /** Number of quadruples put on stream so far */
+    private long numQuads = 0;
+    
     /**
      * Initializes this engine.
      * @param persistentModel Object to which all inferences will be passed
@@ -41,6 +45,13 @@ public final class FoodSafetyEngine
         this.initialize();
         this.registerStream(this.rdfStream);
         new Configurator(this, this.persistentModel);
+    }
+    
+    /**
+     * Logs a status message
+     */
+    public void log() {
+        Logging.info(String.format("%d quadruples put on stream", this.numQuads));
     }
     
     /**
@@ -76,6 +87,7 @@ public final class FoodSafetyEngine
                                         o.asLiteral().getLexicalForm(),
                                         o.asLiteral().getDatatypeURI()),
                     timestamp));
+            this.numQuads += 1;
         }
     }
 }

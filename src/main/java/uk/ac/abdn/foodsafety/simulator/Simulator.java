@@ -15,6 +15,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 
 import uk.ac.abdn.foodsafety.common.Constants;
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
+import uk.ac.abdn.foodsafety.common.Logging;
 import uk.ac.abdn.foodsafety.simulator.meatprobe.MeatProbeFilesParser;
 import uk.ac.abdn.foodsafety.simulator.sensordata.MeatProbeReading;
 import uk.ac.abdn.foodsafety.simulator.sensordata.WirelessTagReading;
@@ -41,6 +42,9 @@ public final class Simulator {
     /** Cache for sorting all readings by timestamp */
     private final Stream.Builder<TimedTemperatureReading> readings = Stream.builder();
 
+    /** Number of readings cached so far */
+    private long numReadings = 0;
+    
     /**
      * Parses from and to as LocalDate/LocalDateTime in the ISO format
      * and registers both of these along with the dataConsumer.
@@ -66,7 +70,7 @@ public final class Simulator {
         .filter((reading) -> reading.time.isAfter(this.fromDateTime))
         .filter((reading) -> reading.time.isBefore(this.toDateTime))
         //Pass on to the cache
-        .forEach(this.readings);
+        .forEach(this.readings.andThen(r -> this.numReadings += 1));
     }
     
     /**
@@ -106,6 +110,7 @@ public final class Simulator {
      * Call this once all readings have been added.
      */
     public void done() {
+        Logging.info(String.format("%d readings in Simulator", this.numReadings));
         this.readings.build()
             .sorted(Comparator.comparing(r -> r.time))
             .forEachOrdered(this.consumer);
