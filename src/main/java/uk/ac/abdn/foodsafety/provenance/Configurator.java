@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import com.hp.hpl.jena.rdf.model.Model;
 
@@ -39,14 +40,14 @@ final class Configurator {
     private Map<String, FoodSafetyFormatter> observers = new HashMap<>();
 
     /** The persistent model to add inferred provenance to */
-    private final Model persistentModel;
+    private final Consumer<Model> persistentModel;
     
     /**
      * Registers the engine to configure
      * @param foodSafetyEngine The engine to configure
-     * @param persistentModel The persistent model to add inferred provenance to
+     * @param persistentModel The object to pass inferred provenance to
      */
-    public Configurator(final CsparqlEngine foodSafetyEngine, final Model persistentModel) {
+    public Configurator(final CsparqlEngine foodSafetyEngine, final Consumer<Model> persistentModel) {
         this.engine = foodSafetyEngine;
         this.persistentModel = persistentModel;
         try {

@@ -7,7 +7,6 @@ import java.util.function.Function;
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
@@ -30,25 +29,20 @@ public final class FoodSafetyEngine
     /** This engine's sole stream */
     private final RdfStream rdfStream = new RdfStream("http://foodsafety/ssn");
     
-    /** Persistent model to be dumped when done */
-    private Model persistentModel = ModelFactory.createDefaultModel();
+    /** Object to which all inferences will be passed */
+    private final Consumer<Model> persistentModel;
     
     /**
      * Initializes this engine.
+     * @param persistentModel Object to which all inferences will be passed
      */
-    public FoodSafetyEngine() {
+    public FoodSafetyEngine(final Consumer<Model> persistentModel) {
+        this.persistentModel = persistentModel;
         this.initialize();
         this.registerStream(this.rdfStream);
         new Configurator(this, this.persistentModel);
     }
     
-    /**
-     * Outputs the internal persistent Model of provenance on System.out
-     */
-    public void done() {
-        this.persistentModel.write(System.out, "N3");
-    }
-
     /**
      * To a Jena Model for a given timestamp, use engine.apply(t).accept(model)
      * This is equivalent to engine.add(t, m)

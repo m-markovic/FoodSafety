@@ -17,6 +17,8 @@ import uk.ac.abdn.foodsafety.simulator.sensordata.TimedTemperatureReading;
 import uk.ac.abdn.foodsafety.simulator.wirelesstag.WirelessTagClient;
 
 import com.google.gson.Gson;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 /**
  * 
@@ -32,8 +34,6 @@ public final class Main {
      * The readings will contain temperature from fromDate to toDate
      * 
      * This application requires its input to be provided in a file at Input.INPUT_PATH
-     * Example input:
-     * {"from": "2016-01-29T15:30:00", "to": "2016-01-29T15:40:00", "wirelessTagId": 2}
      * @param args not used
      */
     public static void main(final String[] args) {
@@ -52,9 +52,11 @@ public final class Main {
      * @param input Parsed from file system
      */
     private static void run(final Input input) {
+        //Jena Model collecting all inferences
+        final Model persistentModel = ModelFactory.createDefaultModel();
         //Connect to wireless tag site
         final WirelessTagClient client = new WirelessTagClient();
-        final FoodSafetyEngine engine = new FoodSafetyEngine();
+        final FoodSafetyEngine engine = new FoodSafetyEngine(persistentModel::add);
         final Simulator simulator = new Simulator(input.from, input.to, engine);
         //Get meat probe data
         simulator
@@ -66,8 +68,10 @@ public final class Main {
                                 client, 
                                 id,
                                 r -> setFoi(foi, r)));
+        //Run the queries and inferences
         simulator.done();
-        engine.done();
+        //Output all inferred data on System.out
+        persistentModel.write(System.out, "N3");
     }
     
     /**

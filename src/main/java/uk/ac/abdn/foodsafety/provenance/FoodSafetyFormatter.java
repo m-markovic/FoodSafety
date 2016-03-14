@@ -8,6 +8,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import uk.ac.abdn.foodsafety.common.FoodSafetyException;
 import uk.ac.abdn.foodsafety.common.Logging;
@@ -49,15 +50,15 @@ class FoodSafetyFormatter extends ResultFormatter {
     private Optional<Model> oldProv = Optional.empty();
 
     /** Final resting place for inferred provenance */
-    private final Model persistentModel;
+    private final Consumer<Model> persistentModel;
 
     /**
      * Registers the query name and prepares for configuration by
      * addSparql() and setOwl()
      * @param queryName Name picked up from directory - used for logging
-     * @param persistentModel All inferred provenance will be added to this model
+     * @param persistentModel All inferred provenance will be passed to this object
      */
-    FoodSafetyFormatter(final String queryName, final Model persistentModel) {
+    FoodSafetyFormatter(final String queryName, final Consumer<Model> persistentModel) {
         this.queryName = queryName;
         this.persistentModel = persistentModel;
         //Initialize SPARQL update query collections
@@ -121,7 +122,7 @@ class FoodSafetyFormatter extends ResultFormatter {
             provmod.remove(this.oldProv.get());
             if (provmod.size() > s) { //we inferred something
                 this.oldProv = Optional.of(provmod);
-                this.persistentModel.add(provmod);
+                this.persistentModel.accept(provmod);
             }
         } else { //First run
             this.sparqlUpdateQueries.get(Stage.COLDSTART)
@@ -129,7 +130,7 @@ class FoodSafetyFormatter extends ResultFormatter {
             provmod.remove(this.m.get());
             if (provmod.size() > s) { //we inferred something
                 this.oldProv = Optional.of(provmod);
-                this.persistentModel.add(provmod);
+                this.persistentModel.accept(provmod);
             } else { //No inference - error
                 throw FoodSafetyException.configurationError(String.format("The coldstart SPARQL for %s did not infer anything", this.queryName));
             }
