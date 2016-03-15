@@ -43,7 +43,10 @@ class FoodSafetyFormatter extends ResultFormatter {
     private EnumMap<Stage, HashMap<String, String>> sparqlUpdateQueries =
             new EnumMap<Stage, HashMap<String, String>>(Stage.class);
 
-    /** Model accumulating the received triples along with the OWL ontology */
+    /** Model containing the ontology */
+    private Optional<OntModel> plan = Optional.empty();
+
+    /** Model storing the received triples along with the ontology */
     private Optional<OntModel> m = Optional.empty();
 
     /** Model containing the latest provenance found */
@@ -74,6 +77,7 @@ class FoodSafetyFormatter extends ResultFormatter {
     @Override
     public synchronized void update(final Observable ignored, final Object rdfTableUntyped) {
         final RDFTable rdfTable = (RDFTable) rdfTableUntyped;
+        this.m = Optional.of(ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF, this.plan.get()));
         rdfTable.stream()
             .map(this::convert)
             .forEach(s -> this.m.get().add(s));
@@ -174,9 +178,8 @@ class FoodSafetyFormatter extends ResultFormatter {
      * @param ontology Ontology, in TTL
      */
     public void setOntology(final String ontology) {
-        final OntModel plan = ModelFactory.createOntologyModel();
-        plan.read(new ByteArrayInputStream(ontology.getBytes(StandardCharsets.ISO_8859_1)), null, "TTL");
-        this.m = Optional.of(ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF, plan));
+        this.plan = Optional.of(ModelFactory.createOntologyModel());
+        plan.get().read(new ByteArrayInputStream(ontology.getBytes(StandardCharsets.ISO_8859_1)), null, "TTL");
     }
     
     /**
