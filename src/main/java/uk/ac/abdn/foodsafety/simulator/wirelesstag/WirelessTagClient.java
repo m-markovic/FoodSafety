@@ -81,6 +81,27 @@ public class WirelessTagClient {
     }
 
     /**
+     * Utility method.
+     * Performs a POST to "/ethClient.asmx/GetTagList" and logs
+     * key info about the wireless tags.
+     */
+    public void logTagList() {
+        try {
+            final HttpsURLConnection urlConnection = 
+              this.post(
+                  "/ethClient.asmx/GetTagList",
+                  gson.toJson(new GetTagListRequest()));
+            final GetTagListResponse response = 
+                    this.parseJsonResponse(
+                        urlConnection, 
+                        GetTagListResponse.class);
+            response.log();
+          } catch (final IOException e) {
+              throw FoodSafetyException.wirelessTagConnectionFailed(e);
+          }
+    }
+
+    /**
      * Performs a POST to "/ethLogs.asmx/GetStatsRaw", retrieving
      * event data from a specified sensor between two dates.
      * @param sensorId The ID of the sensor to get data for, e.g. 3.

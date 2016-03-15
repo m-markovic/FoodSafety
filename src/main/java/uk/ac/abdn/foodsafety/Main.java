@@ -56,6 +56,7 @@ public final class Main {
         final Model persistentModel = ModelFactory.createDefaultModel();
         //Connect to wireless tag site
         final WirelessTagClient client = new WirelessTagClient();
+        client.logTagList();
         final FoodSafetyEngine engine = new FoodSafetyEngine(persistentModel::add);
         final Simulator simulator = new Simulator(input.from, input.to, engine);
         //Get meat probe data
