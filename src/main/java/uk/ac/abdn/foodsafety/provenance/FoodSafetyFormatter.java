@@ -137,7 +137,7 @@ class FoodSafetyFormatter extends ResultFormatter {
                 this.oldProv = Optional.of(provmod);
                 this.persistentModel.accept(provmod);
             } else { //No inference - error
-                throw FoodSafetyException.configurationError(String.format("The coldstart SPARQL for %s did not infer anything", this.queryName));
+                Logging.warn(String.format("The coldstart SPARQL for %s did not infer anything", this.queryName));
             }
         }
     }
