@@ -77,7 +77,8 @@ class FoodSafetyFormatter extends ResultFormatter {
     @Override
     public synchronized void update(final Observable ignored, final Object rdfTableUntyped) {
         final RDFTable rdfTable = (RDFTable) rdfTableUntyped;
-        this.m = Optional.of(ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF, this.plan.get()));
+        this.m = Optional.of(ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM_RDFS_INF));
+        this.m.get().add(this.plan.get());
         rdfTable.stream()
             .map(this::convert)
             .forEach(s -> this.m.get().add(s));
