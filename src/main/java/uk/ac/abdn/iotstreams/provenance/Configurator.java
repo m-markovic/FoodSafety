@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 import com.hp.hpl.jena.rdf.model.Model;
 
 import eu.larkc.csparql.core.engine.CsparqlEngine;
-import uk.ac.abdn.iotstreams.common.FoodSafetyException;
+import uk.ac.abdn.iotstreams.common.IotStreamsException;
 import uk.ac.abdn.iotstreams.common.Logging;
 
 /**
@@ -55,7 +55,7 @@ final class Configurator {
                 .filter(Files::isRegularFile)
                 .forEach(this::addFile);
         } catch (final IOException e) {
-            throw FoodSafetyException.configurationError(e);
+            throw IotStreamsException.configurationError(e);
         }
     }
     
@@ -81,7 +81,7 @@ final class Configurator {
                     rel.getName(2).toString(), 
                     content);
         } else {
-            throw FoodSafetyException.configurationError(String.format("Unexpected file %s at depth %d, filename=%s", rel.toString(), rel.getNameCount(), rel.getFileName().toString()));
+            throw IotStreamsException.configurationError(String.format("Unexpected file %s at depth %d, filename=%s", rel.toString(), rel.getNameCount(), rel.getFileName().toString()));
         }
     }
     
@@ -97,7 +97,7 @@ final class Configurator {
                     false)
                 .addObserver(formatter(name));
         } catch (final ParseException e) {
-            throw FoodSafetyException.configurationError(e);
+            throw IotStreamsException.configurationError(e);
         }
     }
     
@@ -117,7 +117,7 @@ final class Configurator {
         try {
             return String.join("\n", Files.readAllLines(file, ISO88591));
         } catch (final IOException e) {
-            throw FoodSafetyException.configurationError(e);
+            throw IotStreamsException.configurationError(e);
         }
     }
 }

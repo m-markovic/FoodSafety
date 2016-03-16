@@ -8,7 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
-import uk.ac.abdn.iotstreams.common.FoodSafetyException;
+import uk.ac.abdn.iotstreams.common.IotStreamsException;
 import uk.ac.abdn.iotstreams.provenance.FoodSafetyEngine;
 import uk.ac.abdn.iotstreams.simulator.FoiAnnotator;
 import uk.ac.abdn.iotstreams.simulator.Simulator;
@@ -116,7 +116,7 @@ public final class Main {
                         StandardCharsets.UTF_8);
                 return new Gson().fromJson(inputReader, Input.class);
             } catch (final IOException e) {
-                throw FoodSafetyException.userInputError(INPUT_PATH.toString(), e);
+                throw IotStreamsException.userInputError(INPUT_PATH.toString(), e);
             }
         }
     }

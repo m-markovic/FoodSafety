@@ -10,7 +10,7 @@ import java.util.Observable;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import uk.ac.abdn.iotstreams.common.FoodSafetyException;
+import uk.ac.abdn.iotstreams.common.IotStreamsException;
 import uk.ac.abdn.iotstreams.common.Logging;
 
 import com.hp.hpl.jena.ontology.OntModel;
@@ -107,7 +107,7 @@ class FoodSafetyFormatter extends ResultFormatter {
                     this.m.get().createProperty(t.get(1)),
                     o);
         } catch (final Exception e) {
-            throw FoodSafetyException.internalError(String.format("Problem converting %s", t.get(2)));
+            throw IotStreamsException.internalError(String.format("Problem converting %s", t.get(2)));
         }
     }
 

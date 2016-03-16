@@ -11,7 +11,7 @@ import java.time.format.DateTimeParseException;
 import java.util.stream.Stream;
 
 import uk.ac.abdn.iotstreams.common.Constants;
-import uk.ac.abdn.iotstreams.common.FoodSafetyException;
+import uk.ac.abdn.iotstreams.common.IotStreamsException;
 import uk.ac.abdn.iotstreams.simulator.sensordata.MeatProbeReading;
 
 /**
@@ -51,7 +51,7 @@ public class MeatProbeFilesParser {
                     //Remove null values
                     .filter(reading -> reading != null);
         } catch (final IOException e) {
-            throw FoodSafetyException.meatProbeIOfailed(e);
+            throw IotStreamsException.meatProbeIOfailed(e);
         }
     }
     
@@ -95,7 +95,7 @@ public class MeatProbeFilesParser {
                     ? Stream.empty() 
                     : Files.readAllLines(path, ISO88591).stream();
         } catch (final IOException e) {
-            throw FoodSafetyException.meatProbeIOfailed(e);
+            throw IotStreamsException.meatProbeIOfailed(e);
         }
     }
 }

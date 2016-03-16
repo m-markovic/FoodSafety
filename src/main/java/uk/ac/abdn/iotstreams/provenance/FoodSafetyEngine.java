@@ -4,7 +4,7 @@ import java.time.ZonedDateTime;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import uk.ac.abdn.iotstreams.common.FoodSafetyException;
+import uk.ac.abdn.iotstreams.common.IotStreamsException;
 import uk.ac.abdn.iotstreams.common.Logging;
 
 import com.hp.hpl.jena.rdf.model.Model;
@@ -75,7 +75,7 @@ public final class FoodSafetyEngine
             final Statement triple = it.nextStatement();
             final RDFNode o = triple.getObject();
             if (o.isAnon()) {
-                FoodSafetyException.internalError(String.format("Blank node in %s", m.toString()));
+                IotStreamsException.internalError(String.format("Blank node in %s", m.toString()));
             }
             this.rdfStream.put(new RdfQuadruple(
                     triple.getSubject().getURI(),

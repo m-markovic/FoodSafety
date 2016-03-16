@@ -10,13 +10,13 @@ import java.net.URL;
  * The only Exception expected from the FoodSafety application.
  */
 @SuppressWarnings("serial")
-public final class FoodSafetyException extends RuntimeException {
+public final class IotStreamsException extends RuntimeException {
     /**
      * Constructor.
      * @param msg The error message
      * @param cause The Exception behind this situation 
      */
-    private FoodSafetyException(
+    private IotStreamsException(
         final String msg,
         final Exception cause) {
       super(String.format("%s, caused by %s", msg, cause));
@@ -27,8 +27,8 @@ public final class FoodSafetyException extends RuntimeException {
      * @param e IOException caught while communicating with mywirelesstag.com
      * @return An FoodSafetyException representing the known facts about the situation
      */
-    public static FoodSafetyException wirelessTagConnectionFailed(final IOException e) {
-        return new FoodSafetyException("Failed to connect to mywirelesstag.com", e);
+    public static IotStreamsException wirelessTagConnectionFailed(final IOException e) {
+        return new IotStreamsException("Failed to connect to mywirelesstag.com", e);
     }
 
     /**
@@ -37,10 +37,10 @@ public final class FoodSafetyException extends RuntimeException {
      * @param url The url that returned the response
      * @return An FoodSafetyException representing the known facts about the situation
      */
-    public static FoodSafetyException wirelessTagSentError(
+    public static IotStreamsException wirelessTagSentError(
             final int responseCode, 
             final URL url) {
-        return new FoodSafetyException(
+        return new IotStreamsException(
                 String.format(
                     "Got HTTP response code %d on request for %s", 
                     responseCode, 
@@ -53,9 +53,9 @@ public final class FoodSafetyException extends RuntimeException {
      * @param e The caught Exception
      * @return Wrapping Exception
      */
-    public static FoodSafetyException internalError(
+    public static IotStreamsException internalError(
             final Exception e) {
-        return new FoodSafetyException("Internal FoodSafety appliction error", e);
+        return new IotStreamsException("Internal FoodSafety appliction error", e);
     }
 
     /**
@@ -64,10 +64,10 @@ public final class FoodSafetyException extends RuntimeException {
      * @param e The Exception caught when processing the malformed input.
      * @return The wrapping Exception
      */
-    public static FoodSafetyException userInputError(
+    public static IotStreamsException userInputError(
             final String userInput,
             final Exception e) {
-        return new FoodSafetyException(String.format("Malformed input: '%s'", userInput), e);
+        return new IotStreamsException(String.format("Malformed input: '%s'", userInput), e);
     }
     
     /**
@@ -75,8 +75,8 @@ public final class FoodSafetyException extends RuntimeException {
      * @param e Exception caught during file IO
      * @return The wrapping Exception
      */
-    public static FoodSafetyException meatProbeIOfailed(final IOException e) {
-        return new FoodSafetyException("Failure reading a meat probe file", e);
+    public static IotStreamsException meatProbeIOfailed(final IOException e) {
+        return new IotStreamsException("Failure reading a meat probe file", e);
     }
 
     /**
@@ -84,8 +84,8 @@ public final class FoodSafetyException extends RuntimeException {
      * @param msg The error message
      * @return The constructed Exception
      */
-    public static FoodSafetyException internalError(final String msg) {
-        return new FoodSafetyException(msg, null);
+    public static IotStreamsException internalError(final String msg) {
+        return new IotStreamsException(msg, null);
     }
 
     /**
@@ -93,8 +93,8 @@ public final class FoodSafetyException extends RuntimeException {
      * @param e Exception caught during file IO
      * @return The wrapping Exception
      */
-    public static FoodSafetyException annotationIOfailed(IOException e) {
-        return new FoodSafetyException("Failure reading annotation file", e);
+    public static IotStreamsException annotationIOfailed(IOException e) {
+        return new IotStreamsException("Failure reading annotation file", e);
     }
 
     /**
@@ -102,8 +102,8 @@ public final class FoodSafetyException extends RuntimeException {
      * @param e Exception caught during configuration
      * @return The wrapping Exception
      */
-    public static FoodSafetyException configurationError(final Exception e) {
-        return new FoodSafetyException("Failure reading configuration", e);
+    public static IotStreamsException configurationError(final Exception e) {
+        return new IotStreamsException("Failure reading configuration", e);
     }
 
     /**
@@ -111,7 +111,7 @@ public final class FoodSafetyException extends RuntimeException {
      * @param msg error message
      * @return The wrapping Exception
      */
-    public static FoodSafetyException configurationError(final String msg) {
-        return new FoodSafetyException(String.format("Failure reading configuration: %s", msg), null);
+    public static IotStreamsException configurationError(final String msg) {
+        return new IotStreamsException(String.format("Failure reading configuration: %s", msg), null);
     }
 }

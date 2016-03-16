@@ -6,7 +6,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import uk.ac.abdn.iotstreams.common.FoodSafetyException;
+import uk.ac.abdn.iotstreams.common.IotStreamsException;
 import uk.ac.abdn.iotstreams.simulator.sensordata.TimedTemperatureReading;
 
 import com.hp.hpl.jena.ontology.Individual;
@@ -48,7 +48,7 @@ final class SSNModeller
                             reading, 
                             this.lastMeatProbeObservation);
         } else {
-            throw FoodSafetyException.internalError(String.format(
+            throw IotStreamsException.internalError(String.format(
                     "The SSNModeller needs to handle the new sensor type %s", 
                     reading.sensorType));
         }

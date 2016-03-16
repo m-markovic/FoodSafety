@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 import com.hp.hpl.jena.rdf.model.Model;
 
 import uk.ac.abdn.iotstreams.common.Constants;
-import uk.ac.abdn.iotstreams.common.FoodSafetyException;
+import uk.ac.abdn.iotstreams.common.IotStreamsException;
 import uk.ac.abdn.iotstreams.common.Logging;
 import uk.ac.abdn.iotstreams.simulator.meatprobe.MeatProbeFilesParser;
 import uk.ac.abdn.iotstreams.simulator.sensordata.MeatProbeReading;
@@ -129,7 +129,7 @@ public final class Simulator {
             try {
                 return LocalDate.parse(userInput).atTime(defaultTime).atZone(Constants.UK);
             } catch (final DateTimeParseException e) {
-                throw FoodSafetyException.userInputError(userInput, e);
+                throw IotStreamsException.userInputError(userInput, e);
             }
         }
     }

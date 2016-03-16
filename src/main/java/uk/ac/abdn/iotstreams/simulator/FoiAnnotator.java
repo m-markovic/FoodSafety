@@ -17,7 +17,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
 import uk.ac.abdn.iotstreams.common.Constants;
-import uk.ac.abdn.iotstreams.common.FoodSafetyException;
+import uk.ac.abdn.iotstreams.common.IotStreamsException;
 import uk.ac.abdn.iotstreams.simulator.sensordata.TimedTemperatureReading;
 
 /**
@@ -56,11 +56,11 @@ public final class FoiAnnotator
                         .atZone(Constants.UK), 
                     entry.getValue()));
         } catch (JsonSyntaxException e) {
-            throw FoodSafetyException.userInputError(String.format("File '%s'", INPUT_PATH.toString()), e);
+            throw IotStreamsException.userInputError(String.format("File '%s'", INPUT_PATH.toString()), e);
         } catch (JsonIOException e) {
-            throw FoodSafetyException.userInputError(String.format("File '%s'", INPUT_PATH.toString()), e);
+            throw IotStreamsException.userInputError(String.format("File '%s'", INPUT_PATH.toString()), e);
         } catch (IOException e) {
-            throw FoodSafetyException.annotationIOfailed(e);
+            throw IotStreamsException.annotationIOfailed(e);
         }
     }
     

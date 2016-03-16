@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import uk.ac.abdn.iotstreams.common.FoodSafetyException;
+import uk.ac.abdn.iotstreams.common.IotStreamsException;
 import uk.ac.abdn.iotstreams.common.Logging;
 import uk.ac.abdn.iotstreams.simulator.sensordata.WirelessTagReading;
 
@@ -76,7 +76,7 @@ public class WirelessTagClient {
             //TODO do stuff
             System.out.println(response.toString());
           } catch (final IOException e) {
-              throw FoodSafetyException.wirelessTagConnectionFailed(e);
+              throw IotStreamsException.wirelessTagConnectionFailed(e);
           }
     }
 
@@ -97,7 +97,7 @@ public class WirelessTagClient {
                         GetTagListResponse.class);
             response.log();
           } catch (final IOException e) {
-              throw FoodSafetyException.wirelessTagConnectionFailed(e);
+              throw IotStreamsException.wirelessTagConnectionFailed(e);
           }
     }
 
@@ -130,7 +130,7 @@ public class WirelessTagClient {
             response.log();
             return response.stream(sensorId);
           } catch (final IOException e) {
-              throw FoodSafetyException.wirelessTagConnectionFailed(e);
+              throw IotStreamsException.wirelessTagConnectionFailed(e);
           }
     }
 
@@ -147,12 +147,12 @@ public class WirelessTagClient {
                     gson.toJson(new SignInRequest()));
             final int responseCode = urlConnection.getResponseCode();
             if (responseCode != 200) {
-                throw FoodSafetyException.wirelessTagSentError(
+                throw IotStreamsException.wirelessTagSentError(
                         responseCode,
                         urlConnection.getURL());
             }
         } catch (final IOException e) {
-            throw FoodSafetyException.wirelessTagConnectionFailed(e);
+            throw IotStreamsException.wirelessTagConnectionFailed(e);
         }
     }
 
@@ -214,7 +214,7 @@ public class WirelessTagClient {
             final Class<T> classOfT) throws IOException {
         final int responseCode = urlConnection.getResponseCode();
         if (responseCode != 200) {
-            throw FoodSafetyException.wirelessTagSentError(
+            throw IotStreamsException.wirelessTagSentError(
                     responseCode,
                     urlConnection.getURL());
         }
