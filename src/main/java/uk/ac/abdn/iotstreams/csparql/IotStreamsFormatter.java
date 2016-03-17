@@ -30,10 +30,10 @@ import eu.larkc.csparql.core.ResultFormatter;
  * 
  * @author nhc
  *
- * A FoodSafetyFormatter listens to one C-SPARQL query.
+ * An IotStreamsFormatter listens to one C-SPARQL query.
  * When the query emits a result (i.e. triples for one window),
- * the FoodSafetyFormatter executes the registered SPARQL updates
- * and handles provenance results.
+ * the IotStreamsFormatter executes the registered SPARQL updates
+ * and handles results.
  */
 class IotStreamsFormatter extends ResultFormatter {
     /** Name picked up from directory - used for logging */
