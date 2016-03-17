@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 
 import uk.ac.abdn.iotstreams.common.IotStreamsException;
-import uk.ac.abdn.iotstreams.csparql.FoodSafetyEngine;
+import uk.ac.abdn.iotstreams.csparql.IotStreamsEngine;
 import uk.ac.abdn.iotstreams.simulator.FoiAnnotator;
 import uk.ac.abdn.iotstreams.simulator.Simulator;
 import uk.ac.abdn.iotstreams.simulator.meatprobe.MeatProbeFilesParser;
@@ -57,7 +57,7 @@ public final class Main {
         //Connect to wireless tag site
         final WirelessTagClient client = new WirelessTagClient();
         client.logTagList();
-        final FoodSafetyEngine engine = new FoodSafetyEngine(persistentModel::add);
+        final IotStreamsEngine engine = new IotStreamsEngine(persistentModel::add);
         final Simulator simulator = new Simulator(input.from, input.to, engine);
         //Get meat probe data
         simulator

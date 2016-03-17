@@ -35,7 +35,7 @@ import eu.larkc.csparql.core.ResultFormatter;
  * the FoodSafetyFormatter executes the registered SPARQL updates
  * and handles provenance results.
  */
-class FoodSafetyFormatter extends ResultFormatter {
+class IotStreamsFormatter extends ResultFormatter {
     /** Name picked up from directory - used for logging */
     private final String queryName;
     
@@ -61,7 +61,7 @@ class FoodSafetyFormatter extends ResultFormatter {
      * @param queryName Name picked up from directory - used for logging
      * @param persistentModel All inferred provenance will be passed to this object
      */
-    FoodSafetyFormatter(final String queryName, final Consumer<Model> persistentModel) {
+    IotStreamsFormatter(final String queryName, final Consumer<Model> persistentModel) {
         this.queryName = queryName;
         this.persistentModel = persistentModel;
         //Initialize SPARQL update query collections

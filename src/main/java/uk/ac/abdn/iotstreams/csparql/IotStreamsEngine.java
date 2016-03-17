@@ -23,7 +23,7 @@ import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
  * A FoodSafetyEngine is a specific CsparqlEngine with methods
  * and queries for this project.
  */
-public final class FoodSafetyEngine
+public final class IotStreamsEngine
     extends CsparqlEngineImpl 
     implements Function<ZonedDateTime, Consumer<Model>> {
     
@@ -40,7 +40,7 @@ public final class FoodSafetyEngine
      * Initializes this engine.
      * @param persistentModel Object to which all inferences will be passed
      */
-    public FoodSafetyEngine(final Consumer<Model> persistentModel) {
+    public IotStreamsEngine(final Consumer<Model> persistentModel) {
         this.persistentModel = persistentModel;
         this.initialize();
         this.registerStream(this.rdfStream);

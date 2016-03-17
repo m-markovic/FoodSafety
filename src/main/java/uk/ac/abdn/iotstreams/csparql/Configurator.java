@@ -37,7 +37,7 @@ final class Configurator {
     private final CsparqlEngine engine;
 
     /** Observer for each query */
-    private Map<String, FoodSafetyFormatter> observers = new HashMap<>();
+    private Map<String, IotStreamsFormatter> observers = new HashMap<>();
 
     /** The persistent model to add inferred provenance to */
     private final Consumer<Model> persistentModel;
@@ -101,10 +101,10 @@ final class Configurator {
         }
     }
     
-    private FoodSafetyFormatter formatter(final Path nameAsPath) {
+    private IotStreamsFormatter formatter(final Path nameAsPath) {
         final String name = nameAsPath.toString();
         if (!this.observers.containsKey(name)){
-            this.observers.put(name, new FoodSafetyFormatter(name, this.persistentModel));
+            this.observers.put(name, new IotStreamsFormatter(name, this.persistentModel));
         }
         return this.observers.get(name.toString());
     }
