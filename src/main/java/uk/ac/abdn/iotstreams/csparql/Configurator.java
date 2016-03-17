@@ -13,8 +13,8 @@ import java.util.function.Consumer;
 import com.hp.hpl.jena.rdf.model.Model;
 
 import eu.larkc.csparql.core.engine.CsparqlEngine;
-import uk.ac.abdn.iotstreams.common.IotStreamsException;
-import uk.ac.abdn.iotstreams.common.Logging;
+import uk.ac.abdn.iotstreams.util.IotStreamsException;
+import uk.ac.abdn.iotstreams.util.Logging;
 
 /**
  * 

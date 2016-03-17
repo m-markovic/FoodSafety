@@ -4,8 +4,8 @@ import java.time.ZonedDateTime;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import uk.ac.abdn.iotstreams.common.IotStreamsException;
-import uk.ac.abdn.iotstreams.common.Logging;
+import uk.ac.abdn.iotstreams.util.IotStreamsException;
+import uk.ac.abdn.iotstreams.util.Logging;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.RDFNode;

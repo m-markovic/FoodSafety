@@ -6,9 +6,9 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Stream;
 
-import uk.ac.abdn.iotstreams.common.Constants;
-import uk.ac.abdn.iotstreams.common.Logging;
 import uk.ac.abdn.iotstreams.simulator.sensordata.WirelessTagReading;
+import uk.ac.abdn.iotstreams.util.Constants;
+import uk.ac.abdn.iotstreams.util.Logging;
 
 /**
  * A GetStatsRawResponse represents the data sent in a

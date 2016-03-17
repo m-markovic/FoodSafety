@@ -10,8 +10,8 @@ import java.util.Observable;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import uk.ac.abdn.iotstreams.common.IotStreamsException;
-import uk.ac.abdn.iotstreams.common.Logging;
+import uk.ac.abdn.iotstreams.util.IotStreamsException;
+import uk.ac.abdn.iotstreams.util.Logging;
 
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.ontology.OntModelSpec;

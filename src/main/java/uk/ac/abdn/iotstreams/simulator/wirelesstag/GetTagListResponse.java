@@ -2,7 +2,7 @@ package uk.ac.abdn.iotstreams.simulator.wirelesstag;
 
 import java.util.List;
 
-import uk.ac.abdn.iotstreams.common.Logging;
+import uk.ac.abdn.iotstreams.util.Logging;
 
 /**
  * A GetTagListResponse represents the data sent in a

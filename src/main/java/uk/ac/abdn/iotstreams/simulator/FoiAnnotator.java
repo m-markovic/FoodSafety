@@ -16,9 +16,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
-import uk.ac.abdn.iotstreams.common.Constants;
-import uk.ac.abdn.iotstreams.common.IotStreamsException;
 import uk.ac.abdn.iotstreams.simulator.sensordata.TimedTemperatureReading;
+import uk.ac.abdn.iotstreams.util.Constants;
+import uk.ac.abdn.iotstreams.util.IotStreamsException;
 
 /**
  * 

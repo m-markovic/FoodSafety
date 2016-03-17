@@ -8,11 +8,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
-import uk.ac.abdn.iotstreams.common.IotStreamsException;
 import uk.ac.abdn.iotstreams.csparql.IotStreamsEngine;
 import uk.ac.abdn.iotstreams.simulator.meatprobe.MeatProbeFilesParser;
 import uk.ac.abdn.iotstreams.simulator.sensordata.TimedTemperatureReading;
 import uk.ac.abdn.iotstreams.simulator.wirelesstag.WirelessTagClient;
+import uk.ac.abdn.iotstreams.util.IotStreamsException;
 
 import com.google.gson.Gson;
 import com.hp.hpl.jena.rdf.model.Model;

@@ -1,4 +1,4 @@
-package uk.ac.abdn.iotstreams.common;
+package uk.ac.abdn.iotstreams.util;
 
 import java.time.ZoneId;
 

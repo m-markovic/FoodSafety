@@ -14,9 +14,9 @@ import java.util.stream.Stream;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import uk.ac.abdn.iotstreams.common.IotStreamsException;
-import uk.ac.abdn.iotstreams.common.Logging;
 import uk.ac.abdn.iotstreams.simulator.sensordata.WirelessTagReading;
+import uk.ac.abdn.iotstreams.util.IotStreamsException;
+import uk.ac.abdn.iotstreams.util.Logging;
 
 import com.google.gson.Gson;
 

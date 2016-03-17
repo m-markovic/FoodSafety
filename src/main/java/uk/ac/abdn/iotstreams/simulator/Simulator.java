@@ -13,14 +13,14 @@ import java.util.stream.Stream;
 
 import com.hp.hpl.jena.rdf.model.Model;
 
-import uk.ac.abdn.iotstreams.common.Constants;
-import uk.ac.abdn.iotstreams.common.IotStreamsException;
-import uk.ac.abdn.iotstreams.common.Logging;
 import uk.ac.abdn.iotstreams.simulator.meatprobe.MeatProbeFilesParser;
 import uk.ac.abdn.iotstreams.simulator.sensordata.MeatProbeReading;
 import uk.ac.abdn.iotstreams.simulator.sensordata.TimedTemperatureReading;
 import uk.ac.abdn.iotstreams.simulator.sensordata.WirelessTagReading;
 import uk.ac.abdn.iotstreams.simulator.wirelesstag.WirelessTagClient;
+import uk.ac.abdn.iotstreams.util.Constants;
+import uk.ac.abdn.iotstreams.util.IotStreamsException;
+import uk.ac.abdn.iotstreams.util.Logging;
 
 /**
  * 

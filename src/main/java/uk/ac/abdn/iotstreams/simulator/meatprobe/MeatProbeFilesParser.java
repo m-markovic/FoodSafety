@@ -10,9 +10,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.stream.Stream;
 
-import uk.ac.abdn.iotstreams.common.Constants;
-import uk.ac.abdn.iotstreams.common.IotStreamsException;
 import uk.ac.abdn.iotstreams.simulator.sensordata.MeatProbeReading;
+import uk.ac.abdn.iotstreams.util.Constants;
+import uk.ac.abdn.iotstreams.util.IotStreamsException;
 
 /**
  * 

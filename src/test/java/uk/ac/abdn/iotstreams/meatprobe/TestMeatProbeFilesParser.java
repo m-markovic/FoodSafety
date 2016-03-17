@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 
 import org.junit.Test;
 
-import uk.ac.abdn.iotstreams.common.Constants;
 import uk.ac.abdn.iotstreams.simulator.meatprobe.MeatProbeFilesParser;
 import uk.ac.abdn.iotstreams.simulator.sensordata.MeatProbeReading;
+import uk.ac.abdn.iotstreams.util.Constants;
 
 public class TestMeatProbeFilesParser {
 

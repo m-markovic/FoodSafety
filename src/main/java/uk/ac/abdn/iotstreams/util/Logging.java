@@ -1,4 +1,4 @@
-package uk.ac.abdn.iotstreams.common;
+package uk.ac.abdn.iotstreams.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

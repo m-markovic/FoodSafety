@@ -6,8 +6,8 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import uk.ac.abdn.iotstreams.common.IotStreamsException;
 import uk.ac.abdn.iotstreams.simulator.sensordata.TimedTemperatureReading;
+import uk.ac.abdn.iotstreams.util.IotStreamsException;
 
 import com.hp.hpl.jena.ontology.Individual;
 import com.hp.hpl.jena.ontology.OntModel;
