@@ -20,7 +20,7 @@ import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
  * 
  * @author nhc
  *
- * A FoodSafetyEngine is a specific CsparqlEngine with methods
+ * An IotStreamsEngine is a specific CsparqlEngine with methods
  * and queries for this project.
  */
 public final class IotStreamsEngine
@@ -28,7 +28,7 @@ public final class IotStreamsEngine
     implements Function<ZonedDateTime, Consumer<Model>> {
     
     /** This engine's sole stream */
-    private final RdfStream rdfStream = new RdfStream("http://foodsafety/ssn");
+    private final RdfStream rdfStream = new RdfStream("http://iotstreams");
     
     /** Object to which all inferences will be passed */
     private final Consumer<Model> persistentModel;

@@ -1,7 +1,6 @@
-REGISTER QUERY meatteamp AS
-PREFIX fs:<http://foodsafety#>
+REGISTER QUERY myquery AS
 SELECT ?s ?p ?o
-FROM STREAM <http://foodsafety/ssn> [RANGE 2m TUMBLING]
+FROM STREAM <http://iotstreams> [RANGE 2m TUMBLING]
 WHERE {
   ?s ?p ?o
 }
