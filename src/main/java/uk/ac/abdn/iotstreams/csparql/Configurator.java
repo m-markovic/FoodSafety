@@ -21,7 +21,7 @@ import uk.ac.abdn.iotstreams.common.Logging;
  * @author nhc
  *
  * A Configurator loads configuration from a directory
- * and configures a given FoodSafetyEngine accordingly.
+ * and configures a given C-SPARQL Engine accordingly.
  */
 final class Configurator {
     /** Charset used for decoding all meat probe files */
@@ -31,7 +31,7 @@ final class Configurator {
     private static final String OWL_FILE = "init.ttl";
     
     /** Root of all configuration files */
-    private static final Path CONFIG_ROOT = Paths.get("config/foodsafety/");
+    private static final Path CONFIG_ROOT = Paths.get("config/iotstreams/");
     
     /** The engine to configure */
     private final CsparqlEngine engine;
@@ -44,11 +44,11 @@ final class Configurator {
     
     /**
      * Registers the engine to configure
-     * @param foodSafetyEngine The engine to configure
+     * @param engine The engine to configure
      * @param persistentModel The object to pass inferred provenance to
      */
-    public Configurator(final CsparqlEngine foodSafetyEngine, final Consumer<Model> persistentModel) {
-        this.engine = foodSafetyEngine;
+    public Configurator(final CsparqlEngine engine, final Consumer<Model> persistentModel) {
+        this.engine = engine;
         this.persistentModel = persistentModel;
         try {
             Files.walk(CONFIG_ROOT)

@@ -26,7 +26,7 @@ cp -r config-example/ config
 Now add/remove/update files to reflect your configuration. The structure is like this:
 ```
 config/
-  |-- foodsafety/  Configuration for the reuseable FoodSafety inference enginee
+  |-- iotstreams/  Configuration for the reuseable IotStreams  engine
   |     |-- <any name>  Set up one C-SPARQL query along with the associated provenance inference
   |     |     |-- csparql-query.rq  Query for C-SPARQL
   |     |     |-- init.ttl          Ontology to initialize models with
@@ -60,7 +60,7 @@ mvn clean package
 ## Running
 
 ```
-mvn package && java -jar target/foodsafety-jar-with-dependencies.jar
+mvn package && java -jar target/iotstreams-jar-with-dependencies.jar
 ```
 
 ## Creating an Eclipse project
@@ -72,9 +72,9 @@ mvn eclipse:clean eclipse:eclipse
 
 ## Using live data
 
-To run the FoodSafety engine with live data you will need to
+To run the IotStreams engine with live data you will need to
   * Change ```csparql.properties```, setting ```esper.externaltime.enabled``` to ```false```.
-  * Write Java code that constructs an instance of ```uk.ac.abdn.foodsafety.provenance.FoodSafetyEngine``` (call this ```engine```)
+  * Write Java code that constructs an instance of ```uk.ac.abdn.iotstreams.csparql.IotStreamsEngine``` (call this ```engine```)
   * Write Java code that encodes live data as SSN in a Jena ```Model``` (call this ```model```) and adds the data like this: ```engine.apply(ZonedDateTime.now()).accept(model)```. 
 
 ## Run static analyses
