@@ -29,8 +29,8 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 public final class Main {
     /**
      * Creates a C-SPARQL engine for FoodSafety and provides it with simulated live data.
-     * The Simulator will read meat probe files from config/meatprobe/
-     * and will download wireless tag data from the internet.
+     * The Simulator will read meat probe files
+     * and download wireless tag data from the internet.
      * The readings will contain temperature from fromDate to toDate
      * 
      * This application requires its input to be provided in a file at Input.INPUT_PATH
