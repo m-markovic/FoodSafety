@@ -6,7 +6,7 @@ import java.time.ZoneId;
  * 
  * @author nhc
  * 
- * Shared constants between FoodSafety packages.
+ * Shared constants between IotStreams packages.
  */
 public final class Constants {
     /** All date/time stamps without time zone are assigned to this one: */

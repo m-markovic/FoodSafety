@@ -7,7 +7,7 @@ import java.net.URL;
  * 
  * @author nhc
  *
- * The only Exception expected from the FoodSafety application.
+ * The only Exception expected from the IotStreams application.
  */
 @SuppressWarnings("serial")
 public final class IotStreamsException extends RuntimeException {
@@ -25,7 +25,7 @@ public final class IotStreamsException extends RuntimeException {
     /**
      * Wraps an Exception caught during communication with mywirelesstag.com 
      * @param e IOException caught while communicating with mywirelesstag.com
-     * @return An FoodSafetyException representing the known facts about the situation
+     * @return An IotStreamsException representing the known facts about the situation
      */
     public static IotStreamsException wirelessTagConnectionFailed(final IOException e) {
         return new IotStreamsException("Failed to connect to mywirelesstag.com", e);
@@ -35,7 +35,7 @@ public final class IotStreamsException extends RuntimeException {
      * Creates an Exception for HTTP errors during communication with mywirelesstag.com
      * @param responseCode A non-200 HTTP response from mywirelesstag.com
      * @param url The url that returned the response
-     * @return An FoodSafetyException representing the known facts about the situation
+     * @return An IotStreamsException representing the known facts about the situation
      */
     public static IotStreamsException wirelessTagSentError(
             final int responseCode, 
@@ -55,7 +55,7 @@ public final class IotStreamsException extends RuntimeException {
      */
     public static IotStreamsException internalError(
             final Exception e) {
-        return new IotStreamsException("Internal FoodSafety appliction error", e);
+        return new IotStreamsException("Internal IoStreams application error", e);
     }
 
     /**
