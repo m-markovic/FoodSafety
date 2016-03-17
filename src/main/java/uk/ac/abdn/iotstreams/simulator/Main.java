@@ -1,4 +1,4 @@
-package uk.ac.abdn.iotstreams;
+package uk.ac.abdn.iotstreams.simulator;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,8 +10,6 @@ import java.util.HashMap;
 
 import uk.ac.abdn.iotstreams.common.IotStreamsException;
 import uk.ac.abdn.iotstreams.csparql.IotStreamsEngine;
-import uk.ac.abdn.iotstreams.simulator.FoiAnnotator;
-import uk.ac.abdn.iotstreams.simulator.Simulator;
 import uk.ac.abdn.iotstreams.simulator.meatprobe.MeatProbeFilesParser;
 import uk.ac.abdn.iotstreams.simulator.sensordata.TimedTemperatureReading;
 import uk.ac.abdn.iotstreams.simulator.wirelesstag.WirelessTagClient;
