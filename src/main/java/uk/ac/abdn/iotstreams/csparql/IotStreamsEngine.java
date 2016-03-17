@@ -26,7 +26,9 @@ import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
  */
 public final class IotStreamsEngine
     extends CsparqlEngineImpl 
-    implements Function<ZonedDateTime, Consumer<Model>> {
+    implements 
+        Function<ZonedDateTime, Consumer<Model>>,
+        Consumer<Model> {
     
     /** This engine's sole stream */
     private final RdfStream rdfStream = new RdfStream("http://iotstreams");
@@ -88,13 +90,21 @@ public final class IotStreamsEngine
     }
     
     /**
-     * To a Jena Model for a given timestamp, use engine.apply(t).accept(model)
-     * This is equivalent to engine.add(t, m)
+     * To add a Jena Model for a given timestamp, use engine.apply(t).accept(model)
      */
     @Override
     public Consumer<Model> apply(final ZonedDateTime t) {
         return m -> this.add(t, m);
     }
+    
+    /**
+     * To add a Jena Model for the current time (i.e. NOW), use engine.accept(model)
+     */
+    @Override
+    public void accept(final Model m) {
+        this.add(ZonedDateTime.now(), m);
+    }
+    
 
     /**
      * Adds all triples in the given model to C-SPARQL
