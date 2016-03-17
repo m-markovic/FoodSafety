@@ -19,8 +19,16 @@ public final class IotStreamsException extends RuntimeException {
     private IotStreamsException(
         final String msg,
         final Exception cause) {
-      super(String.format("%s, caused by %s", msg, cause));
+        super(String.format("%s, caused by %s", msg, cause));
     }    
+
+    /**
+     * Constructor.
+     * @param msg The error message
+     */
+    public IotStreamsException(String msg) {
+        super(msg);
+    }
 
     /**
      * Wraps an Exception caught during communication with mywirelesstag.com 
@@ -85,7 +93,7 @@ public final class IotStreamsException extends RuntimeException {
      * @return The constructed Exception
      */
     public static IotStreamsException internalError(final String msg) {
-        return new IotStreamsException(msg, null);
+        return new IotStreamsException(msg);
     }
 
     /**
@@ -112,6 +120,6 @@ public final class IotStreamsException extends RuntimeException {
      * @return The wrapping Exception
      */
     public static IotStreamsException configurationError(final String msg) {
-        return new IotStreamsException(String.format("Failure reading configuration: %s", msg), null);
+        return new IotStreamsException(String.format("Failure reading configuration: %s", msg));
     }
 }
