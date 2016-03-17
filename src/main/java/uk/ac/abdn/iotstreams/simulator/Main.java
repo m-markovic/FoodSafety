@@ -55,7 +55,7 @@ public final class Main {
         //Connect to wireless tag site
         final WirelessTagClient client = new WirelessTagClient();
         client.logTagList();
-        final IotStreamsEngine engine = new IotStreamsEngine(persistentModel::add);
+        final IotStreamsEngine engine = IotStreamsEngine.forRecordedData(persistentModel::add);
         final Simulator simulator = new Simulator(input.from, input.to, engine);
         //Get meat probe data
         simulator

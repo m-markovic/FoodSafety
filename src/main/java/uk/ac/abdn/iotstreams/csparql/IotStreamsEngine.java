@@ -14,6 +14,7 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 import eu.larkc.csparql.cep.api.RdfQuadruple;
 import eu.larkc.csparql.cep.api.RdfStream;
+import eu.larkc.csparql.common.config.Config;
 import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
 
 /**
@@ -37,10 +38,42 @@ public final class IotStreamsEngine
     private long numQuads = 0;
     
     /**
+     * Verifies that C-SPARQL is configured for using recorded data,
+     * then returns an IotStreamsEngine.
+     * @param inferredDataConsumer Object to which all inferences will be passed
+     * @return A fresh instance of IotStreamsEngine
+     */
+    public static IotStreamsEngine forRecordedData(final Consumer<Model> inferredDataConsumer) {
+        if (Config.INSTANCE.isEsperUsingExternalTimestamp()) {
+            return new IotStreamsEngine(inferredDataConsumer);
+        } else {
+            throw IotStreamsException.configurationError(
+                    "To use recorded data, csparql.properties must contain the line "
+                    + "'esper.externaltime.enabled=true'");
+        }
+    }
+    
+    /**
+     * Verifies that C-SPARQL is configured for using live data,
+     * then returns an IotStreamsEngine.
+     * @param inferredDataConsumer Object to which all inferences will be passed
+     * @return A fresh instance of IotStreamsEngine
+     */
+    public static IotStreamsEngine forLiveData(final Consumer<Model> inferredDataConsumer) {
+        if (Config.INSTANCE.isEsperUsingExternalTimestamp()) {
+            throw IotStreamsException.configurationError(
+                    "When using live data, csparql.properties must not contain the line "
+                    + "'esper.externaltime.enabled=true'");
+        } else {
+            return new IotStreamsEngine(inferredDataConsumer);
+        }
+    }
+    
+    /**
      * Initializes this engine.
      * @param persistentModel Object to which all inferences will be passed
      */
-    public IotStreamsEngine(final Consumer<Model> persistentModel) {
+    private IotStreamsEngine(final Consumer<Model> persistentModel) {
         this.persistentModel = persistentModel;
         this.initialize();
         this.registerStream(this.rdfStream);
