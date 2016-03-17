@@ -1,4 +1,4 @@
-package uk.ac.abdn.iotstreams.provenance;
+package uk.ac.abdn.iotstreams.csparql;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

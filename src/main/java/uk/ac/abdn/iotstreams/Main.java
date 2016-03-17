@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 
 import uk.ac.abdn.iotstreams.common.IotStreamsException;
-import uk.ac.abdn.iotstreams.provenance.FoodSafetyEngine;
+import uk.ac.abdn.iotstreams.csparql.FoodSafetyEngine;
 import uk.ac.abdn.iotstreams.simulator.FoiAnnotator;
 import uk.ac.abdn.iotstreams.simulator.Simulator;
 import uk.ac.abdn.iotstreams.simulator.meatprobe.MeatProbeFilesParser;
